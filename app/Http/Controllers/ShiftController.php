@@ -36,6 +36,9 @@ class ShiftController extends Controller
             ];
             if (Auth::user()->type == 'employee') {
                 $data['employees'] = Employee::where('user_id', '=', Auth::user()->id)->get();
+                $data['departments'] = Department::where('created_by', \Auth::user()->creatorId())->get(['name', 'id']);
+                $data['employeeShift'] = EmployeeShift::where('created_by', \Auth::user()->creatorId())->get();
+
             } else {
                 if ($data['filter']['department'] || $data['filter']['employee']) {
                     $data['employees'] = Employee::with(['user', 'shift.detailShift.employeeShift'])->where([['created_by', \Auth::user()->creatorId()], ['id', $data['filter']['employee']]])->whereHas('user', function ($query) use ($data) {

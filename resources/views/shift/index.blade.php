@@ -130,7 +130,7 @@
                                             <select class="form-control" name="employee_shift_id">
                                                 <option value="">Nothing Selected</option>
                                                 @foreach ($employeeShift as $item)
-                                                    <option value={{ $item->id }}>{{ $item->name }}</option>
+                                                    <option value={{ $item->id }}>{{ $item->name . ' ( ' . date('H:i', strtotime($item->time_start)). ' - ' . date('H:i', strtotime($item->time_end)) .' )' }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -450,7 +450,6 @@
 @push('script-page')
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    {{-- <script src="{{ asset('libs/select2/dist/js/select2.min.js') }}"></script> --}}
     <script>
         $(document).ready(function() {
             $('.select2-multiple').select2({

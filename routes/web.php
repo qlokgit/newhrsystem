@@ -105,6 +105,9 @@ Route::get('/home', 'HomeController@index')->name('home')->middleware(
         'XSS',
     ]
 );
+
+Route::post('/approve-leave', 'HomeController@approveLeave')->name('approve.employee.leave');
+
 Route::get('/home/getlanguvage', 'HomeController@getlanguvage')->name('home.getlanguvage');
 
 Route::group(
