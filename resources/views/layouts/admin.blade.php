@@ -392,36 +392,6 @@ $color = (!empty($setting['theme_color'])) ? $setting['theme_color'] : 'theme-3'
                     }
                 });
             }
-
-            // Get chat for top ox
-            function getChat() {
-                $.ajax({
-                    url: '{{ route('message.data') }}',
-                    type: "get",
-                    cache: false,
-                    success: function(data) {
-                        console.log(data);
-                        if (data.length != 0) {
-                            $(".message-toggle-msg").addClass('beep');
-                            $(".dropdown-list-message-msg").html(data);
-                        }
-                    }
-                })
-            }
-
-            getChat();
-
-            $(document).on("click", ".mark_all_as_read_message", function() {
-                $.ajax({
-                    url: '{{ route('message.seen') }}',
-                    type: "get",
-                    cache: false,
-                    success: function(data) {
-                        $('.dropdown-list-message-msg').html('');
-                        $(".message-toggle-msg").removeClass('beep');
-                    }
-                })
-            });
         </script>
     @endif
 
