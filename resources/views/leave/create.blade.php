@@ -113,13 +113,15 @@
             <div class="col-md-12">
                 <div class="form-group employees row d-flex align-items-center">
                     {{ Form::label('employee_id', __('Approved By   '), ['class' => 'col-form-label']) }}
-                    <div class="col-11">
-                        {{ Form::select('approved_employee_id[]', $employees, null, ['class' => 'form-control js-example-basic-single', 'id' => 'approved_employee_id', 'placeholder' => __('Select Employee')]) }}
-                    </div>
-                    <div class="col-1">
-                        <button type="button" id="click" class="btn btn-sm btn-primary">
-                            <i class="ti ti-plus"></i>
-                        </button>
+                    <div class="row d-flex align-items-center">
+                        <div class="col-11">
+                            {{ Form::select('approved_employee_id[]', $employees, null, ['class' => 'form-control js-example-basic-single', 'id' => 'approved_employee_id', 'placeholder' => __('Select Employee'), 'required' => 'required']) }}
+                        </div>
+                        <div class="col-1">
+                            <button type="button" id="click" class="btn btn-sm btn-primary">
+                                <i class="ti ti-plus"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -149,7 +151,7 @@
             var html = `
                     <div class="row mt-4" id="inputRow">
                     <div class="col-11">
-                        {{ Form::select('approved_employee_id[]', $employees, null, ['class' => 'form-control js-example-basic-single', 'id' => 'approved_employee_id', 'placeholder' => __('Select Employee')]) }}
+                        {{ Form::select('approved_employee_id[]', $employees, null, ['class' => 'form-control js-example-basic-single', 'id' => 'approved_employee_id', 'placeholder' => __('Select Employee'), 'required' => 'required']) }}
                     </div>
                     <div class="col-1">
                         <button type="button" id="removeRow" class="btn btn-sm btn-danger" >

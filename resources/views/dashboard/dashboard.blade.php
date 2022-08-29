@@ -169,7 +169,6 @@
                                             @endif
                                         </td>
                                         <td>
-                                            @if ($leave->status == 'Pending')
                                                 <div class="action-btn bg-success ms-2">
                                                     <a href="#" class="mx-3 btn btn-sm  align-items-center"
                                                         data-bs-toggle="modal"
@@ -242,6 +241,31 @@
                                                                                     @endif
                                                                                 </td>
                                                                             </tr>
+                                                                            <tr>
+                                                                                <th>{{ __('Approved By') }}</th>
+                                                                                <td>
+                                                                                    @foreach ($approvedLeaveAll as $item)
+                                                                                        <div class="row mt-2">
+                                                                                            <div class="col-8">
+                                                                                                {{ $item->employee->name }}
+                                                                                            </div>
+                                                                                            @if ($item->status == 'Pending')
+                                                                                                <div class="col-4 badge bg-warning p-2 px-3 rounded status-badge5">
+                                                                                                    {{ $item->status }}</div>
+                                                                                            @elseif ($item->status == 'Waiting')
+                                                                                                <div class="col-4 badge bg-info p-2 px-3 rounded status-badge5">
+                                                                                                    {{ $item->status }}</div>
+                                                                                            @elseif($item->status == 'Approved')
+                                                                                                <div class="col-4 badge bg-success p-2 px-3 rounded status-badge5">
+                                                                                                    {{ $item->status }}</div>
+                                                                                            @else($item->status == "Reject")
+                                                                                                <div class="col-4 badge bg-danger p-2 px-3 rounded status-badge5">
+                                                                                                    {{ $item->status }}</div>
+                                                                                            @endif
+                                                                                        </div>
+                                                                                    @endforeach
+                                                                                </td>
+                                                                            </tr>
                                                                             <input type="hidden"
                                                                                 value="{{ $leave->id }}"
                                                                                 name="leave_id">
@@ -253,18 +277,18 @@
                                                         <input type="submit" class="btn-create badge-success" value="{{ __('Approval') }}" name="status">
                                                         <input type="submit" class="btn-create bg-danger" value="{{ __('Reject') }}" name="status">
                                                     </div> --}}
+                                                        @if ($leave->status == 'Pending')
                                                             <div class="modal-footer">
                                                                 <input type="submit" value="{{ __('Approved') }}"
                                                                     class="btn btn-success rounded" name="status">
                                                                 <input type="submit" value="{{ __('Reject') }}"
                                                                     class="btn btn-danger rounded" name="status">
                                                             </div>
+                                                        @endif
                                                             {{ Form::close() }}
                                                         </div>
                                                     </div>
                                                 </div>
-                                            @endif
-
                                         </td>
                                     </tr>
                                 @endforeach

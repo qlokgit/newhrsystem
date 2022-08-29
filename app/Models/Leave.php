@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Leave extends Model
 {
     protected $fillable = [
+        'id',
         'employee_id',
         'Leave_type_id',
         'applied_on',
@@ -28,5 +29,10 @@ class Leave extends Model
     public function employees()
     {
         return $this->hasOne('App\Models\Employee', 'id', 'employee_id');
+    }
+
+    public function approvedLeave()
+    {
+        return $this->hasMany(ApprovedLeave::class, 'leave_id', 'id');
     }
 }

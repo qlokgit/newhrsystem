@@ -229,8 +229,17 @@
                                             <div class="badge bg-warning p-2 px-3 rounded status-badge5">
                                                 {{ $leave->status }}</div>
                                         @elseif($leave->status == 'Approved')
-                                            <div class="badge bg-success p-2 px-3 rounded status-badge5">
-                                                {{ $leave->status }}</div>
+                                            @php
+                                                $status = array_column($leaves[0]->approvedLeave->toArray(), 'status');
+                                                $checkStatus = count(array_unique($status)) === 1 && end($status) === 'Approved';
+                                            @endphp
+                                            @if ($checkStatus)
+                                                <div class="badge bg-success p-2 px-3 rounded status-badge5">
+                                                    Approved</div>
+                                            @else
+                                                <div class="badge bg-warning p-2 px-3 rounded status-badge5">
+                                                    Pending</div>
+                                            @endif
                                         @else($leave->status == "Reject")
                                             <div class="badge bg-danger p-2 px-3 rounded status-badge5">
                                                 {{ $leave->status }}</div>
@@ -256,18 +265,16 @@
                                                     @endcan
                                                 @endif
                                             @else
-                                                @if ($leave->status == 'Pending')
-                                                    <div class="action-btn bg-success ms-2">
-                                                        <a href="#" class="mx-3 btn btn-sm  align-items-center"
-                                                            data-size="lg"
-                                                            data-url="{{ URL::to('leave/' . $leave->id . '/action') }}"
-                                                            data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip"
-                                                            title="" data-title="{{ __('Leave Action') }}"
-                                                            data-bs-original-title="{{ __('Manage Leave') }}">
-                                                            <i class="ti ti-caret-right text-white"></i>
-                                                        </a>
-                                                    </div>
-                                                @endif
+                                                <div class="action-btn bg-success ms-2">
+                                                    <a href="#" class="mx-3 btn btn-sm  align-items-center"
+                                                        data-size="lg"
+                                                        data-url="{{ URL::to('leave/' . $leave->id . '/action') }}"
+                                                        data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip"
+                                                        title="" data-title="{{ __('Leave Action') }}"
+                                                        data-bs-original-title="{{ __('Manage Leave') }}">
+                                                        <i class="ti ti-caret-right text-white"></i>
+                                                    </a>
+                                                </div>
                                                 @can('Edit Leave')
                                                     <div class="action-btn bg-info ms-2">
                                                         <a href="#" class="mx-3 btn btn-sm  align-items-center"
@@ -314,7 +321,6 @@
 @endsection
 
 @push('script-page')
-
     <script>
         $(document).on('change', '#employee_id', function() {
             var employee_id = $(this).val();
