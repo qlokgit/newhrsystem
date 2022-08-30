@@ -15,4 +15,9 @@ class ApprovedLeave extends Model
     {
         return $this->hasOne(Leave::class, 'id', 'leave_id');
     }
+
+    public function employee()
+    {
+        return $this->hasOne(Employee::class, 'id', 'employee_id');
+    }
 }

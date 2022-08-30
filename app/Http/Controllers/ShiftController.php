@@ -40,16 +40,35 @@ class ShiftController extends Controller
                 $data['employeeShift'] = EmployeeShift::where('created_by', \Auth::user()->creatorId())->get();
 
             } else {
-                if ($data['filter']['department'] || $data['filter']['employee']) {
-                    $data['employees'] = Employee::with(['user', 'shift.detailShift.employeeShift'])->where([['created_by', \Auth::user()->creatorId()], ['id', $data['filter']['employee']]])->whereHas('user', function ($query) use ($data) {
-                        $query->where([['type', 'employee'], ['department_id', $data['filter']['department']]]);
-                    })->get();
-                } else {
-                    $data['employees'] = Employee::with(['user', 'shift.detailShift.employeeShift'])->where('created_by', \Auth::user()->creatorId())->whereHas('user', function ($query) {
-                        $query->where('type', 'employee');
-                    })->get();
-                }
+                // if ($data['filter']['department'] || $data['filter']['employee']) {
+                //     $data['employees'] = Employee::with(['user', 'shift.detailShift.employeeShift'])->where([['created_by', \Auth::user()->creatorId()], ['id', $data['filter']['employee']]])->whereHas('user', function ($query) use ($data) {
+                //         $query->where([['type', 'employee'], ['department_id', $data['filter']['department']]]);
+                //     })->get();
+                // } else {
+                //     $data['employees'] = Employee::with(['user', 'shift.detailShift.employeeShift'])->where('created_by', \Auth::user()->creatorId())->whereHas('user', function ($query) {
+                //         $query->where('type', 'employee');
+                //     })->get();
+                // }
 
+                $employee = Employee::query();
+                $department = $data['filter']['department'];
+                $rEmployee = $data['filter']['employee'];
+
+                $employee->with(['user', 'shift.detailShift.employeeShift'])->where('created_by', \Auth::user()->creatorId())->whereHas('user', function ($query) {
+                    $query->where('type', 'employee');
+                });
+
+                $employee->when($rEmployee, function ($q) use ($rEmployee) {
+                    $q->where('id', $rEmployee);
+                });
+                
+                $employee->when($department, function ($q) use ($department) {
+                    $q->whereHas('user', function ($query) use ($department) {
+                        $query->where('department_id', $department);
+                    });
+                });
+
+                $data['employees'] = $employee->get();
                 $data['departments'] = Department::where('created_by', \Auth::user()->creatorId())->get(['name', 'id']);
                 $data['employeeShift'] = EmployeeShift::where('created_by', \Auth::user()->creatorId())->get();
             }

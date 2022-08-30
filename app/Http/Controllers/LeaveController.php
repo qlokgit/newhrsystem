@@ -29,9 +29,9 @@ class LeaveController extends Controller
             if (\Auth::user()->type == 'employee') {
                 $user     = \Auth::user();
                 $employee = Employee::where('user_id', '=', $user->id)->first();
-                $leaves   = Leave::where('employee_id', '=', $employee->id)->get();
+                $leaves   = Leave::with('approvedLeave')->where('employee_id', '=', $employee->id)->get();
             } else {
-                $leaves = Leave::where('created_by', '=', \Auth::user()->creatorId())->get();
+                $leaves = Leave::with('approvedLeave')->where('created_by', '=', \Auth::user()->creatorId())->get();
             }
 
             return view('leave.index', compact('leaves'));
@@ -143,19 +143,19 @@ class LeaveController extends Controller
 
             $approvedEmployee = $request->approved_employee_id;
             foreach ($approvedEmployee as $item) {
-                $employeeApprove = Employee::find($item);
+                // $employeeApprove = Employee::find($item);
                 ApprovedLeave::create([
                     'leave_id' => $leave->id,
                     'employee_id' => $item,
-                    'status' => 'Pending'
+                    'status' => 'Waiting'
                 ]);
 
-                $output = [
-                    'employee' => $employeeApprove,
-                    'leave' => $leave->with('employees')->first()
-                ];
+                // $output = [
+                //     'employee' => $employeeApprove,
+                //     'leave' => $leave->with('employees')->first()
+                // ];
 
-                Mail::to($employeeApprove->email)->send(new \App\Mail\ApprovedLeave(($output)));
+                // Mail::to($employeeApprove->email)->send(new \App\Mail\ApprovedLeave(($output)));
             }
 
             return redirect('/leave')->with('success', __('Leave  successfully created.'));
@@ -171,13 +171,13 @@ class LeaveController extends Controller
 
     public function edit(Leave $leave)
     {
-
         if (\Auth::user()->can('Edit Leave')) {
             if ($leave->created_by == \Auth::user()->creatorId()) {
                 $employees  = Employee::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
                 $leavetypes = LeaveType::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('title', 'id');
+                $approvedLeave = ApprovedLeave::with('employee')->where('leave_id', $leave->id)->get();
 
-                return view('leave.edit', compact('leave', 'employees', 'leavetypes'));
+                return view('leave.edit', compact('leave', 'employees', 'leavetypes', 'approvedLeave'));
             } else {
                 return response()->json(['error' => __('Permission denied.')], 401);
             }
@@ -198,7 +198,6 @@ class LeaveController extends Controller
         $total_leave = $answer_in_days + 1;
 
         $num = (int) last(explode(',', $request->leave_type_id));
-
 
         if ($total_leave > $num) {
             return redirect()->back()->with('error', __('Tanggal yang di input Melebihi Batas Cuti yang di tentukan'));
@@ -230,6 +229,7 @@ class LeaveController extends Controller
             return redirect()->back()->with('error', 'Tahun ini kamu sudah ambil, ' . $total_leave_this_year . ' kali cuti tersisa,  ' . $remaining_leave . ' kali');
         }
 
+        $leave = Leave::find($leave);
         if (\Auth::user()->can('Edit Leave')) {
             if ($leave->created_by == Auth::user()->creatorId()) {
                 $validator = \Validator::make(
@@ -257,6 +257,21 @@ class LeaveController extends Controller
                 $leave->remark           = $request->remark;
 
                 $leave->save();
+
+                // if ($leave) {
+                //     // dd($request->old_approved_employee_id);
+                //     // foreach ($request->old_approved_employee_id as $value) {
+                //     //     $approveLeave = ApprovedLeave::where(['leave_id' => $leave->id, 'employee_id' => $value])->first();
+                //         foreach ($request->approved_employee_id  as $id) {
+                //             $checkApprove = ApprovedLeave::where(['leave_id' => $leave->id, 'employee_id' => $id])->first();
+                //             // dd($request->approved_employee_id );
+                //             if ($checkApprove) {
+                //                 $checkApprove->employee_id = $id;
+                //                 $checkApprove->save();
+                //             } 
+                //         // }
+                //     }
+                // }
 
                 return redirect()->route('leave.index')->with('success', __('Leave successfully updated.'));
             } else {
@@ -297,10 +312,9 @@ class LeaveController extends Controller
         $leave     = Leave::find($id);
         $employee  = Employee::find($leave->employee_id);
         $leavetype = LeaveType::find($leave->leave_type_id);
+        $approvedLeave = ApprovedLeave::with('employee')->where('leave_id', $leave->id)->get();
 
-
-
-        return view('leave.action', compact('employee', 'leavetype', 'leave'));
+        return view('leave.action', compact('employee', 'leavetype', 'leave', 'approvedLeave'));
     }
 
     public function changeaction(Request $request)
@@ -320,13 +334,25 @@ class LeaveController extends Controller
 
         $leave->save();
 
+        $getApprovedLeave = ApprovedLeave::where(['leave_id' => $leave->id, 'status' => 'Waiting'])->orderBy('id', 'asc')->first();
+        $getApprovedLeave->status = 'Pending';
+        $getApprovedLeave->save();
+
+        $output = [
+            'employee' => $getApprovedLeave->employee,
+            'leave' => $leave->with('employees')->first()
+        ];
+
+        Mail::to($getApprovedLeave->employee->email)->send(new \App\Mail\ApprovedLeave(($output)));
+
+
         if ($request->status == 'Reject') {
             $leaveAll = ApprovedLeave::with('leave')->where('leave_id', $leave->id)->get();
             $leave->rejected_by = $emp->id;
             $leave->save();
             foreach ($leaveAll as $value) {
                 $value->status = $request->status;
-                $value->save(); 
+                $value->save();
             }
         }
 

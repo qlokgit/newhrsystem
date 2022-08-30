@@ -29,7 +29,7 @@
             <div class="form-group">
                 <?php echo e(Form::label('start_date', __('Start Date'), ['class' => 'col-form-label'])); ?>
 
-                <?php echo e(Form::text('start_date', null, ['class' => 'form-control d_week','autocomplete'=>'off'])); ?>
+                <?php echo e(Form::text('start_date', null, ['class' => 'form-control d_week', 'autocomplete' => 'off'])); ?>
 
             </div>
         </div>
@@ -37,7 +37,7 @@
             <div class="form-group">
                 <?php echo e(Form::label('end_date', __('End Date'), ['class' => 'col-form-label'])); ?>
 
-                <?php echo e(Form::text('end_date', null, ['class' => 'form-control d_week','autocomplete'=>'off'])); ?>
+                <?php echo e(Form::text('end_date', null, ['class' => 'form-control d_week', 'autocomplete' => 'off'])); ?>
 
             </div>
         </div>
@@ -47,7 +47,7 @@
             <div class="form-group">
                 <?php echo e(Form::label('leave_reason', __('Leave Reason'), ['class' => 'col-form-label'])); ?>
 
-                <?php echo e(Form::textarea('leave_reason', null, ['class' => 'form-control', 'placeholder' => __('Leave Reason'),'rows'=>'3'])); ?>
+                <?php echo e(Form::textarea('leave_reason', null, ['class' => 'form-control', 'placeholder' => __('Leave Reason'), 'rows' => '3'])); ?>
 
             </div>
         </div>
@@ -57,7 +57,7 @@
             <div class="form-group">
                 <?php echo e(Form::label('remark', __('Remark'), ['class' => 'col-form-label'])); ?>
 
-                <?php echo e(Form::textarea('remark', null, ['class' => 'form-control', 'placeholder' => __('Leave Remark'),'rows'=>'3'])); ?>
+                <?php echo e(Form::textarea('remark', null, ['class' => 'form-control', 'placeholder' => __('Leave Remark'), 'rows' => '3'])); ?>
 
             </div>
         </div>
@@ -84,6 +84,7 @@
             </div>
         </div>
     <?php endif; ?>
+    
 </div>
 <div class="modal-footer">
     <button type="button" class="btn  btn-light" data-bs-dismiss="modal"><?php echo e(__('Close')); ?></button>
@@ -91,5 +92,7 @@
 
 </div>
 <?php echo e(Form::close()); ?>
+
+
 
 <?php /**PATH /var/www/html/Project/External/newhrsystem/resources/views/leave/edit.blade.php ENDPATH**/ ?>
