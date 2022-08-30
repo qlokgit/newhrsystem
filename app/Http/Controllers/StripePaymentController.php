@@ -3,23 +3,24 @@
 namespace App\Http\Controllers;
 
 
-use App\Models\Coupon;
-use App\Models\Order;
-use App\Models\Plan;
-use App\Models\UserCoupon;
-use App\Models\Utility;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Crypt;
-use Session;
 use Stripe;
+use Session;
+use App\Models\Plan;
+use App\Models\Order;
+use App\Models\Coupon;
+use App\Models\Utility;
+use App\Models\UserCoupon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 
 class StripePaymentController extends Controller
 {
     public function index()
     {
-        if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company')
-        {
-            $objUser = \Auth::user();
+
+        if(Auth::user()->type == 'super admin'){
+            $objUser = Auth::user();
             $orders  = Order::select(
                 [
                     'orders.*',
@@ -28,11 +29,39 @@ class StripePaymentController extends Controller
             )->join('users', 'orders.user_id', '=', 'users.id')->orderBy('orders.created_at', 'DESC')->get();
 
             return view('order.index', compact('orders'));
-        }
-        else
-        {
+        }else if(Auth::user()->type == 'company'){
+            $objUser = Auth::user();
+            $orders  = Order::select(
+                [
+                    'orders.*',
+                    'users.name as user_name',
+                ]
+            )->join('users', 'orders.user_id', '=', 'users.id')
+            ->where('user_id',Auth::user()->id)
+            ->orderBy('orders.created_at', 'DESC')->get();
+
+            return view('order.index', compact('orders'));
+        }else{
             return redirect()->back()->with('error', __('Permission denied.'));
+
         }
+
+        // if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company')
+        // {
+        //     $objUser = \Auth::user();
+        //     $orders  = Order::select(
+        //         [
+        //             'orders.*',
+        //             'users.name as user_name',
+        //         ]
+        //     )->join('users', 'orders.user_id', '=', 'users.id')->orderBy('orders.created_at', 'DESC')->get();
+
+        //     return view('order.index', compact('orders'));
+        // }
+        // else
+        // {
+        //     return redirect()->back()->with('error', __('Permission denied.'));
+        // }
 
     }
 

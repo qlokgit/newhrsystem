@@ -8,7 +8,7 @@ $logo = asset(Storage::url('uploads/logo/'));
 $company_logo = App\Models\Utility::GetLogo();
 $company_logo_landing = App\Models\Utility::GetLogolanding();
 $setting = App\Models\Utility::colorset();
-$color = !empty($setting['theme_color']) ? $setting['theme_color'] : 'theme-3';
+$color = !empty($setting['theme_color']) ? $setting['theme_color'] : 'theme-2';
 
 @endphp
 
@@ -17,9 +17,9 @@ $color = !empty($setting['theme_color']) ? $setting['theme_color'] : 'theme-3';
 <html dir="">
 
 <head>
-    {{-- <title>{{ __('HRMGO SaaS') }}</title> --}}
+    {{-- <title>{{ __('QLOK Suite HRIS') }}</title> --}}
     <title>
-        {{ App\Models\Utility::getValByName('title_text') ? App\Models\Utility::getValByName('title_text') : config('app.name', 'HRMGO SaaS') }}
+        {{ App\Models\Utility::getValByName('title_text') ? App\Models\Utility::getValByName('title_text') : config('app.name', 'QLOK Suite HRIS') }}
     </title>
 
     <!-- Meta -->
@@ -64,7 +64,7 @@ $color = !empty($setting['theme_color']) ? $setting['theme_color'] : 'theme-3';
             <a class="navbar-brand bg-transparent" href="#">
                 {{-- <img src="{{$logo}}" alt="logo" /> --}}
                 <img src="{{ $logos . '/' . (isset($company_logo_landing) && !empty($company_logo_landing) ? $company_logo_landing : 'logo-light.png') }}"
-                    alt="{{ config('app.name', 'HRMGO') }}" alt="logo">
+                    alt="{{ config('app.name', 'QLOKHRIS') }}" alt="logo">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false"
@@ -111,7 +111,7 @@ $color = !empty($setting['theme_color']) ? $setting['theme_color'] : 'theme-3';
             <div class="row align-items-center justify-content-between">
                 <div class="col-sm-5">
                     <h1 class="text-white mb-sm-4 wow animate__fadeInLeft" data-wow-delay="0.2s">
-                        {{ __('HRMGo Saas') }}
+                        {{ __('QLOK Suite HRIS') }}
                     </h1>
                     <h2 class="text-white mb-sm-4 wow animate__fadeInLeft" data-wow-delay="0.4s">
                         HRM and Payroll Tool
@@ -123,9 +123,8 @@ $color = !empty($setting['theme_color']) ? $setting['theme_color'] : 'theme-3';
                     <div class="my-4 wow animate__fadeInLeft" data-wow-delay="0.8s">
                         <a href="{{ route('login') }}" class="btn btn-light me-2"><i class="far fa-eye me-2"></i>Live
                             Demo</a>
-                        <a href="https://codecanyon.net/item/hrmgo-saas-hrm-and-payroll-tool/25982934"
-                            class="btn btn-outline-light" target="_blank"><i class="fas fa-shopping-cart me-2"></i>Buy
-                            now</a>
+                        <a href="https://hris.qloksuite.com"
+                            class="btn btn-outline-light" target="_blank"><i class="fas fa-shopping-cart me-2"></i>Register</a>
                     </div>
                 </div>
                 <div class="col-sm-5">
@@ -743,11 +742,11 @@ $color = !empty($setting['theme_color']) ? $setting['theme_color'] : 'theme-3';
                 <div class="col-lg-6 col-sm-12 text-end">
 
                     {{-- <p class="text-body"> {{ __('Copyright') }} &copy;
-                        {{ Utility::getValByName('footer_text') ? Utility::getValByName('footer_text') : config('app.name', 'HRMGO') }}
+                        {{ Utility::getValByName('footer_text') ? Utility::getValByName('footer_text') : config('app.name', 'QLOKHRIS') }}
                         {{ date('Y') }} </p> --}}
                     <p class="text-body"> {{ __('Copyright') }}
-                        {{ Utility::getValByName('footer_text') ? Utility::getValByName('footer_text') : config('app.name', 'HRMGo SaaS') }}
-                        {{ date('Y') }} | Design By HRMGo </p>
+                        {{ Utility::getValByName('footer_text') ? Utility::getValByName('footer_text') : config('app.name', 'QLOK Suite HRIS') }}
+                        {{ date('Y') }} | a product of Redcorp Indonesia </p>
                 </div>
             </div>
         </div>

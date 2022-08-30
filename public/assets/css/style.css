@@ -2,7 +2,7 @@
 /**======================================================================
 =========================================================================
 Template Name: Dashboard Bootstrap 5 Admin Template
-Author: Rajodiya Infotech
+Author: Redcorp Indonesia
 Support: [support link]
 File: style.css
 =========================================================================
@@ -15631,17 +15631,17 @@ body.theme-2 {
 }
 
 body.theme-2 .bg-primary {
-    background: linear-gradient(141.55deg, rgba(81, 69, 157, 0) 3.46%, #4ebbd3 99.86%), #1f3996 !important;
+    background: linear-gradient(141.55deg, rgba(81, 69, 157, 0) 3.46%, #82afec 99.86%), #5D87CD !important;
 }
 
 body.theme-2 .dash-header .drp-language .drp-text,
   body.theme-2 .dash-header .dash-head-link > i:not(.nocolor) {
-    color: #1f3996;
+    color: #5d87cd;
 }
 
 body.theme-2 .dash-header .drp-company .theme-avtar {
     background: #d2d7ea;
-    color: #1f3996;
+    color: #5d87cd;
 }
 
 body.theme-2 .dash-sidebar.light-sidebar .dash-navbar > .dash-item.active > .dash-link, body.theme-2 .dash-sidebar.light-sidebar .dash-navbar > .dash-item:active > .dash-link, body.theme-2 .dash-sidebar.light-sidebar .dash-navbar > .dash-item:focus > .dash-link, body.theme-2 .dash-sidebar.light-sidebar .dash-navbar > .dash-item:hover > .dash-link,
@@ -15649,7 +15649,7 @@ body.theme-2 .dash-sidebar.light-sidebar .dash-navbar > .dash-item.active > .das
   body.theme-2 .dash-sidebar .dash-navbar > .dash-item:active > .dash-link,
   body.theme-2 .dash-sidebar .dash-navbar > .dash-item:focus > .dash-link,
   body.theme-2 .dash-sidebar .dash-navbar > .dash-item:hover > .dash-link {
-    background: linear-gradient(141.55deg, rgba(81, 69, 157, 0) 3.46%, #4ebbd3 99.86%), #1f3996;
+    background: linear-gradient(141.55deg, rgba(81, 69, 157, 0) 3.46%, #82afec 99.86%), #5d87cd;
     color: #fff;
     box-shadow: 0 5px 7px -1px rgba(31, 57, 150, 0.3);
 }
@@ -15659,12 +15659,12 @@ body.theme-2 .dash-sidebar.light-sidebar .dash-navbar > .dash-item.active > .das
     body.theme-2 .dash-sidebar .dash-navbar > .dash-item:active > .dash-link i,
     body.theme-2 .dash-sidebar .dash-navbar > .dash-item:focus > .dash-link i,
     body.theme-2 .dash-sidebar .dash-navbar > .dash-item:hover > .dash-link i {
-    color: #1f3996;
+    color: #5d87cd;
 }
 
 body.theme-2 .dash-sidebar.light-sidebar .dash-item .dash-submenu .dash-item::before,
   body.theme-2 .dash-sidebar .dash-item .dash-submenu .dash-item::before {
-    border-right-color: #1f3996;
+    border-right-color: #5d87cd;
 }
 
 body.theme-2 .dash-sidebar.light-sidebar .dash-item .dash-submenu .dash-item.active > .dash-link, body.theme-2 .dash-sidebar.light-sidebar .dash-item .dash-submenu .dash-item:active > .dash-link, body.theme-2 .dash-sidebar.light-sidebar .dash-item .dash-submenu .dash-item:focus > .dash-link, body.theme-2 .dash-sidebar.light-sidebar .dash-item .dash-submenu .dash-item:hover > .dash-link,
@@ -15672,30 +15672,30 @@ body.theme-2 .dash-sidebar.light-sidebar .dash-item .dash-submenu .dash-item.act
   body.theme-2 .dash-sidebar .dash-item .dash-submenu .dash-item:active > .dash-link,
   body.theme-2 .dash-sidebar .dash-item .dash-submenu .dash-item:focus > .dash-link,
   body.theme-2 .dash-sidebar .dash-item .dash-submenu .dash-item:hover > .dash-link {
-    color: #1f3996;
+    color: #5d87cd;
 }
 
 body.theme-2 a:not([class]) {
-    color: #1f3996;
+    color: #5d87cd;
 }
 
 body.theme-2 a:not([class]):hover {
-    color: #1f3996;
+    color: #5d87cd;
 }
 
 body.theme-2 .text-primary {
-    color: #1f3996 !important;
+    color: #5d87cd !important;
 }
 
 body.theme-2 .list-group-item.active {
-    background: linear-gradient(141.55deg, rgba(81, 69, 157, 0) 3.46%, #4ebbd3 99.86%), #1f3996 !important;
+    background: linear-gradient(141.55deg, rgba(81, 69, 157, 0) 3.46%, #82afec 99.86%), #5d87cd !important;
 }
 
 body.theme-2 .progress-bar:not([class*="bg-"]),
   body.theme-2 .btn-primary {
     color: #ffffff;
-    background-color: #1f3996;
-    border-color: #1f3996;
+    background-color: #5d87cd;
+    border-color: #5d87cd;
 }
 
 body.theme-2 .progress-bar:not([class*="bg-"]):hover,
@@ -15746,19 +15746,19 @@ body.theme-2 .progress-bar:not([class*="bg-"]):disabled, body.theme-2 .progress-
     body.theme-2 .btn-primary:disabled,
     body.theme-2 .btn-primary.disabled {
     color: #ffffff;
-    background-color: #1f3996;
-    border-color: #1f3996;
+    background-color: #5d87cd;
+    border-color: #5d87cd;
 }
 
 body.theme-2 .btn-outline-primary {
-    color: #1f3996;
-    border-color: #1f3996;
+    color: #5d87cd;
+    border-color: #5d87cd;
 }
 
 body.theme-2 .btn-outline-primary:hover {
     color: #ffffff;
-    background-color: #1f3996;
-    border-color: #1f3996;
+    background-color: #5d87cd;
+    border-color: #5d87cd;
 }
 
 .btn-check:focus + body.theme-2 .btn-outline-primary, body.theme-2 .btn-outline-primary:focus {
@@ -15768,8 +15768,8 @@ body.theme-2 .btn-outline-primary:hover {
 .btn-check:checked + body.theme-2 .btn-outline-primary,
     .btn-check:active + body.theme-2 .btn-outline-primary, body.theme-2 .btn-outline-primary:active, body.theme-2 .btn-outline-primary.active, body.theme-2 .btn-outline-primary.dropdown-toggle.show {
     color: #ffffff;
-    background-color: #1f3996;
-    border-color: #1f3996;
+    background-color: #5d87cd;
+    border-color: #5d87cd;
 }
 
 .btn-check:checked + body.theme-2 .btn-outline-primary:focus,
@@ -15778,40 +15778,40 @@ body.theme-2 .btn-outline-primary:hover {
 }
 
 body.theme-2 .btn-outline-primary:disabled, body.theme-2 .btn-outline-primary.disabled {
-    color: #1f3996;
+    color: #5d87cd;
     background-color: transparent;
 }
 
 body.theme-2 .btn-light-primary {
     background: #d2d7ea;
-    color: #1f3996;
+    color: #5d87cd;
     border-color: #d2d7ea;
 }
 
 body.theme-2 .btn-light-primary:hover {
-    background: #1f3996;
+    background: #5d87cd;
     color: #fff;
-    border-color: #1f3996;
+    border-color: #5d87cd;
 }
 
 body.theme-2 .btn-light-primary.focus, body.theme-2 .btn-light-primary:focus {
-    background: #1f3996;
+    background: #5d87cd;
     color: #fff;
-    border-color: #1f3996;
+    border-color: #5d87cd;
 }
 
 body.theme-2 .btn-light-primary:not(:disabled):not(.disabled).active, body.theme-2 .btn-light-primary:not(:disabled):not(.disabled):active,
     .show > body.theme-2 .btn-light-primary.dropdown-toggle {
-    background: #1f3996;
+    background: #5d87cd;
     color: #fff;
-    border-color: #1f3996;
+    border-color: #5d87cd;
 }
 
 body.theme-2 .btn-check:active + .btn-light-primary,
   body.theme-2 .btn-check:checked + .btn-light-primary {
-    background: #1f3996;
+    background: #5d87cd;
     color: #fff;
-    border-color: #1f3996;
+    border-color: #5d87cd;
 }
 
 body.theme-2 .alert-primary {
@@ -15826,21 +15826,21 @@ body.theme-2 .alert-primary .alert-link {
 
 body.theme-2 .badge.bg-light-primary {
     background: #d2d7ea;
-    color: #1f3996;
+    color: #5d87cd;
     border-color: #d2d7ea;
 }
 
 body.theme-2 .page-item.active .page-link {
-    background: #1f3996;
-    border-color: #1f3996;
+    background: #5d87cd;
+    border-color: #5d87cd;
 }
 
 body.theme-2 .nav-link {
-    color: #1f3996;
+    color: #5d87cd;
 }
 
 body.theme-2 .nav-link:hover, body.theme-2 .nav-link:focus {
-    color: #1f3996;
+    color: #5d87cd;
 }
 
 body.theme-2 .nav-tabs .nav-link {
@@ -15855,7 +15855,7 @@ body.theme-2 .nav-pills .nav-link:focus,
   body.theme-2 .nav-pills .nav-link.active,
   body.theme-2 .nav-pills .show > .nav-link {
     color: #ffffff;
-    background: linear-gradient(141.55deg, rgba(81, 69, 157, 0) 3.46%, #4ebbd3 99.86%), #1f3996;
+    background: linear-gradient(141.55deg, rgba(81, 69, 157, 0) 3.46%, #82afec 99.86%), #5d87cd;
 }
 
 body.theme-2 .form-check-input:focus,
@@ -15864,54 +15864,54 @@ body.theme-2 .form-check-input:focus,
   body.theme-2 .custom-select:focus,
   body.theme-2 .dataTable-selector:focus,
   body.theme-2 .dataTable-input:focus {
-    border-color: #1f3996;
+    border-color: #5d87cd;
     box-shadow: 0 0 0 0.2rem rgba(31, 57, 150, 0.25);
 }
 
 body.theme-2 .form-check-input:checked {
-    background-color: #1f3996;
-    border-color: #1f3996;
+    background-color: #5d87cd;
+    border-color: #5d87cd;
 }
 
 body.theme-2 .form-range::-webkit-slider-thumb {
-    background: #1f3996;
+    background: #5d87cd;
 }
 
 body.theme-2 .form-range::-webkit-slider-thumb:active {
-    background: #1f3996;
+    background: #5d87cd;
 }
 
 body.theme-2 .form-range::-moz-range-thumb {
-    background: #1f3996;
+    background: #5d87cd;
 }
 
 body.theme-2 .form-range::-moz-range-thumb:active {
-    background: #1f3996;
+    background: #5d87cd;
 }
 
 body.theme-2 .form-check-input:checked {
-    background-color: #1f3996;
-    border-color: #1f3996;
+    background-color: #5d87cd;
+    border-color: #5d87cd;
 }
 
 body.theme-2 .form-check-input[type="checkbox"]:indeterminate {
-    background-color: #1f3996;
-    border-color: #1f3996;
+    background-color: #5d87cd;
+    border-color: #5d87cd;
 }
 
 body.theme-2 .form-check .form-check-input.input-primary:checked {
-    background-color: #1f3996;
-    border-color: #1f3996;
+    background-color: #5d87cd;
+    border-color: #5d87cd;
 }
 
 body.theme-2 pre[class*="language-"] > code {
-    border-left-color: #1f3996;
+    border-left-color: #5d87cd;
     background-image: linear-gradient(transparent 50%, rgba(31, 57, 150, 0.04) 50%);
 }
 
 body.theme-2 .card .card-header h5:after, body.theme-2 .card .card-header .h5:after,
   body.theme-2 .card .card-header .h5:after {
-    background: #1f3996;
+    background: #5d87cd;
 }
 
 body.theme-3 {
@@ -22151,9 +22151,9 @@ select.form-control[data-multiselectsplitter-firstselect-selector], select.custo
 }
 
 .auth-wrapper .navbar {
-    background: #ffffff;
+    background: transparent;
     border-radius: 10px;
-    box-shadow: 0 6px 30px rgba(182, 186, 203, 0.3);
+    box-shadow: 0 6px 30px transparent;
 }
 
 .auth-wrapper .auth-content {
@@ -23116,15 +23116,15 @@ body.theme-1 .team-lists img {
 }
 
 body.theme-2 .conversations-list .list-group-item .btn-link {
-    color: #1f3996;
+    color: #5d87cd;
 }
 
 body.theme-2 .conversations-list .list-group-item.active, body.theme-2 .conversations-list .list-group-item:hover {
-    background: linear-gradient(141.55deg, rgba(81, 69, 157, 0) 3.46%, #4ebbd3 99.86%), #1f3996;
+    background: linear-gradient(141.55deg, rgba(81, 69, 157, 0) 3.46%, #82afec 99.86%), #5d87cd;
 }
 
 body.theme-2 .team-lists img {
-    border-color: #1f3996;
+    border-color: #5d87cd;
 }
 
 body.theme-3 .conversations-list .list-group-item .btn-link {

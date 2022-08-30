@@ -7,7 +7,7 @@
     <title>Document</title>
 </head>
 <body>
-    Anda mendapatkan shift ditaggal :
+    Anda mendapatkan shift ditanggal :
     @foreach ($detailsShift as $item)
         <p class="text-700">{{date('d F Y', strtotime($item->date))}}</p>
     @endforeach

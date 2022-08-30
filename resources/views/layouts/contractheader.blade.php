@@ -6,13 +6,13 @@ $company_logo = \App\Models\Utility::GetLogo();
 $SITE_RTL = Utility::getValByName('SITE_RTL');
 
 $setting = App\Models\Utility::colorset();
-$color = (!empty($setting['theme_color'])) ? $setting['theme_color'] : 'theme-3';
+$color = (!empty($setting['theme_color'])) ? $setting['theme_color'] : 'theme-2';
 @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{$SITE_RTL == 'on'?'rtl':''}}">
 
 <head>
-    <title>{{(Utility::getValByName('header_text')) ? Utility::getValByName('header_text') : config('app.name', 'LeadGo')}} @yield('title')</title>
+    <title>{{(Utility::getValByName('header_text')) ? Utility::getValByName('header_text') : config('app.name', 'Qlok Suite HRIS')}} @yield('title')</title>
     <!-- Meta -->
     <meta charset="utf-8" />
     <meta
@@ -20,9 +20,9 @@ $color = (!empty($setting['theme_color'])) ? $setting['theme_color'] : 'theme-3'
       content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui"
     />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="description" content="Dashboard Template Description" />
-    <meta name="keywords" content="Dashboard Template" />
-    <meta name="author" content="Rajodiya Infotech" />
+    <meta name="description" content="Aplikasi HRIS terbaik untuk memudahkan kelola bisnis Anda" />
+    <meta name="keywords" content="hrm,hris,hrd,payroll,attendance" />
+    <meta name="author" content="Qlok Suite HRIS" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Favicon icon -->
     <link rel="icon" href="{{$logo.'/'.(isset($favicon) && !empty($favicon)?$favicon:'favicon.png')}}" type="image/x-icon" />

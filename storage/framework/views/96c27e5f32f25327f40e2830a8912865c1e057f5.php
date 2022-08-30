@@ -1,3 +1,5 @@
+
+
 <?php $__env->startSection('page-title'); ?>
     <?php echo e(__('Shift Roster')); ?>
 
@@ -127,7 +129,7 @@
                                             <select class="form-control" name="employee_shift_id">
                                                 <option value="">Nothing Selected</option>
                                                 <?php $__currentLoopData = $employeeShift; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                    <option value=<?php echo e($item->id); ?>><?php echo e($item->name); ?></option>
+                                                    <option value=<?php echo e($item->id); ?>><?php echo e($item->name . ' ( ' . date('H:i', strtotime($item->time_start)). ' - ' . date('H:i', strtotime($item->time_end)) .' )'); ?></option>
                                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </select>
                                         </div>
@@ -450,7 +452,6 @@
 <?php $__env->startPush('script-page'); ?>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    
     <script>
         $(document).ready(function() {
             $('.select2-multiple').select2({

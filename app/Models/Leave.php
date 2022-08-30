@@ -17,6 +17,7 @@ class Leave extends Model
         'remark',
         'status',
         'created_by',
+        'rejected_by',
     ];
 
     public function leaveType()

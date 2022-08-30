@@ -8,7 +8,7 @@ $company_logo = \App\Models\Utility::GetLogo();
 $SITE_RTL = Utility::getValByName('SITE_RTL');
 
 $setting = App\Models\Utility::colorset();
-$color = (!empty($setting['theme_color'])) ? $setting['theme_color'] : 'theme-3';
+$color = (!empty($setting['theme_color'])) ? $setting['theme_color'] : 'theme-2';
 
 @endphp
 
@@ -19,15 +19,15 @@ $color = (!empty($setting['theme_color'])) ? $setting['theme_color'] : 'theme-3'
 <head>
 
     <title>
-        {{ Utility::getValByName('title_text') ? Utility::getValByName('title_text') : config('app.name', 'HRMGo') }}
+        {{ Utility::getValByName('title_text') ? Utility::getValByName('title_text') : config('app.name', 'Qlok Suite HRIS') }}
         - @yield('page-title')</title>
     <meta charset="utf-8" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="description" content="Dashboard Template Description" />
-    <meta name="keywords" content="Dashboard Template" />
-    <meta name="author" content="Rajodiya Infotech" />
+    <meta name="description" content="Aplikasi HRIS terbaik untuk memudahkan kelola bisnis Anda" />
+    <meta name="keywords" content="hrm, hris, hrd, payroll, attendance" />
+    <meta name="author" content="Qlok Suite HRIS" />
 
 
     <!-- Favicon icon -->

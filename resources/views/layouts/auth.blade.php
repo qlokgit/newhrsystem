@@ -7,7 +7,7 @@ $company_logo = \App\Models\Utility::GetLogo();
 $SITE_RTL = Utility::getValByName('SITE_RTL');
 
 $setting = App\Models\Utility::colorset();
-$color = !empty($setting['theme_color']) ? $setting['theme_color'] : 'theme-3';
+$color = !empty($setting['theme_color']) ? $setting['theme_color'] : 'theme-2';
 
 // $SITE_RTL=$setting['SITE_RTL'];
 
@@ -19,9 +19,9 @@ $color = !empty($setting['theme_color']) ? $setting['theme_color'] : 'theme-3';
 
 <head>
 
-    {{-- <title>{{(Utility::getValByName('header_text')) ? Utility::getValByName('header_text') : config('app.name', 'LeadGo')}} &dash; @yield('title')</title> --}}
+    {{-- <title>{{(Utility::getValByName('header_text')) ? Utility::getValByName('header_text') : config('app.name', 'QlokHRIS')}} &dash; @yield('title')</title> --}}
     <title>
-        {{ Utility::getValByName('title_text') ? Utility::getValByName('title_text') : config('app.name', 'HRMGo') }}
+        {{ Utility::getValByName('title_text') ? Utility::getValByName('title_text') : config('app.name', 'QlokHRIS') }}
         - @yield('page-title')</title>
     <!-- HTML5 Shim and Respond.js IE11 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -36,9 +36,9 @@ $color = !empty($setting['theme_color']) ? $setting['theme_color'] : 'theme-3';
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
 
-    <meta name="description" content="Dashboard Template Description" />
-    <meta name="keywords" content="Dashboard Template" />
-    <meta name="author" content="Rajodiya Infotech" />
+    <meta name="description" content="Aplikasi HRIS terbaik untuk memudahkan kelola bisnis Anda" />
+    <meta name="keywords" content="hris, hrm, hrd, payroll, attendance" />
+    <meta name="author" content="Qlok Suite HRIS" />
 
     <!-- Favicon icon -->
     <link rel="icon" href="{{ asset(Storage::url('uploads/logo')) . '/favicon.png' }}" type="image/x-icon" />
@@ -93,13 +93,13 @@ $color = !empty($setting['theme_color']) ? $setting['theme_color'] : 'theme-3';
                     <div class="collapse navbar-collapse" id="navbarTogglerDemo01" style="flex-grow: 0;">
                         <ul class="navbar-nav align-items-center ms-auto mb-2 mb-lg-0">
                             <li class="nav-item">
-                                <a class="nav-link active" href="#">{{ __('Support') }}</a>
+                                <a class="nav-link active" href="https://www.qloksuite.com/helpdesk/">{{ __('Support') }}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">{{ __('Terms') }}</a>
+                                <a class="nav-link" href="https://www.qloksuite.com/terms-conditions">{{ __('Terms') }}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">{{ __('Privacy') }}</a>
+                                <a class="nav-link" href="https://www.qloksuite.com/privacy-policy">{{ __('Privacy') }}</a>
                             </li>
                             <li class="nav-item">
                                 @yield('language-bar')
@@ -119,7 +119,7 @@ $color = !empty($setting['theme_color']) ? $setting['theme_color'] : 'theme-3';
                     <div class="row">
                         <div class="col-6">
                             {{ __('Copyright') }} &copy;
-                            {{ Utility::getValByName('footer_text') ? Utility::getValByName('footer_text') : config('app.name', 'LeadGo') }}
+                            {{ Utility::getValByName('footer_text') ? Utility::getValByName('footer_text') : config('app.name', 'Qlok Suite HRIS') }}
                             {{ date('Y') }}
                         </div>
                     </div>

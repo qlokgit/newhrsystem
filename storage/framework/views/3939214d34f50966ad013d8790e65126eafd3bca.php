@@ -1,3 +1,7 @@
+
+
+
+
 <?php $__env->startSection('page-title'); ?>
     <?php echo e(__('Manage Leave')); ?>
 
@@ -16,9 +20,9 @@
     </a>
 
     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('Create Leave')): ?>
-        <a href="#" data-url="<?php echo e(route('leave.create')); ?>" data-ajax-popup="true" data-title="<?php echo e(__('Create New Leave')); ?>"
-            data-size="lg" data-bs-toggle="tooltip" title="" class="btn btn-sm btn-primary"
-            data-bs-original-title="<?php echo e(__('Create')); ?>">
+        <a href="#" id="create_leave" data-url="<?php echo e(route('leave.create')); ?>" data-ajax-popup="true"
+            data-title="<?php echo e(__('Create New Leave')); ?>" data-size="lg" data-bs-toggle="tooltip" title=""
+            class="btn btn-sm btn-primary" data-bs-original-title="<?php echo e(__('Create')); ?>">
             <i class="ti ti-plus"></i>
         </a>
     <?php endif; ?>
@@ -69,11 +73,14 @@
                                     <td><?php echo e($leave->leave_reason); ?></td>
                                     <td>
                                         <?php if($leave->status == 'Pending'): ?>
-                                            <div class="badge bg-warning p-2 px-3 rounded status-badge5"><?php echo e($leave->status); ?></div>
+                                            <div class="badge bg-warning p-2 px-3 rounded status-badge5">
+                                                <?php echo e($leave->status); ?></div>
                                         <?php elseif($leave->status == 'Approved'): ?>
-                                            <div class="badge bg-success p-2 px-3 rounded status-badge5"><?php echo e($leave->status); ?></div>
+                                            <div class="badge bg-success p-2 px-3 rounded status-badge5">
+                                                <?php echo e($leave->status); ?></div>
                                         <?php else: ?>
-                                            <div class="badge bg-danger p-2 px-3 rounded status-badge5"><?php echo e($leave->status); ?></div>
+                                            <div class="badge bg-danger p-2 px-3 rounded status-badge5">
+                                                <?php echo e($leave->status); ?></div>
                                         <?php endif; ?>
                                     </td>
 
@@ -96,18 +103,22 @@
                                                     <?php endif; ?>
                                                 <?php endif; ?>
                                             <?php else: ?>
-                                                <div class="action-btn bg-success ms-2">
-                                                    <a href="#" class="mx-3 btn btn-sm  align-items-center" data-size="lg"
-                                                        data-url="<?php echo e(URL::to('leave/' . $leave->id . '/action')); ?>"
-                                                        data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip"
-                                                        title="" data-title="<?php echo e(__('Leave Action')); ?>"
-                                                        data-bs-original-title="<?php echo e(__('Manage Leave')); ?>">
-                                                        <i class="ti ti-caret-right text-white"></i>
-                                                    </a>
-                                                </div>
+                                                <?php if($leave->status == 'Pending'): ?>
+                                                    <div class="action-btn bg-success ms-2">
+                                                        <a href="#" class="mx-3 btn btn-sm  align-items-center"
+                                                            data-size="lg"
+                                                            data-url="<?php echo e(URL::to('leave/' . $leave->id . '/action')); ?>"
+                                                            data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip"
+                                                            title="" data-title="<?php echo e(__('Leave Action')); ?>"
+                                                            data-bs-original-title="<?php echo e(__('Manage Leave')); ?>">
+                                                            <i class="ti ti-caret-right text-white"></i>
+                                                        </a>
+                                                    </div>
+                                                <?php endif; ?>
                                                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('Edit Leave')): ?>
                                                     <div class="action-btn bg-info ms-2">
-                                                        <a href="#" class="mx-3 btn btn-sm  align-items-center" data-size="lg"
+                                                        <a href="#" class="mx-3 btn btn-sm  align-items-center"
+                                                            data-size="lg"
                                                             data-url="<?php echo e(URL::to('leave/' . $leave->id . '/edit')); ?>"
                                                             data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip"
                                                             title="" data-title="<?php echo e(__('Edit Leave')); ?>"
@@ -120,7 +131,11 @@
 
                                             <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('Delete Leave')): ?>
                                                 <div class="action-btn bg-danger ms-2">
-                                                    <?php echo Form::open(['method' => 'DELETE', 'route' => ['leave.destroy', $leave->id], 'id' => 'delete-form-' . $leave->id]); ?>
+                                                    <?php echo Form::open([
+                                                        'method' => 'DELETE',
+                                                        'route' => ['leave.destroy', $leave->id],
+                                                        'id' => 'delete-form-' . $leave->id,
+                                                    ]); ?>
 
                                                     <a href="#" class="mx-3 btn btn-sm  align-items-center bs-pass-para"
                                                         data-bs-toggle="tooltip" title="" data-bs-original-title="Delete"
@@ -147,6 +162,7 @@
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startPush('script-page'); ?>
+
     <script>
         $(document).on('change', '#employee_id', function() {
             var employee_id = $(this).val();

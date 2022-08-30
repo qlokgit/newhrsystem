@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AccountList;
 use App\Models\Announcement;
+use App\Models\ApprovedLeave;
 use App\Models\AttendanceEmployee;
 use App\Models\Employee;
 use App\Models\Event;
@@ -17,6 +18,7 @@ use App\Models\Plan;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Models\Utility;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
@@ -43,7 +45,6 @@ class HomeController extends Controller
             if($user->type == 'employee')
             {
                 $emp = Employee::where('user_id', '=', $user->id)->first();
-
                 $announcements = Announcement::orderBy('announcements.id', 'desc')->take(5)->leftjoin('announcement_employees', 'announcements.id', '=', 'announcement_employees.announcement_id')->where('announcement_employees.employee_id', '=', $emp->id)->orWhere(
                     function ($q){
                         $q->where('announcements.department_id', 0)->where('announcements.employee_id', 0);
@@ -87,7 +88,8 @@ class HomeController extends Controller
                 $officeTime['startTime'] = Utility::getValByName('company_start_time');
                 $officeTime['endTime']   = Utility::getValByName('company_end_time');
 
-                return view('dashboard.dashboard', compact('arrEvents', 'announcements', 'employees', 'meetings', 'employeeAttendance', 'officeTime'));
+                $approvedLeave = ApprovedLeave::with('leave.employees')->where('employee_id', $emp->id)->get();
+                return view('dashboard.dashboard', compact('arrEvents', 'announcements', 'employees', 'meetings', 'employeeAttendance', 'officeTime', 'approvedLeave'));
             }
             else if($user->type == 'super admin')
             {
@@ -214,5 +216,29 @@ class HomeController extends Controller
         }
 
         return $arrTask;
+    }
+
+    public function approveLeave(Request $request)
+    {
+        $leave = ApprovedLeave::where('id',$request->leave_id)->first();
+        $emp = Employee::find($leave->employee_id);
+
+        if ($request->status == 'Reject') {
+            $leaveAll = ApprovedLeave::with('leave')->where('leave_id', $leave->leave_id)->get();
+            foreach ($leaveAll as $value) {
+                $value->status = $request->status;
+                $value->save();
+
+                $value->leave->status = $request->status;
+                $value->leave->rejected_by = $emp->id;
+                $value->leave->save();
+            }
+        }
+
+        $leave->update([
+            'status' => $request->status
+        ]);
+
+        return redirect('/home')->with('success', __('Approved Leave successfully.'));
     }
 }
