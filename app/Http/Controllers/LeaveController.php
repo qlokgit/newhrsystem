@@ -14,6 +14,8 @@ use App\Mail\LeaveActionSend;
 use Illuminate\Support\Carbon;
 use App\Imports\EmployeesImport;
 use App\Models\ApprovedLeave;
+use App\Models\Department;
+use App\Models\Designation;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -50,9 +52,11 @@ class LeaveController extends Controller
             }
             $leavetypes      = LeaveType::where('created_by', '=', \Auth::user()->creatorId())->get();
             $leavetypes_days = LeaveType::where('created_by', '=', \Auth::user()->creatorId())->get();
+            $departments   = Department::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+            $designations   = Designation::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
 
             //            dd(Employee::employeeTotalLeave(1));
-            return view('leave.create', compact('employees', 'leavetypes', 'leavetypes_days'));
+            return view('leave.create', compact('employees', 'leavetypes', 'leavetypes_days', 'departments', 'designations'));
         } else {
             return response()->json(['error' => __('Permission denied.')], 401);
         }
@@ -409,5 +413,12 @@ class LeaveController extends Controller
             )->groupBy('leaves.leave_type_id')->get();
 
         return $leave_counts;
+    }
+
+    public function getEmployee($department, $designation)
+    {
+        $employee = Employee::where(['department_id' => $department, 'designation_id' => $designation])->get();
+        
+        return response()->json($employee);
     }
 }

@@ -283,7 +283,11 @@ Route::resource('award', 'AwardController')->middleware(
         'XSS',
     ]
 );
+
 Route::get('termination/{id}/description', 'TerminationController@description')->name('termination.description');
+
+Route::get('get-employee/{department}/{designation}', 'LeaveController@getEmployee')->name('get.employee.json');
+Route::get('get-approved-leave/{id}', 'HomeController@getApprovedLeave')->name('get.apprive.leave.json');
 
 Route::resource('termination', 'TerminationController')->middleware(
     [

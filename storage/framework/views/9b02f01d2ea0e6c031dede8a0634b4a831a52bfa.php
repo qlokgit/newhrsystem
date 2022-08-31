@@ -9,7 +9,7 @@
     Halo <?php echo e($leave['employee']->name); ?>
 
     <p>
-       <b><?php echo e($leave['leave']->employees->name); ?></b> meminta persutujuan cuti dari anda
+       <b><?php echo e($leave['leave']); ?></b> meminta persutujuan cuti dari anda
        <p>silahkan approve status cuti di dashboard</p>
        <p><a href="<?php echo e(route('home')); ?>">Masuk</a></p>
     </p>

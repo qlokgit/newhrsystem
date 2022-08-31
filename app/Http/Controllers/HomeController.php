@@ -86,7 +86,7 @@ class HomeController extends Controller
                 $officeTime['startTime'] = Utility::getValByName('company_start_time');
                 $officeTime['endTime']   = Utility::getValByName('company_end_time');
 
-                $approvedLeave = ApprovedLeave::with('leave.employees')->where(['employee_id' => $emp->id])->get();
+                $approvedLeave = ApprovedLeave::with('leave.employees')->where('employee_id', $emp->id)->where('status', '!=' ,'Waiting')->get();
                 if (count($approvedLeave) != 0) {
                     $approvedLeaveAll = ApprovedLeave::with('employee')->where('leave_id', $approvedLeave[0]->leave_id)->get();
                 } else {
@@ -226,17 +226,24 @@ class HomeController extends Controller
         ]);
 
         
-        $getApprovedLeave = ApprovedLeave::with('employee')->where(['leave_id' => $leave->leave_id, 'status' => 'Waiting'])->orderBy('id', 'asc')->first();
+        $getApprovedLeave = ApprovedLeave::with('employee')->where(['leave_id' => $leave->leave_id, 'status' => 'Pending'])->orderBy('id', 'asc')->first();
         $getApprovedLeave->status = 'Pending';
         $getApprovedLeave->save();
 
         $output = [
             'employee' => $getApprovedLeave->employee,
-            'leave' => $leave->with('employees')->first()
+            'leave' => $emp->name
         ];
 
         Mail::to($getApprovedLeave->employee->email)->send(new \App\Mail\ApprovedLeave(($output)));
 
         return redirect('/home')->with('success', __('Approved Leave successfully.'));
+    }
+
+    public function getApprovedLeave($id)
+    {
+        $approvedLeave = ApprovedLeave::with('employee')->where('leave_id', $id)->get();
+
+        return response()->json($approvedLeave);
     }
 }
