@@ -145,6 +145,7 @@
                                 </tr>
                             </thead>
                             <tbody class="list">
+                                
                                 <?php $__currentLoopData = $approvedLeave; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $leave): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <tr>
                                         <td><?php echo e($leave->leave->employees->name); ?></td>
@@ -174,119 +175,103 @@
                                             <?php endif; ?>
                                         </td>
                                         <td>
-                                                <div class="action-btn bg-success ms-2">
-                                                    <a href="#" class="mx-3 btn btn-sm  align-items-center"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#approveModal<?php echo e($leave->id); ?>">
-                                                        <i class="ti ti-caret-right text-white"></i>
-                                                    </a>
-                                                </div>
-                                                <!-- Modal -->
-                                                <div class="modal fade" id="approveModal<?php echo e($leave->id); ?>" tabindex="-1"
-                                                    aria-labelledby="approveModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog modal-lg">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header" style="margin-left: 15px">
-                                                                <h5 class="modal-title" id="exampleModalLabel">Modal title
-                                                                </h5>
-                                                                <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
-                                                            </div>
-                                                            <?php echo e(Form::open(['route' => 'approve.employee.leave', 'method' => 'post'])); ?>
+                                            <div class="action-btn bg-success ms-2">
+                                                <a href="#approveModal-<?php echo e($leave->leave->id); ?>"
+                                                    class="mx-3 btn btn-sm  align-items-center approved-leave"
+                                                    data-bs-toggle="modal" data-id="<?php echo e($leave->leave_id); ?>"
+                                                    data-bs-target="#approveModal-<?php echo e($leave->leave->id); ?>">
+                                                    <i class="ti ti-caret-right text-white"></i>
+                                                </a>
+                                            </div>
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="approveModal-<?php echo e($leave->leave->id); ?>"
+                                                tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header" style="margin-left: 15px">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Modal title
+                                                            </h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                        </div>
+                                                        <?php echo e(Form::open(['route' => 'approve.employee.leave', 'method' => 'post'])); ?>
 
-                                                            <?php echo csrf_field(); ?>
-                                                            <div class="modal-body">
-                                                                <div class="row">
-                                                                    <div class="col-12">
-                                                                        <table class="table">
-                                                                            <tr role="row">
-                                                                                <th><?php echo e(__('Employee')); ?></th>
-                                                                                <td><?php echo e($leave->leave->employees->name); ?>
+                                                        <?php echo csrf_field(); ?>
+                                                        <div class="modal-body">
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <table class="table">
+                                                                        <tr role="row">
+                                                                            <th><?php echo e(__('Employee')); ?></th>
+                                                                            <td><?php echo e($leave->leave->employees->name); ?>
 
-                                                                                </td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <th><?php echo e(__('Leave Type ')); ?></th>
-                                                                                <td><?php echo e(!empty(\Auth::user()->getLeaveType($leave->leave->leave_type_id)) ? \Auth::user()->getLeaveType($leave->leave->leave_type_id)->title : ''); ?>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th><?php echo e(__('Leave Type ')); ?></th>
+                                                                            <td><?php echo e(!empty(\Auth::user()->getLeaveType($leave->leave->leave_type_id)) ? \Auth::user()->getLeaveType($leave->leave->leave_type_id)->title : ''); ?>
 
-                                                                                </td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <th><?php echo e(__('Appplied On')); ?></th>
-                                                                                <td><?php echo e(\Auth::user()->dateFormat($leave->leave->applied_on)); ?>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th><?php echo e(__('Appplied On')); ?></th>
+                                                                            <td><?php echo e(\Auth::user()->dateFormat($leave->leave->applied_on)); ?>
 
-                                                                                </td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <th><?php echo e(__('Start Date')); ?></th>
-                                                                                <td><?php echo e(\Auth::user()->dateFormat($leave->leave->start_date)); ?>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th><?php echo e(__('Start Date')); ?></th>
+                                                                            <td><?php echo e(\Auth::user()->dateFormat($leave->leave->start_date)); ?>
 
-                                                                                </td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <th><?php echo e(__('End Date')); ?></th>
-                                                                                <td><?php echo e(\Auth::user()->dateFormat($leave->leave->end_date)); ?>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th><?php echo e(__('End Date')); ?></th>
+                                                                            <td><?php echo e(\Auth::user()->dateFormat($leave->leave->end_date)); ?>
 
-                                                                                </td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <th><?php echo e(__('Leave Reason')); ?></th>
-                                                                                <td><?php echo e($leave->leave->leave_reason); ?>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th><?php echo e(__('Leave Reason')); ?></th>
+                                                                            <td><?php echo e($leave->leave->leave_reason); ?>
 
-                                                                                </td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <th><?php echo e(__('Status')); ?></th>
-                                                                                <td>
-                                                                                    <?php if($leave->status == 'Pending'): ?>
-                                                                                        <div
-                                                                                            class="badge bg-warning p-2 px-3 rounded status-badge5">
-                                                                                            <?php echo e($leave->status); ?></div>
-                                                                                    <?php elseif($leave->status == 'Approved'): ?>
-                                                                                        <div
-                                                                                            class="badge bg-success p-2 px-3 rounded status-badge5">
-                                                                                            <?php echo e($leave->status); ?></div>
-                                                                                    <?php else: ?>
-                                                                                        <div
-                                                                                            class="badge bg-danger p-2 px-3 rounded status-badge5">
-                                                                                            <?php echo e($leave->status); ?></div>
-                                                                                    <?php endif; ?>
-                                                                                </td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <th><?php echo e(__('Approved By')); ?></th>
-                                                                                <td>
-                                                                                    <?php $__currentLoopData = $approvedLeaveAll; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                                                        <div class="row mt-2">
-                                                                                            <div class="col-8">
-                                                                                                <?php echo e($item->employee->name); ?>
-
-                                                                                            </div>
-                                                                                            <?php if($item->status == 'Pending'): ?>
-                                                                                                <div class="col-4 badge bg-warning p-2 px-3 rounded status-badge5">
-                                                                                                    <?php echo e($item->status); ?></div>
-                                                                                            <?php elseif($item->status == 'Waiting'): ?>
-                                                                                                <div class="col-4 badge bg-info p-2 px-3 rounded status-badge5">
-                                                                                                    <?php echo e($item->status); ?></div>
-                                                                                            <?php elseif($item->status == 'Approved'): ?>
-                                                                                                <div class="col-4 badge bg-success p-2 px-3 rounded status-badge5">
-                                                                                                    <?php echo e($item->status); ?></div>
-                                                                                            <?php else: ?>
-                                                                                                <div class="col-4 badge bg-danger p-2 px-3 rounded status-badge5">
-                                                                                                    <?php echo e($item->status); ?></div>
-                                                                                            <?php endif; ?>
-                                                                                        </div>
-                                                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                                                                </td>
-                                                                            </tr>
-                                                                            <input type="hidden"
-                                                                                value="<?php echo e($leave->id); ?>"
-                                                                                name="leave_id">
-                                                                        </table>
-                                                                    </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th><?php echo e(__('Status')); ?></th>
+                                                                            <td>
+                                                                                <?php if($leave->status == 'Pending'): ?>
+                                                                                    <div
+                                                                                        class="badge bg-warning p-2 px-3 rounded status-badge5">
+                                                                                        <?php echo e($leave->status); ?></div>
+                                                                                <?php elseif($leave->status == 'Approved'): ?>
+                                                                                    <div
+                                                                                        class="badge bg-success p-2 px-3 rounded status-badge5">
+                                                                                        <?php echo e($leave->status); ?></div>
+                                                                                <?php else: ?>
+                                                                                    <div
+                                                                                        class="badge bg-danger p-2 px-3 rounded status-badge5">
+                                                                                        <?php echo e($leave->status); ?></div>
+                                                                                <?php endif; ?>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th><?php echo e(__('Approved By')); ?></th>
+                                                                            <td>
+                                                                                
+                                                                                <div class="approved-leave-employee">
+                                                                                    
+                                                                                </div>
+                                                                                
+                                                                            </td>
+                                                                        </tr>
+                                                                        <input type="hidden" value="<?php echo e($leave->id); ?>"
+                                                                            name="leave_id">
+                                                                    </table>
                                                                 </div>
                                                             </div>
-                                                            
+                                                        </div>
+                                                        
                                                         <?php if($leave->status == 'Pending'): ?>
                                                             <div class="modal-footer">
                                                                 <input type="submit" value="<?php echo e(__('Approved')); ?>"
@@ -295,11 +280,11 @@
                                                                     class="btn btn-danger rounded" name="status">
                                                             </div>
                                                         <?php endif; ?>
-                                                            <?php echo e(Form::close()); ?>
+                                                        <?php echo e(Form::close()); ?>
 
-                                                        </div>
                                                     </div>
                                                 </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -576,6 +561,37 @@
 
 <?php $__env->startPush('script-page'); ?>
     <script src="<?php echo e(asset('assets/js/plugins/main.min.js')); ?>"></script>
+    <script>
+        $(document).ready(function() {
+            $(document).on("click", ".approved-leave", function() {
+                var id = $(this).attr('data-id');
+                $.ajax({
+                    "url": "/get-approved-leave/" + id,
+                    "method": "get",
+                    success: function(data) {
+                        var html = '';
+                        var i;
+
+                        for (i = 0; i < data.length; i++) {
+                            html += '<div class="row mt-2"> <div class="col-8">' + data[i].employee.name + '</div>'
+                            if (data[i].status == 'Pending') {
+                                html += '<div class="col-4 badge bg-warning p-2 px-3 rounded status-badge5">' + data[i].status + '</div>'
+                            } else if (data[i].status == 'Approved') {
+                                html += '<div class="col-4 badge bg-success p-2 px-3 rounded status-badge5">' + data[i].status + '</div>'
+                            } else if (data[i].status == 'Waiting') {
+                                html += '<div class="col-4 badge bg-info p-2 px-3 rounded status-badge5">' + data[i].status + '</div>'
+                            } else {
+                                html += ' class="col-4 badge bg-danger p-2 px-3 rounded status-badge5">' + data[i].status + '</div>'
+                            } 
+                            html += '</div>'
+                        }
+                    $('.approved-leave-employee').html(html);
+                    }
+                })
+                console.log(id);
+            });
+        });
+    </script>
     <script type="text/javascript">
         (function() {
             var etitle;
