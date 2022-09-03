@@ -239,6 +239,7 @@
                     $time = mktime(12, 0, 0, $month, $d, $year);
                     if (date('m', $time) == $month) {
                         $list[] = [
+                            'id' => $d,
                             'date' => date('d', $time),
                             'dateInitial' => date('D', $time),
                             'day' => date('l', $time),
@@ -271,20 +272,21 @@
                                     // $countDetailShift = !empty($detailShift) ? count($detailShift) - 1 : 0;
                                 @endphp
                                 @foreach ($list as $key => $date)
-                                {{-- @dd() --}}
+                                    {{-- @php
+                                        $id_detail[] = $list
+                                    @endphp
+                                @dd($id_detail) --}}
                                     <td>
-                                        {{-- @dd(array_column($checkDetailArray, 'date')) --}}
                                         @php
-                                            // $checkDetailShift = !empty($item->shift->first()->detailShift[$key]) ? $item->shift->first()->detailShift[$key]->date : '';
                                             
                                             $checked = array_search($date['yearFormat'], array_column($checkDetailArray, 'date'));
-                                            // $checkedView = $checked ?
                                         @endphp
                                         @if (is_numeric($checked))
                                             @php
                                                 $checkShift = !empty($item->shift[$id]->detailShift[$id]->employeeShift);
                                                 $shift = $checkShift ? $item->shift[$id]->detailShift[$id]->employeeShift : '';
                                             @endphp
+    {{-- @dd($checkDetailArray[$key]) --}}
                                             <a href="#" class="edit-shift" data-bs-toggle="modal"
                                                 data-bs-target="#editShift" data-employeeId="{{ $item->id }}"
                                                 data-id="{{$item->shift->first()->detailShift->first()->id}}"
@@ -293,8 +295,8 @@
                                                 data-year="{{ $date['yearFormat'] }}" data-day="{{ $date['day'] }}"
                                                 data-selectYear="{{ $date['year'] }}">
                                                 <div class="fw-bold text-white p-1 rounded "
-                                                    style="background-color:{{ $item->shift->first()->detailShift->first()->employeeShift->color }}">
-                                                    {{ $item->shift->first()->detailShift->first()->employeeShift->initial }}
+                                                    style="background-color:{{ !empty($checkDetailArray[$key]['employee_shift']['color']) ? $checkDetailArray[$key]['employee_shift']['color'] : '' }}">
+                                                    {{ !empty($checkDetailArray[$key]['employee_shift']['initial']) ? $checkDetailArray[$key]['employee_shift']['initial'] : '' }}
                                                 </div>
                                             </a>
 
@@ -303,7 +305,8 @@
                                                 <div class="modal-dialog">
 
                                                     <div class="modal-content">
-                                                        <form action="{{ route('edit.shift.roaster') }}"
+                                                        <form ac
+                                                        tion="{{ route('edit.shift.roaster') }}"
                                                             method="POST">
                                                             @method('PUT')
                                                             @csrf
