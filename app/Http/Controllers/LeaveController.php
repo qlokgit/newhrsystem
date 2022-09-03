@@ -431,4 +431,12 @@ class LeaveController extends Controller
 
         return response()->json($employee);
     }
+
+    public function deleteApprovedLeave($id)
+    {
+        $leave = ApprovedLeave::find($id);
+        $leave->delete();
+
+        return redirect()->route('leave.index')->with('success', __('Employee approved leave successfully updated.'));
+    }
 }

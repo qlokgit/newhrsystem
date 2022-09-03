@@ -288,6 +288,7 @@ Route::get('termination/{id}/description', 'TerminationController@description')-
 
 Route::get('get-employee/{department}/{designation}', 'LeaveController@getEmployee')->name('get.employee.json');
 Route::get('get-approved-leave/{id}', 'HomeController@getApprovedLeave')->name('get.apprive.leave.json');
+Route::get('delete-approved-leave/{id}', 'LeaveController@deleteApprovedLeave')->name('delete.approve.leave');
 
 Route::resource('termination', 'TerminationController')->middleware(
     [
