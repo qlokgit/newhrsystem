@@ -235,6 +235,7 @@
                     $time = mktime(12, 0, 0, $month, $d, $year);
                     if (date('m', $time) == $month) {
                         $list[] = [
+                            'id' => $d,
                             'date' => date('d', $time),
                             'dateInitial' => date('D', $time),
                             'day' => date('l', $time),
@@ -268,20 +269,18 @@
                                     // $countDetailShift = !empty($detailShift) ? count($detailShift) - 1 : 0;
                                 ?>
                                 <?php $__currentLoopData = $list; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $date): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                
+                                    
                                     <td>
-                                        
                                         <?php
-                                            // $checkDetailShift = !empty($item->shift->first()->detailShift[$key]) ? $item->shift->first()->detailShift[$key]->date : '';
                                             
                                             $checked = array_search($date['yearFormat'], array_column($checkDetailArray, 'date'));
-                                            // $checkedView = $checked ?
                                         ?>
                                         <?php if(is_numeric($checked)): ?>
                                             <?php
                                                 $checkShift = !empty($item->shift[$id]->detailShift[$id]->employeeShift);
                                                 $shift = $checkShift ? $item->shift[$id]->detailShift[$id]->employeeShift : '';
                                             ?>
+    
                                             <a href="#" class="edit-shift" data-bs-toggle="modal"
                                                 data-bs-target="#editShift" data-employeeId="<?php echo e($item->id); ?>"
                                                 data-id="<?php echo e($item->shift->first()->detailShift->first()->id); ?>"
@@ -290,8 +289,8 @@
                                                 data-year="<?php echo e($date['yearFormat']); ?>" data-day="<?php echo e($date['day']); ?>"
                                                 data-selectYear="<?php echo e($date['year']); ?>">
                                                 <div class="fw-bold text-white p-1 rounded "
-                                                    style="background-color:<?php echo e($item->shift->first()->detailShift->first()->employeeShift->color); ?>">
-                                                    <?php echo e($item->shift->first()->detailShift->first()->employeeShift->initial); ?>
+                                                    style="background-color:<?php echo e(!empty($checkDetailArray[$key]['employee_shift']['color']) ? $checkDetailArray[$key]['employee_shift']['color'] : ''); ?>">
+                                                    <?php echo e(!empty($checkDetailArray[$key]['employee_shift']['initial']) ? $checkDetailArray[$key]['employee_shift']['initial'] : ''); ?>
 
                                                 </div>
                                             </a>
@@ -301,7 +300,8 @@
                                                 <div class="modal-dialog">
 
                                                     <div class="modal-content">
-                                                        <form action="<?php echo e(route('edit.shift.roaster')); ?>"
+                                                        <form ac
+                                                        tion="<?php echo e(route('edit.shift.roaster')); ?>"
                                                             method="POST">
                                                             <?php echo method_field('PUT'); ?>
                                                             <?php echo csrf_field(); ?>

@@ -106,29 +106,28 @@
             </div>
         </div>
     </div>
-
-    <div class="row">
-        <div class="form-group">
-            {{ Form::label('department_id', __('Select Department*'), ['class' => 'form-label']) }}
-            <div class="form-icon-user">
-                {{ Form::select('department_id', $departments, null, ['class' => 'form-control select2', 'id' => 'department_id', 'required' => 'required', 'placeholder' => 'Select Department']) }}
+    @if (\Auth::user()->type != 'employee')
+        <div class="row">
+            <div class="form-group">
+                {{ Form::label('department_id', __('Select Department*'), ['class' => 'form-label']) }}
+                <div class="form-icon-user">
+                    {{ Form::select('department_id', $departments, null, ['class' => 'form-control select2', 'id' => 'department_id', 'required' => 'required', 'placeholder' => 'Select Department']) }}
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            {{ Form::label('designation_id', __('Select Designation'), ['class' => 'form-label']) }}
+            <div class="form-group">
+                {{ Form::label('designation_id', __('Select Designation'), ['class' => 'form-label']) }}
 
-            <div class="form-icon-user">
-                <div class="designation_div">
-                    <select class="form-control  designation_id" name="designation_id" id="choices-multiple"
-                        placeholder="Select Designation">
-                    </select>
+                <div class="form-icon-user">
+                    <div class="designation_div">
+                        <select class="form-control  designation_id" name="designation_id" id="choices-multiple"
+                            placeholder="Select Designation">
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    @if (\Auth::user()->type != 'employee')
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group employees row d-flex align-items-center">
@@ -137,7 +136,7 @@
                     <div class="row  d-flex align-items-center">
                         <div class="col-11">
                             <select class="form-control employee_id data_employee_id" name="approved_employee_id[]"
-                               placeholder="Select Employee" required>
+                                placeholder="Select Employee" required>
                                 <option selected disabled>Select Employee</option>
                             </select>
                         </div>
@@ -175,7 +174,6 @@
     $(document).ready(function() {
 
         var selectDesignation = $('.designation_id').val();
-        console.log(selectDesignation);
         if (selectDesignation == null) {
             document.getElementById('click').style.display = 'none'
         }
@@ -228,9 +226,6 @@
         getEmployee(department_id, designation_id, 'first');
     });
 
-    // $(document).on('click', '.add-employee', function() {
-
-    // });
 
     $(".add-employee").click(function() {
         var department_id = $('#department_id').val();

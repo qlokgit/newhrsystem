@@ -145,21 +145,24 @@ class LeaveController extends Controller
             $leave->created_by       = \Auth::user()->creatorId();
             $leave->save();
 
-            $approvedEmployee = $request->approved_employee_id;
-            foreach ($approvedEmployee as $item) {
-                // $employeeApprove = Employee::find($item);
-                ApprovedLeave::create([
-                    'leave_id' => $leave->id,
-                    'employee_id' => $item,
-                    'status' => 'Waiting'
-                ]);
 
-                // $output = [
-                //     'employee' => $employeeApprove,
-                //     'leave' => $leave->with('employees')->first()
-                // ];
+            if (\Auth::user()->type != 'employee') {
+                $approvedEmployee = $request->approved_employee_id;
+                foreach ($approvedEmployee as $item) {
+                    // $employeeApprove = Employee::find($item);
+                    ApprovedLeave::create([
+                        'leave_id' => $leave->id,
+                        'employee_id' => $item,
+                        'status' => 'Waiting'
+                    ]);
 
-                // Mail::to($employeeApprove->email)->send(new \App\Mail\ApprovedLeave(($output)));
+                    // $output = [
+                    //     'employee' => $employeeApprove,
+                    //     'leave' => $leave->with('employees')->first()
+                    // ];
+
+                    // Mail::to($employeeApprove->email)->send(new \App\Mail\ApprovedLeave(($output)));
+                }
             }
 
             return redirect('/leave')->with('success', __('Leave  successfully created.'));
@@ -180,8 +183,9 @@ class LeaveController extends Controller
                 $employees  = Employee::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
                 $leavetypes = LeaveType::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('title', 'id');
                 $approvedLeave = ApprovedLeave::with('employee')->where('leave_id', $leave->id)->get();
-
-                return view('leave.edit', compact('leave', 'employees', 'leavetypes', 'approvedLeave'));
+                $departments   = Department::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+                $designations   = Designation::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+                return view('leave.edit', compact('leave', 'employees', 'leavetypes', 'approvedLeave', 'departments'));
             } else {
                 return response()->json(['error' => __('Permission denied.')], 401);
             }
@@ -262,20 +266,26 @@ class LeaveController extends Controller
 
                 $leave->save();
 
-                // if ($leave) {
-                //     // dd($request->old_approved_employee_id);
-                //     // foreach ($request->old_approved_employee_id as $value) {
-                //     //     $approveLeave = ApprovedLeave::where(['leave_id' => $leave->id, 'employee_id' => $value])->first();
-                //         foreach ($request->approved_employee_id  as $id) {
-                //             $checkApprove = ApprovedLeave::where(['leave_id' => $leave->id, 'employee_id' => $id])->first();
-                //             // dd($request->approved_employee_id );
-                //             if ($checkApprove) {
-                //                 $checkApprove->employee_id = $id;
-                //                 $checkApprove->save();
-                //             } 
-                //         // }
-                //     }
-                // }
+                if ($leave) {
+                    // dd($request->old_approved_employee_id);
+                    // foreach ($request->old_approved_employee_id as $value) {
+                    //     $approveLeave = ApprovedLeave::where(['leave_id' => $leave->id, 'employee_id' => $value])->first();
+                    foreach ($request->approved_employee_id  as $id) {
+                        $checkApprove = ApprovedLeave::where(['leave_id' => $leave->id, 'employee_id' => $id])->first();
+                        // dd($request->approved_employee_id );
+                        if ($checkApprove) {
+                            $checkApprove->employee_id = $id;
+                            $checkApprove->save();
+                        } else {
+                            ApprovedLeave::create([
+                                'leave_id' => $leave->id,
+                                'employee_id' => $id,
+                                'status' => 'Waiting'
+                            ]);
+                        }
+                        // }
+                    }
+                }
 
                 return redirect()->route('leave.index')->with('success', __('Leave successfully updated.'));
             } else {
@@ -418,7 +428,7 @@ class LeaveController extends Controller
     public function getEmployee($department, $designation)
     {
         $employee = Employee::where(['department_id' => $department, 'designation_id' => $designation])->get();
-        
+
         return response()->json($employee);
     }
 }

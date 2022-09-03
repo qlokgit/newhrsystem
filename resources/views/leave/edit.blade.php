@@ -127,13 +127,37 @@
             </div>
         </div>
     @endrole
-    {{-- @if (\Auth::user()->type != 'employee')
+    
+    @if (\Auth::user()->type != 'employee')
+        @php
+            $department = !empty($approvedLeave[0]->employee->department_id) ? $approvedLeave[0]->employee->department_id : null;
+        @endphp
+        <div class="row">
+            <div class="form-group">
+                {{ Form::label('department_id', __('Select Department*'), ['class' => 'form-label']) }}
+                <div class="form-icon-user">
+                    {{ Form::select('department_id', $departments, $department , ['class' => 'form-control select2', 'id' => 'department_id', 'required' => 'required', 'placeholder' => 'Select Department']) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ Form::label('designation_id', __('Select Designation'), ['class' => 'form-label']) }}
+
+                <div class="form-icon-user">
+                    <div class="designation_div">
+                        <select class="form-control  designation_id" name="designation_id" id="choices-multiple"
+                            placeholder="Select Designation">
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group employees row ">
                     {{ Form::label('employee_id', __('Approved By   '), ['class' => 'col-form-label']) }}
                     @foreach ($approvedLeave as $item)
-                    {!! Form::hidden('old_approved_employee_id[]', $item->employee_id) !!}
+                        {!! Form::hidden('old_approved_employee_id[]', $item->employee_id) !!}
                         <div class="row d-flex align-items-center mb-4">
                             <div class="col-11">
                                 {{ Form::select('approved_employee_id[]', $employees, $item->employee_id, ['class' => 'form-control js-example-basic-single', 'id' => 'approved_employee_id', 'placeholder' => __('Select Employee'), 'required' => 'required']) }}
@@ -148,7 +172,7 @@
                 </div>
             </div>
         </div>
-    @endif --}}
+    @endif
 </div>
 <div class="modal-footer">
     <button type="button" class="btn  btn-light" data-bs-dismiss="modal">{{ __('Close') }}</button>
@@ -157,8 +181,11 @@
 </div>
 {{ Form::close() }}
 
-{{-- <script>
+<script>
     $(document).ready(function() {
+        var department_id = $('select[name=department_id] option').filter(':selected').val();
+        getDesignation(department_id);
+
         let number = 1;
 
         $(document).on('click', '#removeRow', function() {
@@ -188,4 +215,54 @@
 
         });
     });
-</script> --}}
+
+    $(document).on('change', 'select[name=department_id]', function() {
+        var department_id = $(this).val();
+        getDesignation(department_id);
+    });
+
+    $(document).on('change', 'select[name=designation_id]', function() {
+        var department_id = $(this).val();
+        var designation_id = $('.designation_id').val();
+        document.getElementById('click').style.display = 'block'
+        getEmployee(department_id, designation_id, 'first');
+    });
+
+
+    $(".add-employee").click(function() {
+        var department_id = $('#department_id').val();
+        var designation_id = $('.designation_id').val();
+
+        getEmployee(department_id, designation_id, 'add');
+    });
+
+    function getDesignation(did) {
+
+        $.ajax({
+            url: '{{ route('employee.json') }}',
+            type: 'POST',
+            data: {
+                "department_id": did,
+                "_token": "{{ csrf_token() }}",
+            },
+            success: function(data) {
+
+                $('.designation_id').empty();
+                var emp_selct = ` <select class="form-control  designation_id" name="designation_id" id="choices-multiple"
+                                        placeholder="Select Designation" >
+                                        </select>`;
+                $('.designation_div').html(emp_selct);
+
+                $('.designation_id').append('<option value="0"> {{ __('All') }} </option>');
+                $.each(data, function(key, value) {
+                    $('.designation_id').append('<option value="' + key + '">' + value +
+                        '</option>');
+                });
+                new Choices('#choices-multiple', {
+                    removeItemButton: true,
+                });
+            }
+        });
+    }
+
+</script>
