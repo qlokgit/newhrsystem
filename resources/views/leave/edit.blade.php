@@ -127,7 +127,7 @@
             </div>
         </div>
     @endrole
-    
+
     @if (\Auth::user()->type != 'employee')
         @php
             $department = !empty($approvedLeave[0]->employee->department_id) ? $approvedLeave[0]->employee->department_id : null;
@@ -136,7 +136,7 @@
             <div class="form-group">
                 {{ Form::label('department_id', __('Select Department*'), ['class' => 'form-label']) }}
                 <div class="form-icon-user">
-                    {{ Form::select('department_id', $departments, $department , ['class' => 'form-control select2', 'id' => 'department_id', 'required' => 'required', 'placeholder' => 'Select Department']) }}
+                    {{ Form::select('department_id', $departments, $department, ['class' => 'form-control select2', 'id' => 'department_id', 'required' => 'required', 'placeholder' => 'Select Department']) }}
                 </div>
             </div>
 
@@ -156,16 +156,26 @@
             <div class="col-md-12">
                 <div class="form-group employees row ">
                     {{ Form::label('employee_id', __('Approved By   '), ['class' => 'col-form-label']) }}
-                    @foreach ($approvedLeave as $item)
+                    @foreach ($approvedLeave as $key => $item)
                         {!! Form::hidden('old_approved_employee_id[]', $item->employee_id) !!}
                         <div class="row d-flex align-items-center mb-4">
-                            <div class="col-11">
-                                {{ Form::select('approved_employee_id[]', $employees, $item->employee_id, ['class' => 'form-control js-example-basic-single', 'id' => 'approved_employee_id', 'placeholder' => __('Select Employee'), 'required' => 'required']) }}
+                            <div class="col-10">
+                                {{ Form::select('approved_employee_id[]', $employees, $item->employee_id, ['class' => 'form-control js-example-basic-single', 'id' => 'approved_employee_id', 'placeholder' => __('Select Employee'), 'required' => 'required', 'disabled' => 'disabled']) }}
                             </div>
-                            <div class="col-1">
-                                <button type="button" class="btn btn-sm btn-primary click">
-                                    <i class="ti ti-plus"></i>
-                                </button>
+                            <div class="col-2">
+                                <div class="">
+                                    <div>
+                                        <a href="{{ route('delete.approve.leave', $item->id) }}"
+                                            class="btn btn-sm btn-danger delete">
+                                            <i class="ti ti-trash"></i>
+                                        </a>
+                                    </div>
+                                    @if ($key == 0)
+                                        <button type="button" class="btn btn-sm btn-primary click ">
+                                            <i class="ti ti-plus"></i>
+                                        </button>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     @endforeach
@@ -182,34 +192,40 @@
 {{ Form::close() }}
 
 <script>
+    let number = 1;
+
+
     $(document).ready(function() {
+        $('.click').css('display', 'none')
         var department_id = $('select[name=department_id] option').filter(':selected').val();
         getDesignation(department_id);
-
-        let number = 1;
 
         $(document).on('click', '#removeRow', function() {
             $(this).closest('#inputRow').remove();
         });
 
         $('.click').click(function(e) {
+            var add_employee = $('.add_data_employee_id-'+number).val();
 
             e.preventDefault();
             // number += 1;
             number += 1;
 
             var html = `
-                    <div class="row mt-4" id="inputRow">
-                    <div class="col-11">
-                        {{ Form::select('approved_employee_id[]', $employees, null, ['class' => 'form-control js-example-basic-single', 'id' => 'approved_employee_id', 'placeholder' => __('Select Employee'), 'required' => 'required']) }}
-                    </div>
-                    <div class="col-1">
-                        <button type="button" id="removeRow" class="btn btn-sm btn-danger" >
-                            <i class="ti ti-trash"></i>
-                        </button>
-                    </div>
-                    </div>
-                    `;
+        <div class="row mt-4 d-flex align-items-center" id="inputRow">
+            <div class="col-10">
+                <select class="form-control employee_id add_data_employee_id-${number}" name="approved_employee_id[]" ""id=
+                    placeholder="Select Employee" required>
+                    <option selected disabled>Select Employee</option>
+                </select>
+            </div>
+            <div class="col-2">
+                <button type="button" id="removeRow" class="btn btn-sm btn-danger" >
+                    <i class="ti ti-trash"></i>
+                </button>
+            </div>
+        </div>
+        `;
 
             $('.employees').append(html);
 
@@ -224,17 +240,45 @@
     $(document).on('change', 'select[name=designation_id]', function() {
         var department_id = $(this).val();
         var designation_id = $('.designation_id').val();
-        document.getElementById('click').style.display = 'block'
-        getEmployee(department_id, designation_id, 'first');
+        if (designation_id != null) {
+            $('.click').css('display', 'block')
+
+        }
+        getEmployee(department_id, designation_id, 'add');
     });
 
 
-    $(".add-employee").click(function() {
+    $(".click").click(function() {
         var department_id = $('#department_id').val();
         var designation_id = $('.designation_id').val();
 
         getEmployee(department_id, designation_id, 'add');
     });
+
+    var base_url = window.location.origin;
+
+
+    function getEmployee(department, designation, type) {
+        $.ajax({
+            'url': base_url + '/get-employee/' + department + '/' + designation,
+            'type': 'GET',
+            success: function(data) {
+                var html = '';
+                var i;
+                html += '<option selected disabled>Select Employee</option>';
+                for (i = 0; i < data.length; i++) {
+                    html += '<option value=' + data[i].id + '>' + data[i]
+                        .name + '</option>';
+                }
+
+                if (type == 'add') {
+                    $('.add_data_employee_id-' + number).html(html);
+                } else {
+                    $('.data_employee_id').html(html);
+                }
+            }
+        })
+    }
 
     function getDesignation(did) {
 
@@ -264,5 +308,4 @@
             }
         });
     }
-
 </script>
