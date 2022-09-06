@@ -1373,8 +1373,8 @@ Route::resource('contract', 'ContractController')->middleware(['auth', 'XSS']);
 Route::resource('employee_shift', 'EmployeeShiftController')->middleware(['auth', 'XSS']);
 Route::get('/get-employee-by-department/{id}', ['as' => 'get.employee.department', 'uses' => 'ShiftController@getEmployeeByDepartment',])->middleware(['auth', 'XSS']);
 Route::post('/set-employee-by-department', ['as' => 'set.employee.department', 'uses' => 'ShiftController@setEmployeeByDate',])->middleware(['auth', 'XSS']);
-Route::delete('/delete-shift-roaster/{id}', ['as' => 'delete.shift.roaster', 'uses' => 'ShiftController@deleteShiftRoaster',])->middleware(['auth', 'XSS']);
-Route::put('/edit-shift-roaster', ['as' => 'edit.shift.roaster', 'uses' => 'ShiftController@editShiftRoaster',])->middleware(['auth', 'XSS']);
+Route::delete('/delete-shift-roaster', ['as' => 'delete.shift.roaster', 'uses' => 'ShiftController@deleteShiftRoaster',])->middleware(['auth', 'XSS']);
+Route::post('/edit-shift-roaster', ['as' => 'edit.shift.roaster', 'uses' => 'ShiftController@editShiftRoaster',])->middleware(['auth', 'XSS']);
 
 
 Route::post('/contract/{id}/file', ['as' => 'contracts.file.upload', 'uses' => 'ContractController@fileUpload',])->middleware(['auth', 'XSS']);
