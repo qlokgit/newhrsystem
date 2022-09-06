@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\Reader\Xls\RC4;
 
+use function PHPSTORM_META\map;
+
 class ShiftController extends Controller
 {
     /**
@@ -288,9 +290,10 @@ class ShiftController extends Controller
         return redirect()->route('shift.index')->with('success', __('Shift Roster successfully created.'));
     }
 
-    public function deleteShiftRoaster($id)
+    public function deleteShiftRoaster(Request $request)
     {
-        $data = DetailShift::find($id);
+        // dd($request->all());
+        $data = DetailShift::find($request->shift_id_d);
         if ($data) {
             $data->delete();
             return redirect()->route('shift.index')->with('success', __('Shift Roster success delete.'));

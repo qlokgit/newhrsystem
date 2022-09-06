@@ -26,13 +26,13 @@
 @endpush
 @section('content')
     @php
-    $month = [];
-    for ($m = 1; $m <= 12; $m++) {
-        $month[] = [
-            'name' => date('F', mktime(0, 0, 0, $m, $m, $filter['year'])),
-            'month' => date('d', mktime(0, 0, 0, $m, $m, $filter['year'])),
-        ];
-    }
+        $month = [];
+        for ($m = 1; $m <= 12; $m++) {
+            $month[] = [
+                'name' => date('F', mktime(0, 0, 0, $m, $m, $filter['year'])),
+                'month' => date('d', mktime(0, 0, 0, $m, $m, $filter['year'])),
+            ];
+        }
     @endphp
     {{-- @dd($month) --}}
     <div class="card py-2">
@@ -130,7 +130,9 @@
                                             <select class="form-control" name="employee_shift_id">
                                                 <option value="">Nothing Selected</option>
                                                 @foreach ($employeeShift as $item)
-                                                    <option value={{ $item->id }}>{{ $item->name . ' ( ' . date('H:i', strtotime($item->time_start)). ' - ' . date('H:i', strtotime($item->time_end)) .' )' }}</option>
+                                                    <option value={{ $item->id }}>
+                                                        {{ $item->name . ' ( ' . date('H:i', strtotime($item->time_start)) . ' - ' . date('H:i', strtotime($item->time_end)) . ' )' }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -271,11 +273,8 @@
                                     $checkDetailArray = !empty($detailShift) ? $detailShift->toArray() : [];
                                     // $countDetailShift = !empty($detailShift) ? count($detailShift) - 1 : 0;
                                 @endphp
+                                {{-- @dd($item->shift->first()->detailShift->get()) --}}
                                 @foreach ($list as $key => $date)
-                                    {{-- @php
-                                        $id_detail[] = $list
-                                    @endphp
-                                @dd($id_detail) --}}
                                     <td>
                                         @php
                                             
@@ -285,18 +284,18 @@
                                             @php
                                                 $checkShift = !empty($item->shift[$id]->detailShift[$id]->employeeShift);
                                                 $shift = $checkShift ? $item->shift[$id]->detailShift[$id]->employeeShift : '';
+                                                $idShift = !empty($item->shift[$id]->detailShift[$id]->id) ? $item->shift[$id]->detailShift[$id]->id : '';
                                             @endphp
-    {{-- @dd($checkDetailArray[$key]) --}}
                                             <a href="#" class="edit-shift" data-bs-toggle="modal"
                                                 data-bs-target="#editShift" data-employeeId="{{ $item->id }}"
-                                                data-id="{{$item->shift->first()->detailShift->first()->id}}"
+                                                data-id="{{ !empty($checkDetailArray[$key]['id']) ? $checkDetailArray[$key]['id'] : '' }}"
                                                 data-employeeName="{{ $item->name }}"
                                                 data-employeeType="{{ $item->user->type }}"
                                                 data-year="{{ $date['yearFormat'] }}" data-day="{{ $date['day'] }}"
                                                 data-selectYear="{{ $date['year'] }}">
                                                 <div class="fw-bold text-white p-1 rounded "
-                                                    style="background-color:{{ !empty($checkDetailArray[$key]['employee_shift']['color']) ? $checkDetailArray[$key]['employee_shift']['color'] : '' }}">
-                                                    {{ !empty($checkDetailArray[$key]['employee_shift']['initial']) ? $checkDetailArray[$key]['employee_shift']['initial'] : '' }}
+                                                    style="background-color:{{ isset($item->shift->first()->detailShift[$key]) ? $item->shift->first()->detailShift[$key]->employeeShift->color : '' }}">
+                                                    {{ isset($item->shift->first()->detailShift[$key]) ? $item->shift->first()->detailShift[$key]->employeeShift->initial : '' }}
                                                 </div>
                                             </a>
 
@@ -305,10 +304,8 @@
                                                 <div class="modal-dialog">
 
                                                     <div class="modal-content">
-                                                        <form ac
-                                                        tion="{{ route('edit.shift.roaster') }}"
-                                                            method="POST">
-                                                            @method('PUT')
+                                                        <form action="{{ route('edit.shift.roaster') }}" method="POST">
+                                                            {{-- @method('PUT') --}}
                                                             @csrf
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title">Edit Employee Shift
@@ -340,7 +337,8 @@
                                                                             <option value="">Nothing Selected
                                                                             </option>
                                                                             @foreach ($employeeShift as $val)
-                                                                                <option value={{ $val->id }} {{$item->shift->first()->detailShift->first()->employeeShift->id == $val->id ? 'selected' : ''}}>
+                                                                                <option value={{ $val->id }}
+                                                                                    {{ $item->shift->first()->detailShift->first()->employeeShift->id == $val->id ? 'selected' : '' }}>
                                                                                     {{ $val->name }}
                                                                                 </option>
                                                                             @endforeach
@@ -351,8 +349,8 @@
                                                                     id="edit_employee_ids" value="">
                                                                 <input type="hidden" name="select_year"
                                                                     id="edit_select_year" value="">
-                                                                    <input type="hidden" name="shift_id"
-                                                                    id="shift_id" value="">
+                                                                <input type="hidden" name="shift_id" id="shift_id"
+                                                                    value="">
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-secondary"
@@ -362,10 +360,15 @@
                                                                     changes</button>
                                                             </div>
                                                         </form>
-                                                        <form action="{{route('delete.shift.roaster', $item->shift->first()->detailShift->first()->id)}}" method="post">
-                                                            @csrf
+                                                        <form
+                                                            action="{{ route('delete.shift.roaster', $item->shift->first()->detailShift->first()->id) }}"
+                                                            method="post">
                                                             @method('DELETE')
-                                                            <input type="submit" value="DELETE" style="float: right;margin-right: 20px;margin-bottom: 20px;" class="btn btn-danger">
+                                                            @csrf
+                                                            <input type="hidden" name="shift_id_d" id="shift_id_d">
+                                                            <input type="submit" value="DELETE"
+                                                                style="float: right;margin-right: 20px;margin-bottom: 20px;"
+                                                                class="btn btn-danger">
                                                         </form>
                                                     </div>
                                                 </div>
@@ -493,8 +496,10 @@
                 $('#edit-employee-type').html(type)
                 $('.edit-text-date').html(`Date: ${selectYear} (${day})`)
                 document.getElementById("edit_employee_ids").value = id;
+                document.getElementById("shift_id_d").value = shiftId;
                 document.getElementById("edit_select_year").value = year;
                 document.getElementById("shift_id").value = shiftId;
+                console.log(shiftId);
             });
         });
 

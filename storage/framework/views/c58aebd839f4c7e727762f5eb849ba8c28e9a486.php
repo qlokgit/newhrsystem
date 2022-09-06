@@ -25,13 +25,13 @@
 <?php $__env->stopPush(); ?>
 <?php $__env->startSection('content'); ?>
     <?php
-    $month = [];
-    for ($m = 1; $m <= 12; $m++) {
-        $month[] = [
-            'name' => date('F', mktime(0, 0, 0, $m, $m, $filter['year'])),
-            'month' => date('d', mktime(0, 0, 0, $m, $m, $filter['year'])),
-        ];
-    }
+        $month = [];
+        for ($m = 1; $m <= 12; $m++) {
+            $month[] = [
+                'name' => date('F', mktime(0, 0, 0, $m, $m, $filter['year'])),
+                'month' => date('d', mktime(0, 0, 0, $m, $m, $filter['year'])),
+            ];
+        }
     ?>
     
     <div class="card py-2">
@@ -127,7 +127,10 @@
                                             <select class="form-control" name="employee_shift_id">
                                                 <option value="">Nothing Selected</option>
                                                 <?php $__currentLoopData = $employeeShift; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                    <option value=<?php echo e($item->id); ?>><?php echo e($item->name . ' ( ' . date('H:i', strtotime($item->time_start)). ' - ' . date('H:i', strtotime($item->time_end)) .' )'); ?></option>
+                                                    <option value=<?php echo e($item->id); ?>>
+                                                        <?php echo e($item->name . ' ( ' . date('H:i', strtotime($item->time_start)) . ' - ' . date('H:i', strtotime($item->time_end)) . ' )'); ?>
+
+                                                    </option>
                                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </select>
                                         </div>
@@ -268,8 +271,8 @@
                                     $checkDetailArray = !empty($detailShift) ? $detailShift->toArray() : [];
                                     // $countDetailShift = !empty($detailShift) ? count($detailShift) - 1 : 0;
                                 ?>
+                                
                                 <?php $__currentLoopData = $list; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $date): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    
                                     <td>
                                         <?php
                                             
@@ -279,18 +282,18 @@
                                             <?php
                                                 $checkShift = !empty($item->shift[$id]->detailShift[$id]->employeeShift);
                                                 $shift = $checkShift ? $item->shift[$id]->detailShift[$id]->employeeShift : '';
+                                                $idShift = !empty($item->shift[$id]->detailShift[$id]->id) ? $item->shift[$id]->detailShift[$id]->id : '';
                                             ?>
-    
                                             <a href="#" class="edit-shift" data-bs-toggle="modal"
                                                 data-bs-target="#editShift" data-employeeId="<?php echo e($item->id); ?>"
-                                                data-id="<?php echo e($item->shift->first()->detailShift->first()->id); ?>"
+                                                data-id="<?php echo e(!empty($checkDetailArray[$key]['id']) ? $checkDetailArray[$key]['id'] : ''); ?>"
                                                 data-employeeName="<?php echo e($item->name); ?>"
                                                 data-employeeType="<?php echo e($item->user->type); ?>"
                                                 data-year="<?php echo e($date['yearFormat']); ?>" data-day="<?php echo e($date['day']); ?>"
                                                 data-selectYear="<?php echo e($date['year']); ?>">
                                                 <div class="fw-bold text-white p-1 rounded "
-                                                    style="background-color:<?php echo e(!empty($checkDetailArray[$key]['employee_shift']['color']) ? $checkDetailArray[$key]['employee_shift']['color'] : ''); ?>">
-                                                    <?php echo e(!empty($checkDetailArray[$key]['employee_shift']['initial']) ? $checkDetailArray[$key]['employee_shift']['initial'] : ''); ?>
+                                                    style="background-color:<?php echo e(isset($item->shift->first()->detailShift[$key]) ? $item->shift->first()->detailShift[$key]->employeeShift->color : ''); ?>">
+                                                    <?php echo e(isset($item->shift->first()->detailShift[$key]) ? $item->shift->first()->detailShift[$key]->employeeShift->initial : ''); ?>
 
                                                 </div>
                                             </a>
@@ -300,10 +303,8 @@
                                                 <div class="modal-dialog">
 
                                                     <div class="modal-content">
-                                                        <form ac
-                                                        tion="<?php echo e(route('edit.shift.roaster')); ?>"
-                                                            method="POST">
-                                                            <?php echo method_field('PUT'); ?>
+                                                        <form action="<?php echo e(route('edit.shift.roaster')); ?>" method="POST">
+                                                            
                                                             <?php echo csrf_field(); ?>
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title">Edit Employee Shift
@@ -335,7 +336,9 @@
                                                                             <option value="">Nothing Selected
                                                                             </option>
                                                                             <?php $__currentLoopData = $employeeShift; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                                                <option value=<?php echo e($val->id); ?> <?php echo e($item->shift->first()->detailShift->first()->employeeShift->id == $val->id ? 'selected' : ''); ?>>
+                                                                                <option value=<?php echo e($val->id); ?>
+
+                                                                                    <?php echo e($item->shift->first()->detailShift->first()->employeeShift->id == $val->id ? 'selected' : ''); ?>>
                                                                                     <?php echo e($val->name); ?>
 
                                                                                 </option>
@@ -347,8 +350,8 @@
                                                                     id="edit_employee_ids" value="">
                                                                 <input type="hidden" name="select_year"
                                                                     id="edit_select_year" value="">
-                                                                    <input type="hidden" name="shift_id"
-                                                                    id="shift_id" value="">
+                                                                <input type="hidden" name="shift_id" id="shift_id"
+                                                                    value="">
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-secondary"
@@ -358,10 +361,15 @@
                                                                     changes</button>
                                                             </div>
                                                         </form>
-                                                        <form action="<?php echo e(route('delete.shift.roaster', $item->shift->first()->detailShift->first()->id)); ?>" method="post">
-                                                            <?php echo csrf_field(); ?>
+                                                        <form
+                                                            action="<?php echo e(route('delete.shift.roaster', $item->shift->first()->detailShift->first()->id)); ?>"
+                                                            method="post">
                                                             <?php echo method_field('DELETE'); ?>
-                                                            <input type="submit" value="DELETE" style="float: right;margin-right: 20px;margin-bottom: 20px;" class="btn btn-danger">
+                                                            <?php echo csrf_field(); ?>
+                                                            <input type="hidden" name="shift_id_d" id="shift_id_d">
+                                                            <input type="submit" value="DELETE"
+                                                                style="float: right;margin-right: 20px;margin-bottom: 20px;"
+                                                                class="btn btn-danger">
                                                         </form>
                                                     </div>
                                                 </div>
@@ -490,8 +498,10 @@
                 $('#edit-employee-type').html(type)
                 $('.edit-text-date').html(`Date: ${selectYear} (${day})`)
                 document.getElementById("edit_employee_ids").value = id;
+                document.getElementById("shift_id_d").value = shiftId;
                 document.getElementById("edit_select_year").value = year;
                 document.getElementById("shift_id").value = shiftId;
+                console.log(shiftId);
             });
         });
 

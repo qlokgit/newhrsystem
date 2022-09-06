@@ -182,7 +182,7 @@ class LeaveController extends Controller
             if ($leave->created_by == \Auth::user()->creatorId()) {
                 $employees  = Employee::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
                 $leavetypes = LeaveType::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('title', 'id');
-                $approvedLeave = ApprovedLeave::with('employee')->where('leave_id', $leave->id)->get();
+                $approvedLeave = ApprovedLeave::with('employee.designation')->where('leave_id', $leave->id)->get();
                 $departments   = Department::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
                 $designations   = Designation::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
                 return view('leave.edit', compact('leave', 'employees', 'leavetypes', 'approvedLeave', 'departments'));
@@ -437,6 +437,6 @@ class LeaveController extends Controller
         $leave = ApprovedLeave::find($id);
         $leave->delete();
 
-        return redirect()->route('leave.index')->with('success', __('Employee approved leave successfully updated.'));
+        return redirect()->route('leave.index')->with('success', __('Employee approved leave successfully delete.'));
     }
 }
