@@ -148,7 +148,7 @@
                                 
                                 <?php $__currentLoopData = $approvedLeave; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $leave): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <tr>
-                                        <td><?php echo e($leave->leave->employees->name); ?></td>
+                                        <td><?php echo e(!empty($leave->leave->employees) ? $leave->leave->employees->name : ''); ?></td>
                                         <td><?php echo e(!empty(\Auth::user()->getLeaveType($leave->leave->leave_type_id)) ? \Auth::user()->getLeaveType($leave->leave->leave_type_id)->title : ''); ?>
 
                                         </td>
