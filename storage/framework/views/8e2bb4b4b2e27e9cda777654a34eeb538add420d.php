@@ -212,7 +212,7 @@
         });
 
         $(document).on('change', '.designation_id-' + number, function() {
-            var department_id = $(this).val();
+            var department_id = $('.department_id-' + number).val();
             var designation_id = $('.designation_id-' + number).val();
             getEmployee(department_id, designation_id, 'add');
         });
@@ -221,7 +221,7 @@
 
 
     $(document).on('change', '.designation_id', function() {
-        var department_id = $(this).val();
+        var department_id = $('.department_id').val();
         var designation_id = $('.designation_id').val();
         getEmployee(department_id, designation_id, 'first');
     });
@@ -279,6 +279,7 @@
     var base_url = window.location.origin;
 
     function getEmployee(department, designation, type) {
+        console.log(department + ' - ' + designation + ' - ' + type);
         $.ajax({
             'url': base_url + '/get-employee/' + department + '/' + designation,
             'type': 'GET',
