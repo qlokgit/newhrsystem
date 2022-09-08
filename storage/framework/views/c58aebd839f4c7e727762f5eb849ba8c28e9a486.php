@@ -275,25 +275,25 @@
                                 <?php $__currentLoopData = $list; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $date): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <td>
                                         <?php
-                                            
                                             $checked = array_search($date['yearFormat'], array_column($checkDetailArray, 'date'));
                                         ?>
+                                        
                                         <?php if(is_numeric($checked)): ?>
                                             <?php
                                                 $checkShift = !empty($item->shift[$id]->detailShift[$id]->employeeShift);
                                                 $shift = $checkShift ? $item->shift[$id]->detailShift[$id]->employeeShift : '';
                                                 $idShift = !empty($item->shift[$id]->detailShift[$id]->id) ? $item->shift[$id]->detailShift[$id]->id : '';
+                                                $getDateShift = !empty($detailShift[$key]->date) ? $detailShift[$key]->date : '';
                                             ?>
                                             <a href="#" class="edit-shift" data-bs-toggle="modal"
                                                 data-bs-target="#editShift" data-employeeId="<?php echo e($item->id); ?>"
-                                                data-id="<?php echo e(!empty($checkDetailArray[$key]['id']) ? $checkDetailArray[$key]['id'] : ''); ?>"
+                                                data-id="<?php echo e($checkDetailArray[$checked]['id']); ?>"
                                                 data-employeeName="<?php echo e($item->name); ?>"
                                                 data-employeeType="<?php echo e($item->user->type); ?>"
                                                 data-year="<?php echo e($date['yearFormat']); ?>" data-day="<?php echo e($date['day']); ?>"
                                                 data-selectYear="<?php echo e($date['year']); ?>">
-                                                <div class="fw-bold text-white p-1 rounded "
-                                                    style="background-color:<?php echo e(isset($item->shift->first()->detailShift[$key]) ? $item->shift->first()->detailShift[$key]->employeeShift->color : ''); ?>">
-                                                    <?php echo e(isset($item->shift->first()->detailShift[$key]) ? $item->shift->first()->detailShift[$key]->employeeShift->initial : ''); ?>
+                                                <div class="fw-bold text-white p-1 rounded "style="background-color:<?php echo e($checkDetailArray[$checked]['employee_shift']['color']); ?>">
+                                                    <?php echo e($checkDetailArray[$checked]['employee_shift']['initial']); ?>
 
                                                 </div>
                                             </a>

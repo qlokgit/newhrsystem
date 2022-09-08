@@ -144,7 +144,7 @@
                                 {{-- @dd($approvedLeave) --}}
                                 @foreach ($approvedLeave as $leave)
                                     <tr>
-                                        <td>{{ $leave->leave->employees->name }}</td>
+                                        <td>{{ !empty($leave->leave->employees) ? $leave->leave->employees->name : '' }}</td>
                                         <td>{{ !empty(\Auth::user()->getLeaveType($leave->leave->leave_type_id)) ? \Auth::user()->getLeaveType($leave->leave->leave_type_id)->title : '' }}
                                         </td>
                                         <td>{{ \Auth::user()->dateFormat($leave->leave->applied_on) }}</td>

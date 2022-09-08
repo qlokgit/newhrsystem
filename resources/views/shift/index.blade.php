@@ -277,25 +277,25 @@
                                 @foreach ($list as $key => $date)
                                     <td>
                                         @php
-                                            
                                             $checked = array_search($date['yearFormat'], array_column($checkDetailArray, 'date'));
                                         @endphp
+                                        {{-- {{$checked}} --}}
                                         @if (is_numeric($checked))
                                             @php
                                                 $checkShift = !empty($item->shift[$id]->detailShift[$id]->employeeShift);
                                                 $shift = $checkShift ? $item->shift[$id]->detailShift[$id]->employeeShift : '';
                                                 $idShift = !empty($item->shift[$id]->detailShift[$id]->id) ? $item->shift[$id]->detailShift[$id]->id : '';
+                                                $getDateShift = !empty($detailShift[$key]->date) ? $detailShift[$key]->date : '';
                                             @endphp
                                             <a href="#" class="edit-shift" data-bs-toggle="modal"
                                                 data-bs-target="#editShift" data-employeeId="{{ $item->id }}"
-                                                data-id="{{ !empty($checkDetailArray[$key]['id']) ? $checkDetailArray[$key]['id'] : '' }}"
+                                                data-id="{{ $checkDetailArray[$checked]['id'] }}"
                                                 data-employeeName="{{ $item->name }}"
                                                 data-employeeType="{{ $item->user->type }}"
                                                 data-year="{{ $date['yearFormat'] }}" data-day="{{ $date['day'] }}"
                                                 data-selectYear="{{ $date['year'] }}">
-                                                <div class="fw-bold text-white p-1 rounded "
-                                                    style="background-color:{{ isset($item->shift->first()->detailShift[$key]) ? $item->shift->first()->detailShift[$key]->employeeShift->color : '' }}">
-                                                    {{ isset($item->shift->first()->detailShift[$key]) ? $item->shift->first()->detailShift[$key]->employeeShift->initial : '' }}
+                                                <div class="fw-bold text-white p-1 rounded "style="background-color:{{$checkDetailArray[$checked]['employee_shift']['color']}}">
+                                                    {{$checkDetailArray[$checked]['employee_shift']['initial']}}
                                                 </div>
                                             </a>
 

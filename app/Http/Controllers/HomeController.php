@@ -11,6 +11,7 @@ use App\Models\Event;
 use App\Models\LandingPageSection;
 use App\Models\Meeting;
 use App\Models\Job;
+use App\Models\Leave;
 use App\Models\Order;
 use App\Models\Payees;
 use App\Models\Payer;
@@ -86,7 +87,7 @@ class HomeController extends Controller
                 $officeTime['startTime'] = Utility::getValByName('company_start_time');
                 $officeTime['endTime']   = Utility::getValByName('company_end_time');
 
-                $approvedLeave = ApprovedLeave::with('leave.employees')->where('employee_id', $emp->id)->where('status', '!=' ,'Waiting')->get();
+                $approvedLeave = ApprovedLeave::with('leave.employees')->where('employee_id', $emp->id)->where('status', '!=', 'Waiting')->get();
                 if (count($approvedLeave) != 0) {
                     $approvedLeaveAll = ApprovedLeave::with('employee')->where('leave_id', $approvedLeave[0]->leave_id)->get();
                 } else {
@@ -225,17 +226,20 @@ class HomeController extends Controller
             'status' => $request->status
         ]);
 
-        
-        $getApprovedLeave = ApprovedLeave::with('employee')->where(['leave_id' => $leave->leave_id, 'status' => 'Pending'])->orderBy('id', 'asc')->first();
-        $getApprovedLeave->status = 'Pending';
-        $getApprovedLeave->save();
+        $getApprovedLeave = ApprovedLeave::with('employee')->where(['leave_id' => $leave->leave_id, 'status' => 'Waiting'])->orderBy('id', 'asc')->first();
+        if ($getApprovedLeave) {
+            $getApprovedLeave->status = 'Pending';
+            $getApprovedLeave->save();
 
-        $output = [
-            'employee' => $getApprovedLeave->employee,
-            'leave' => $emp->name
-        ];
+            $output = [
+                'employee' => $getApprovedLeave->employee,
+                'leave' => $emp->name
+            ];
 
-        Mail::to($getApprovedLeave->employee->email)->send(new \App\Mail\ApprovedLeave(($output)));
+            Mail::to($getApprovedLeave->employee->email)->send(new \App\Mail\ApprovedLeave(($output)));
+        } else {
+            Leave::with('approvedLeave.employee')->where('id', $leave->leave_id)->update(['status' => 'Approved']);
+        }
 
         return redirect('/home')->with('success', __('Approved Leave successfully.'));
     }

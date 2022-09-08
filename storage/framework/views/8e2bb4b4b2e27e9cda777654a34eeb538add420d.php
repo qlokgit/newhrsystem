@@ -85,7 +85,7 @@
                 <?php echo e(Form::label('department_id', __('Select Department*'), ['class' => 'form-label'])); ?>
 
                 <div class="form-icon-user">
-                    <?php echo e(Form::select('department_id', $departments, null, ['class' => 'form-control select2 department_id', 'id' => 'department_id', 'required' => 'required', 'placeholder' => 'Select Department'])); ?>
+                    <?php echo e(Form::select('department_id', $departments, null, ['class' => 'form-control select2 department_id', 'id' => 'department_id', 'placeholder' => 'Select Department', 'required'])); ?>
 
                 </div>
             </div>
@@ -96,7 +96,7 @@
 
                 <div class="form-icon-user">
                     <div class="designation_div">
-                        <select class="form-control designation_id" name="designation_id" id="choices-multiple"
+                        <select class="form-control designation_id" name="designation_id" id="choices-multiple" required
                             placeholder="Select Designation">
                         </select>
                     </div>
@@ -153,7 +153,7 @@
                                 <?php echo e(Form::label('department_id', __('Select Department*'), ['class' => 'form-label'])); ?>
 
                                 <div class="form-icon-user">
-                                    <?php echo e(Form::select('department_id', $departments, null, ['class' => 'form-control select2 department_id-${number}', 'id' => 'department_id-${number}', 'required' => 'required', 'placeholder' => 'Select Department'])); ?>
+                                    <?php echo e(Form::select('department_id', $departments, null, ['class' => 'form-control select2 department_id-${number}', 'id' => 'department_id-${number}', 'placeholder' => 'Select Department', 'required'])); ?>
 
                                 </div>
                             </div>

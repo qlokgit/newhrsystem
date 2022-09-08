@@ -230,7 +230,7 @@
                                                 {{ $leave->status }}</div>
                                         @elseif($leave->status == 'Approved')
                                             @php
-                                                $status = array_column($leaves[0]->approvedLeave->toArray(), 'status');
+                                                $status = array_column($leave->approvedLeave->toArray(), 'status');
                                                 $checkStatus = count(array_unique($status)) === 1 && end($status) === 'Approved';
                                             @endphp
                                             @if ($checkStatus)
@@ -299,7 +299,7 @@
                                                     <a href="#" class="mx-3 btn btn-sm  align-items-center bs-pass-para"
                                                         data-bs-toggle="tooltip" title="" data-bs-original-title="Delete"
                                                         aria-label="Delete"><i
-                                                            class="ti ti-trash text-white text-white"></i></a>
+                                                            class="ti ti-trash text-white"></i></a>
                                                     </form>
                                                 </div>
                                             @endcan
