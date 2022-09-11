@@ -8,7 +8,7 @@
 <body>
     Halo {{$leave['employee']->name}}
     <p>
-       <b>{{$leave['leave']}}</b> meminta persutujuan cuti dari anda
+       <b>{{$leave['type'] == 'hr' ? $leave['leave']['employees']['name'] : $leave['leave'] }}</b> meminta persutujuan cuti dari anda
        <p>silahkan approve status cuti di dashboard</p>
        <p><a href="{{route('home')}}">Masuk</a></p>
     </p>

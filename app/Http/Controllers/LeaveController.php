@@ -354,7 +354,8 @@ class LeaveController extends Controller
 
         $output = [
             'employee' => $getApprovedLeave->employee,
-            'leave' => $leave->with('employees')->first()
+            'leave' => $leave->with('employees')->first(),
+            'type' => 'hr'
         ];
 
         Mail::to($getApprovedLeave->employee->email)->send(new \App\Mail\ApprovedLeave(($output)));
