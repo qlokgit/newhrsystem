@@ -1358,7 +1358,7 @@ Route::post('setting/telegram', 'SettingsController@telegram')->name('telegram.s
 //twilio
 Route::post('setting/twilio', 'SettingsController@twilio')->name('twilio.setting');
 
-// recaptcha
+// recaptcha/orders
 Route::post('/recaptcha-settings', ['as' => 'recaptcha.settings.store', 'uses' => 'SettingsController@recaptchaSettingStore'])->middleware(['auth', 'XSS']);
 
 // user reset password

@@ -74,6 +74,10 @@ class AuthenticatedSessionController extends Controller
         }
 
         $user =\Auth::user();
+
+        if($user == ''){
+            return redirect()->back();
+        }
         // dd($user);
         if($user->type == 'company')
         {
