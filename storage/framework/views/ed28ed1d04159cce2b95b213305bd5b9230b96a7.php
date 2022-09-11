@@ -237,7 +237,6 @@
     });
 
     $(document).on('change', '.department_id', function() {
-        console.log('tes');
         var department_id = $(this).val();
         getDesignation(department_id, 'first');
     });
@@ -250,7 +249,7 @@
         });
 
         $(document).on('change', '.designation_id-' + number, function() {
-            var department_id = $(this).val();
+            var department_id = $('.department_id-' + number).val();
             var designation_id = $('.designation_id-' + number).val();
             getEmployee(department_id, designation_id, 'add');
         });

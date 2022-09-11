@@ -231,12 +231,7 @@ class LeaveController extends Controller
                 ->sum('total_leave_days');
         }
 
-        $check_all_leave = $total_leave + $total_leave_this_year;
-        $remaining_leave = $num - $total_leave_this_year;
-        if ($check_all_leave > $num) {
-            return redirect()->back()->with('error', 'Tahun ini kamu sudah ambil, ' . $total_leave_this_year . ' kali cuti tersisa,  ' . $remaining_leave . ' kali');
-        }
-
+        
         $leave = Leave::find($leave);
         if (\Auth::user()->can('Edit Leave')) {
             if ($leave->created_by == Auth::user()->creatorId()) {
