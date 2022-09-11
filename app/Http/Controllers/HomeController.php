@@ -233,7 +233,8 @@ class HomeController extends Controller
 
             $output = [
                 'employee' => $getApprovedLeave->employee,
-                'leave' => $emp->name
+                'leave' => $emp->name,
+                'type' => 'employee'
             ];
 
             Mail::to($getApprovedLeave->employee->email)->send(new \App\Mail\ApprovedLeave(($output)));
