@@ -242,7 +242,7 @@ class HomeController extends Controller
             Leave::with('approvedLeave.employee')->where('id', $leave->leave_id)->update(['status' => 'Approved']);
         }
 
-        return redirect('/home')->with('success', __('Approved Leave successfully.'));
+        return redirect('/leave')->with('success', __('Approved Leave successfully.'));
     }
 
     public function getApprovedLeave($id)

@@ -32,11 +32,25 @@ class LeaveController extends Controller
                 $user     = \Auth::user();
                 $employee = Employee::where('user_id', '=', $user->id)->first();
                 $leaves   = Leave::with('approvedLeave')->where('employee_id', '=', $employee->id)->get();
+
+                $emp = Employee::where('user_id', '=', $user->id)->first();
+                $approvedLeave = ApprovedLeave::with('leave.employees')->where('employee_id', $emp->id)->where('status', '!=', 'Waiting')->get();
+                if (count($approvedLeave) != 0) {
+                    $approvedLeaveAll = ApprovedLeave::with('employee')->where('leave_id', $approvedLeave[0]->leave_id)->get();
+                } else {
+                    $approvedLeaveAll = [];
+                }
+
+            return view('leave.index', compact('leaves','approvedLeave', 'approvedLeaveAll'));
+
+
+
             } else {
                 $leaves = Leave::with('approvedLeave')->where('created_by', '=', \Auth::user()->creatorId())->get();
+                return view('leave.index', compact('leaves'));
+
             }
 
-            return view('leave.index', compact('leaves'));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }

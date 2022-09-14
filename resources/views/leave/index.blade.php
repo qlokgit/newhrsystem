@@ -184,6 +184,190 @@
 @endsection
 
 @section('content')
+@if (\Auth::user()->type == 'employee')
+        <div class="col-xl-12 col-lg-12 col-md-12">
+            <div class="card">
+                <div class="card-header card-body table-border-style">
+                    <h5>{{ __('Approved Employee List') }}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>{{ __('Name') }}</th>
+                                    <th>{{ __('Leave Type') }}</th>
+                                    <th>{{ __('Applied On') }}</th>
+                                    <th>{{ __('Start Date') }}</th>
+                                    <th>{{ __('End Date') }}</th>
+                                    <th>{{ __('Total Days') }}</th>
+                                    <th>{{ __('Leave Reason') }}</th>
+                                    <th>{{ __('Status') }}</th>
+                                    <th>{{ __('Action') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody class="list">
+                                {{-- @dd($approvedLeave) --}}
+                                @foreach ($approvedLeave as $leave)
+                                    <tr>
+                                        <td>{{ !empty($leave->leave->employees) ? $leave->leave->employees->name : '' }}</td>
+                                        <td>{{ !empty(\Auth::user()->getLeaveType($leave->leave->leave_type_id)) ? \Auth::user()->getLeaveType($leave->leave->leave_type_id)->title : '' }}
+                                        </td>
+                                        <td>{{ \Auth::user()->dateFormat($leave->leave->applied_on) }}</td>
+                                        <td>{{ \Auth::user()->dateFormat($leave->leave->start_date) }}</td>
+                                        <td>{{ \Auth::user()->dateFormat($leave->leave->end_date) }}</td>
+                                        @php
+                                            $startDate = new \DateTime($leave->leave->start_date);
+                                            $endDate = new \DateTime($leave->leave->end_date);
+                                            $total_leave_days = !empty($startDate->diff($endDate)) ? $startDate->diff($endDate)->days : 0;
+                                        @endphp
+                                        <td>{{ $leave->leave->total_leave_days }}</td>
+                                        <td>{{ $leave->leave->leave_reason }}</td>
+                                        <td>
+                                            @if ($leave->status == 'Pending')
+                                                <div class="badge bg-warning p-2 px-3 rounded status-badge5">
+                                                    {{ $leave->status }}</div>
+                                            @elseif($leave->status == 'Approved')
+                                                <div class="badge bg-success p-2 px-3 rounded status-badge5">
+                                                    {{ $leave->status }}</div>
+                                            @else($leave->status == "Reject")
+                                                <div class="badge bg-danger p-2 px-3 rounded status-badge5">
+                                                    {{ $leave->status }}</div>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <div class="action-btn bg-success ms-2">
+                                                <a href="#approveModal-{{ $leave->leave->id }}"
+                                                    class="mx-3 btn btn-sm  align-items-center approved-leave"
+                                                    data-bs-toggle="modal" data-id="{{ $leave->leave_id }}"
+                                                    data-bs-target="#approveModal-{{ $leave->leave->id }}">
+                                                    <i class="ti ti-caret-right text-white"></i>
+                                                </a>
+                                            </div>
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="approveModal-{{ $leave->leave->id }}"
+                                                tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header" style="margin-left: 15px">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Modal title
+                                                            </h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                        </div>
+                                                        {{ Form::open(['route' => 'approve.employee.leave', 'method' => 'post']) }}
+                                                        @csrf
+                                                        <div class="modal-body">
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <table class="table">
+                                                                        <tr role="row">
+                                                                            <th>{{ __('Employee') }}</th>
+                                                                            <td>{{ $leave->leave->employees->name }}
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>{{ __('Leave Type ') }}</th>
+                                                                            <td>{{ !empty(\Auth::user()->getLeaveType($leave->leave->leave_type_id)) ? \Auth::user()->getLeaveType($leave->leave->leave_type_id)->title : '' }}
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>{{ __('Appplied On') }}</th>
+                                                                            <td>{{ \Auth::user()->dateFormat($leave->leave->applied_on) }}
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>{{ __('Start Date') }}</th>
+                                                                            <td>{{ \Auth::user()->dateFormat($leave->leave->start_date) }}
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>{{ __('End Date') }}</th>
+                                                                            <td>{{ \Auth::user()->dateFormat($leave->leave->end_date) }}
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>{{ __('Leave Reason') }}</th>
+                                                                            <td>{{ $leave->leave->leave_reason }}
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>{{ __('Status') }}</th>
+                                                                            <td>
+                                                                                @if ($leave->status == 'Pending')
+                                                                                    <div
+                                                                                        class="badge bg-warning p-2 px-3 rounded status-badge5">
+                                                                                        {{ $leave->status }}</div>
+                                                                                @elseif($leave->status == 'Approved')
+                                                                                    <div
+                                                                                        class="badge bg-success p-2 px-3 rounded status-badge5">
+                                                                                        {{ $leave->status }}</div>
+                                                                                @else($leave->status == "Reject")
+                                                                                    <div
+                                                                                        class="badge bg-danger p-2 px-3 rounded status-badge5">
+                                                                                        {{ $leave->status }}</div>
+                                                                                @endif
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>{{ __('Approved By') }}</th>
+                                                                            <td>
+                                                                                {{-- @foreach ($approvedLeaveAll as $item) --}}
+                                                                                <div class="approved-leave-employee">
+                                                                                    {{-- <div class="row mt-2">
+                                                                                                <div class="col-8">
+                                                                                                    {{ $item->employee->name }}
+                                                                                                </div>
+                                                                                                @if ($item->status == 'Pending')
+                                                                                                    <div class="col-4 badge bg-warning p-2 px-3 rounded status-badge5">
+                                                                                                        {{ $item->status }}</div>
+                                                                                                @elseif ($item->status == 'Waiting')
+                                                                                                    <div class="col-4 badge bg-info p-2 px-3 rounded status-badge5">
+                                                                                                        {{ $item->status }}</div>
+                                                                                                @elseif($item->status == 'Approved')
+                                                                                                    <div class="col-4 badge bg-success p-2 px-3 rounded status-badge5">
+                                                                                                        {{ $item->status }}</div>
+                                                                                                @else($item->status == "Reject")
+                                                                                                    <div class="col-4 badge bg-danger p-2 px-3 rounded status-badge5">
+                                                                                                        {{ $item->status }}</div>
+                                                                                                @endif
+                                                                                            </div> --}}
+                                                                                </div>
+                                                                                {{-- @endforeach --}}
+                                                                            </td>
+                                                                        </tr>
+                                                                        <input type="hidden" value="{{ $leave->id }}"
+                                                                            name="leave_id">
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        {{-- <div class="col-12">
+                                                        <input type="submit" class="btn-create badge-success" value="{{ __('Approval') }}" name="status">
+                                                        <input type="submit" class="btn-create bg-danger" value="{{ __('Reject') }}" name="status">
+                                                    </div> --}}
+                                                        @if ($leave->status == 'Pending')
+                                                            <div class="modal-footer">
+                                                                <input type="submit" value="{{ __('Approved') }}"
+                                                                    class="btn btn-success rounded" name="status">
+                                                                <input type="submit" value="{{ __('Reject') }}"
+                                                                    class="btn btn-danger rounded" name="status">
+                                                            </div>
+                                                        @endif
+                                                        {{ Form::close() }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+@endif
     <div class="col-xl-12">
         <div class="card">
             <div class="card-header card-body table-border-style">
@@ -352,6 +536,38 @@
                     });
 
                 }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $(document).on("click", ".approved-leave", function() {
+                var id = $(this).attr('data-id');
+                $.ajax({
+                    "url": "/get-approved-leave/" + id,
+                    "method": "get",
+                    success: function(data) {
+                        var html = '';
+                        var i;
+
+                        for (i = 0; i < data.length; i++) {
+                            html += '<div class="row mt-2"> <div class="col-8">' + data[i].employee.name + '</div>'
+                            if (data[i].status == 'Pending') {
+                                html += '<div class="col-4 badge bg-warning p-2 px-3 rounded status-badge5">' + data[i].status + '</div>'
+                            } else if (data[i].status == 'Approved') {
+                                html += '<div class="col-4 badge bg-success p-2 px-3 rounded status-badge5">' + data[i].status + '</div>'
+                            } else if (data[i].status == 'Waiting') {
+                                html += '<div class="col-4 badge bg-info p-2 px-3 rounded status-badge5">' + data[i].status + '</div>'
+                            } else {
+                                html += ' class="col-4 badge bg-danger p-2 px-3 rounded status-badge5">' + data[i].status + '</div>'
+                            } 
+                            html += '</div>'
+                        }
+                    $('.approved-leave-employee').html(html);
+                    }
+                })
+                console.log(id);
             });
         });
     </script>
