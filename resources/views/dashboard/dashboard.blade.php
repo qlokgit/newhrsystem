@@ -164,7 +164,7 @@
                                             @elseif($leave->status == 'Approved')
                                                 <div class="badge bg-success p-2 px-3 rounded status-badge5">
                                                     {{ $leave->status }}</div>
-                                            @else($leave->status == "Reject")
+                                            @else
                                                 <div class="badge bg-danger p-2 px-3 rounded status-badge5">
                                                     {{ $leave->status }}</div>
                                             @endif

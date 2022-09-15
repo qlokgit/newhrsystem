@@ -309,6 +309,8 @@ class LeaveController extends Controller
     {
         if (\Auth::user()->can('Delete Leave')) {
             if ($leave->created_by == \Auth::user()->creatorId()) {
+                $approvedLeave = ApprovedLeave::where('leave_id', $leave->id)->delete();
+
                 $leave->delete();
 
                 return redirect()->route('leave.index')->with('success', __('Leave successfully deleted.'));
