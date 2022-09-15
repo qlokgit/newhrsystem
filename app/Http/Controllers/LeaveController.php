@@ -32,11 +32,25 @@ class LeaveController extends Controller
                 $user     = \Auth::user();
                 $employee = Employee::where('user_id', '=', $user->id)->first();
                 $leaves   = Leave::with('approvedLeave')->where('employee_id', '=', $employee->id)->get();
+
+                $emp = Employee::where('user_id', '=', $user->id)->first();
+                $approvedLeave = ApprovedLeave::with('leave.employees')->where('employee_id', $emp->id)->where('status', '!=', 'Waiting')->get();
+                if (count($approvedLeave) != 0) {
+                    $approvedLeaveAll = ApprovedLeave::with('employee')->where('leave_id', $approvedLeave[0]->leave_id)->get();
+                } else {
+                    $approvedLeaveAll = [];
+                }
+
+            return view('leave.index', compact('leaves','approvedLeave', 'approvedLeaveAll'));
+
+
+
             } else {
                 $leaves = Leave::with('approvedLeave')->where('created_by', '=', \Auth::user()->creatorId())->get();
+                return view('leave.index', compact('leaves'));
+
             }
 
-            return view('leave.index', compact('leaves'));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
@@ -231,12 +245,7 @@ class LeaveController extends Controller
                 ->sum('total_leave_days');
         }
 
-        $check_all_leave = $total_leave + $total_leave_this_year;
-        $remaining_leave = $num - $total_leave_this_year;
-        if ($check_all_leave > $num) {
-            return redirect()->back()->with('error', 'Tahun ini kamu sudah ambil, ' . $total_leave_this_year . ' kali cuti tersisa,  ' . $remaining_leave . ' kali');
-        }
-
+        
         $leave = Leave::find($leave);
         if (\Auth::user()->can('Edit Leave')) {
             if ($leave->created_by == Auth::user()->creatorId()) {

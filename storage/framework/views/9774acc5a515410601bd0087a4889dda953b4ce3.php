@@ -847,11 +847,7 @@ unset($__errorArgs, $__bag); ?>
                                                     <div class="form-group col-md-12">
                                                         <label class="form-check form-switch d-inline-block">
                                                             <input type="checkbox"
-                                                                class="email-template-checkbox form-check-input"
-                                                                name="<?php echo e($EmailTemplate->id); ?>"
-                                                                <?php if($EmailTemplate->template->is_active == 1): ?> checked="checked" <?php endif; ?>
-                                                                value="<?php echo e($EmailTemplate->template->is_active == 1 ? '1' : '0'); ?>"
-                                                                data-url="<?php echo e(route('company.email.setting', $EmailTemplate->id)); ?>">
+                                                                
                                                             <span class="slider1 round"></span>
                                                         </label>
                                                     </div>

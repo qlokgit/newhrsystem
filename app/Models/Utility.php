@@ -458,86 +458,86 @@ class Utility extends Model
 
         $mailTo = array_values($mailTo);
 
-        if($usr->type != 'super admin')
-        {
-        // dd($usr->type);
+//         if($usr->type != 'super admin')
+//         {
+//         // dd($usr->type);
 
-            // find template is exist or not in our record
-            $template = EmailTemplate::where('slug', $emailTemplate)->first();
+//             // find template is exist or not in our record
+//             $template = EmailTemplate::where('slug', $emailTemplate)->first();
 
-// dd($template);
-            if(isset($template) && !empty($template))
-            {
-                // check template is active or not by company
-                $is_active = UserEmailTemplate::where('template_id', '=', $template->id)->where('user_id', '=', $usr->creatorId())->first();
+// // dd($template);
+//             if(isset($template) && !empty($template))
+//             {
+//                 // check template is active or not by company
+//                 $is_active = UserEmailTemplate::where('template_id', '=', $template->id)->where('user_id', '=', $usr->creatorId())->first();
 
-                // dd($is_active);
-                if($is_active->is_active == 1)
-                {
-                    $settings = self::settings();
+//                 // dd($is_active);
+//                 if($is_active->is_active == 1)
+//                 {
+//                     $settings = self::settings();
 
-                    // get email content language base
-                    $content = EmailTemplateLang::where('parent_id', '=', $template->id)->where('lang', 'LIKE', $usr->lang)->first();
+//                     // get email content language base
+//                     $content = EmailTemplateLang::where('parent_id', '=', $template->id)->where('lang', 'LIKE', $usr->lang)->first();
 
-                    $content->from = $template->from;
+//                     $content->from = $template->from;
                   
-                    if(!empty($content->content))
-                    {
+//                     if(!empty($content->content))
+//                     {
 
-                        $content->content = self::replaceVariable($content->content, $obj);
-                        // send email
-                        try
-                        {
-                            // dd($mailTo,$content, $settings);
-                            Mail::to($mailTo)->send(new CommonEmailTemplate($content, $settings));
-                        }
-                        catch(\Exception $e)
-                        {
-                            // dd( $e);
-                            $error = __('E-Mail has been not sent due to SMTP configuration');
-                        }
+//                         $content->content = self::replaceVariable($content->content, $obj);
+//                         // send email
+//                         try
+//                         {
+//                             // dd($mailTo,$content, $settings);
+//                             Mail::to($mailTo)->send(new CommonEmailTemplate($content, $settings));
+//                         }
+//                         catch(\Exception $e)
+//                         {
+//                             // dd( $e);
+//                             $error = __('E-Mail has been not sent due to SMTP configuration');
+//                         }
 
-                        if(isset($error))
-                        {
-                            $arReturn = [
-                                'is_success' => false,
-                                'error' => $error,
-                            ];
-                        }
-                        else
-                        {
-                            $arReturn = [
-                                'is_success' => true,
-                                'error' => false,
-                            ];
-                        }
-                    }
-                    else
-                    {
-                        $arReturn = [
-                            'is_success' => false,
-                            'error' => __('Mail not send, email is empty'),
-                        ];
-                    }
+//                         if(isset($error))
+//                         {
+//                             $arReturn = [
+//                                 'is_success' => false,
+//                                 'error' => $error,
+//                             ];
+//                         }
+//                         else
+//                         {
+//                             $arReturn = [
+//                                 'is_success' => true,
+//                                 'error' => false,
+//                             ];
+//                         }
+//                     }
+//                     else
+//                     {
+//                         $arReturn = [
+//                             'is_success' => false,
+//                             'error' => __('Mail not send, email is empty'),
+//                         ];
+//                     }
 
-                    return $arReturn;
-                }
-                else
-                {
-                    return [
-                        'is_success' => true,
-                        'error' => false,
-                    ];
-                }
-            }
-            else
-            {
-                return [
-                    'is_success' => false,
-                    'error' => __('Mail not send, email not found'),
-                ];
-            }
-        }
+//                     return $arReturn;
+//                 }
+//                 else
+//                 {
+//                     return [
+//                         'is_success' => true,
+//                         'error' => false,
+//                     ];
+//                 }
+//             }
+//             else
+//             {
+//                 return [
+//                     'is_success' => false,
+//                     'error' => __('Mail not send, email not found'),
+//                 ];
+//             }
+//         }
     }
     
     public static function replaceVariable($content, $obj)

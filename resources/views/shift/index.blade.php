@@ -83,9 +83,10 @@
         </form>
     </div>
     <button type="button" class="btn btn-primary align-items-center d-flex mb-3"
-        style="background-color: #0d6efd;width:200px" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        style="width:200px" data-bs-toggle="modal" data-bs-target="#exampleModal">
         <i class="ti ti-plus"></i> Add Shift Roster
     </button>
+    
 
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
