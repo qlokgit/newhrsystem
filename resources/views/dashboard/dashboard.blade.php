@@ -164,7 +164,7 @@
                                             @elseif($leave->status == 'Approved')
                                                 <div class="badge bg-success p-2 px-3 rounded status-badge5">
                                                     {{ $leave->status }}</div>
-                                            @else($leave->status == "Reject")
+                                            @else
                                                 <div class="badge bg-danger p-2 px-3 rounded status-badge5">
                                                     {{ $leave->status }}</div>
                                             @endif
@@ -588,7 +588,7 @@
                             } else if (data[i].status == 'Waiting') {
                                 html += '<div class="col-4 badge bg-info p-2 px-3 rounded status-badge5">' + data[i].status + '</div>'
                             } else {
-                                html += ' class="col-4 badge bg-danger p-2 px-3 rounded status-badge5">' + data[i].status + '</div>'
+                                html += '<div class="col-4 badge bg-danger p-2 px-3 rounded status-badge5">' + data[i].status + '</div>'
                             } 
                             html += '</div>'
                         }
