@@ -184,7 +184,7 @@
 @endsection
 
 @section('content')
-@if (\Auth::user()->type == 'employee')
+    @if (\Auth::user()->type == 'employee')
         <div class="col-xl-12 col-lg-12 col-md-12">
             <div class="card">
                 <div class="card-header card-body table-border-style">
@@ -210,7 +210,8 @@
                                 {{-- @dd($approvedLeave) --}}
                                 @foreach ($approvedLeave as $leave)
                                     <tr>
-                                        <td>{{ !empty($leave->leave->employees) ? $leave->leave->employees->name : '' }}</td>
+                                        <td>{{ !empty($leave->leave->employees) ? $leave->leave->employees->name : '' }}
+                                        </td>
                                         <td>{{ !empty(\Auth::user()->getLeaveType($leave->leave->leave_type_id)) ? \Auth::user()->getLeaveType($leave->leave->leave_type_id)->title : '' }}
                                         </td>
                                         <td>{{ \Auth::user()->dateFormat($leave->leave->applied_on) }}</td>
@@ -367,7 +368,7 @@
                 </div>
             </div>
         </div>
-@endif
+    @endif
     <div class="col-xl-12">
         <div class="card">
             <div class="card-header card-body table-border-style">
@@ -434,21 +435,6 @@
 
                                         <span>
                                             @if (\Auth::user()->type == 'employee')
-                                                @if ($leave->status == 'Pending')
-                                                    @can('Edit Leave')
-                                                        <div class="action-btn bg-info ms-2">
-                                                            <a href="#" class="mx-3 btn btn-sm  align-items-center"
-                                                                data-size="lg"
-                                                                data-url="{{ URL::to('leave/' . $leave->id . '/edit') }}"
-                                                                data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip"
-                                                                title="" data-title="{{ __('Edit Leave') }}"
-                                                                data-bs-original-title="{{ __('Edit') }}">
-                                                                <i class="ti ti-pencil text-white"></i>
-                                                            </a>
-                                                        </div>
-                                                    @endcan
-                                                @endif
-                                            @else
                                                 <div class="action-btn bg-success ms-2">
                                                     <a href="#" class="mx-3 btn btn-sm  align-items-center"
                                                         data-size="lg"
@@ -459,6 +445,22 @@
                                                         <i class="ti ti-caret-right text-white"></i>
                                                     </a>
                                                 </div>
+                                                @if ($leave->status == 'Pending')
+                                                    @can('Edit Leave')
+                                                        <div class="action-btn bg-info ms-2">
+                                                            <a href="#" class="mx-3 btn btn-sm  align-items-center"
+                                                                data-size="lg"
+                                                                data-url="{{ URL::to('leave/' . $leave->id . '/edit') }}"
+                                                                data-ajax-popup="true" data-size="md"
+                                                                data-bs-toggle="tooltip" title=""
+                                                                data-title="{{ __('Edit Leave') }}"
+                                                                data-bs-original-title="{{ __('Edit') }}">
+                                                                <i class="ti ti-pencil text-white"></i>
+                                                            </a>
+                                                        </div>
+                                                    @endcan
+                                                @endif
+                                            @else
                                                 @can('Edit Leave')
                                                     <div class="action-btn bg-info ms-2">
                                                         <a href="#" class="mx-3 btn btn-sm  align-items-center"
@@ -481,8 +483,8 @@
                                                         'id' => 'delete-form-' . $leave->id,
                                                     ]) !!}
                                                     <a href="#" class="mx-3 btn btn-sm  align-items-center bs-pass-para"
-                                                        data-bs-toggle="tooltip" title="" data-bs-original-title="Delete"
-                                                        aria-label="Delete"><i
+                                                        data-bs-toggle="tooltip" title=""
+                                                        data-bs-original-title="Delete" aria-label="Delete"><i
                                                             class="ti ti-trash text-white"></i></a>
                                                     </form>
                                                 </div>
@@ -552,19 +554,28 @@
                         var i;
 
                         for (i = 0; i < data.length; i++) {
-                            html += '<div class="row mt-2"> <div class="col-8">' + data[i].employee.name + '</div>'
+                            html += '<div class="row mt-2"> <div class="col-8">' + data[i]
+                                .employee.name + '</div>'
                             if (data[i].status == 'Pending') {
-                                html += '<div class="col-4 badge bg-warning p-2 px-3 rounded status-badge5">' + data[i].status + '</div>'
+                                html +=
+                                    '<div class="col-4 badge bg-warning p-2 px-3 rounded status-badge5">' +
+                                    data[i].status + '</div>'
                             } else if (data[i].status == 'Approved') {
-                                html += '<div class="col-4 badge bg-success p-2 px-3 rounded status-badge5">' + data[i].status + '</div>'
+                                html +=
+                                    '<div class="col-4 badge bg-success p-2 px-3 rounded status-badge5">' +
+                                    data[i].status + '</div>'
                             } else if (data[i].status == 'Waiting') {
-                                html += '<div class="col-4 badge bg-info p-2 px-3 rounded status-badge5">' + data[i].status + '</div>'
+                                html +=
+                                    '<div class="col-4 badge bg-info p-2 px-3 rounded status-badge5">' +
+                                    data[i].status + '</div>'
                             } else {
-                                html += '<div class="col-4 badge bg-danger p-2 px-3 rounded status-badge5">' + data[i].status + '</div>'
-                            } 
+                                html +=
+                                    '<div class="col-4 badge bg-danger p-2 px-3 rounded status-badge5">' +
+                                    data[i].status + '</div>'
+                            }
                             html += '</div>'
                         }
-                    $('.approved-leave-employee').html(html);
+                        $('.approved-leave-employee').html(html);
                     }
                 })
                 console.log(id);

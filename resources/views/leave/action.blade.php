@@ -75,6 +75,26 @@
                 <tr>
                     <th>{{ __('Approved By') }}</th>
                     <td>
+                        <div class="row mt-2">
+                            <div class="col-8">
+
+                                {{ $hr->hr->name }} <b>(HR)</b>
+                            </div>
+
+                            @if ($hr->status == 'Pending')
+                                <div class="col-4 badge bg-warning p-2 px-3 rounded status-badge5">
+                                    {{ $hr->status }}</div>
+                            @elseif ($hr->status == 'Waiting')
+                                <div class="col-4 badge bg-info p-2 px-3 rounded status-badge5">
+                                    {{ $hr->status }}</div>
+                            @elseif($hr->status == 'Approved')
+                                <div class="col-4 badge bg-success p-2 px-3 rounded status-badge5">
+                                    {{ $hr->status }}</div>
+                            @else($hr->status == "Reject")
+                                <div class="col-4 badge bg-danger p-2 px-3 rounded status-badge5">
+                                    {{ $hr->status }}</div>
+                            @endif
+                        </div>
                         @foreach ($approvedLeave as $item)
                             <div class="row mt-2">
                                 <div class="col-8">
