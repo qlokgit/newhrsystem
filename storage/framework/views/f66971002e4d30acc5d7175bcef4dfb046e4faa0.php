@@ -280,7 +280,7 @@
                                                         <i class="ti ti-caret-right text-white"></i>
                                                     </a>
                                                 </div>
-                                                <?php if($leave->status == 'Pending'): ?>
+                                                
                                                     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('Edit Leave')): ?>
                                                         <div class="action-btn bg-info ms-2">
                                                             <a href="#" class="mx-3 btn btn-sm  align-items-center"
@@ -294,7 +294,7 @@
                                                             </a>
                                                         </div>
                                                     <?php endif; ?>
-                                                <?php endif; ?>
+                                                
                                             <?php else: ?>
                                                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('Edit Leave')): ?>
                                                     <div class="action-btn bg-info ms-2">
