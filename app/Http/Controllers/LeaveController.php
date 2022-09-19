@@ -337,7 +337,7 @@ class LeaveController extends Controller
         $leave     = Leave::find($id);
         $employee  = Employee::find($leave->employee_id);
         $leavetype = LeaveType::find($leave->leave_type_id);
-        $hr = Leave::with('hr')->find($id);
+        $hr = Leave::with(['hr','rejectedBy'])->find($id);
         $approvedLeave = ApprovedLeave::with('employee')->where('leave_id', $leave->id)->get();
 
         return view('leave.action', compact('employee', 'leavetype', 'leave', 'hr', 'approvedLeave'));

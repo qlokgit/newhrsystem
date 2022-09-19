@@ -41,7 +41,6 @@
 
                                 <?php echo e($hr->hr->name); ?> <b>(HR)</b>
                             </div>
-
                             <?php if($hr->status == 'Pending'): ?>
                                 <div class="col-4 badge bg-warning p-2 px-3 rounded status-badge5">
                                     <?php echo e($hr->status); ?></div>
@@ -79,17 +78,26 @@
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </td>
                 </tr>
+                <?php if($hr->rejected_by): ?>
+                    <tr>
+                        <th><?php echo e(__('Rejected By')); ?></th>
+                        <td><?php echo e($hr->rejectedBy->name); ?></td>
+                    </tr>
+                <?php endif; ?>
                 <input type="hidden" value="<?php echo e($leave->id); ?>" name="leave_id">
             </table>
         </div>
     </div>
 </div>
 
-<?php if($leave->status == 'Pending'): ?>
-    <div class="modal-footer">
-        <input type="submit" value="<?php echo e(__('Approved')); ?>" class="btn btn-success rounded" name="status">
-        <input type="submit" value="<?php echo e(__('Reject')); ?>" class="btn btn-danger rounded" name="status">
-    </div>
+<?php if(\Auth::user()->type == 'hr' || \Auth::user()->type == 'company'): ?>
+
+    <?php if($leave->status == 'Pending'): ?>
+        <div class="modal-footer">
+            <input type="submit" value="<?php echo e(__('Approved')); ?>" class="btn btn-success rounded" name="status">
+            <input type="submit" value="<?php echo e(__('Reject')); ?>" class="btn btn-danger rounded" name="status">
+        </div>
+    <?php endif; ?>
 <?php endif; ?>
 <?php echo e(Form::close()); ?>
 

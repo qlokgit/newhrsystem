@@ -36,6 +36,11 @@ class Leave extends Model
         return $this->hasOne('App\Models\Employee', 'id', 'created_by');
     }
 
+    public function rejectedBy()
+    {
+        return $this->hasOne('App\Models\Employee', 'id', 'rejected_by');
+    }
+
     public function approvedLeave()
     {
         return $this->hasMany(ApprovedLeave::class, 'leave_id', 'id');

@@ -80,7 +80,6 @@
 
                                 {{ $hr->hr->name }} <b>(HR)</b>
                             </div>
-
                             @if ($hr->status == 'Pending')
                                 <div class="col-4 badge bg-warning p-2 px-3 rounded status-badge5">
                                     {{ $hr->status }}</div>
@@ -117,6 +116,12 @@
                         @endforeach
                     </td>
                 </tr>
+                @if ($hr->rejected_by)
+                    <tr>
+                        <th>{{ __('Rejected By') }}</th>
+                        <td>{{ $hr->rejectedBy->name }}</td>
+                    </tr>
+                @endif
                 <input type="hidden" value="{{ $leave->id }}" name="leave_id">
             </table>
         </div>
@@ -126,10 +131,13 @@
         <input type="submit" class="btn-create badge-success" value="{{ __('Approval') }}" name="status">
         <input type="submit" class="btn-create bg-danger" value="{{ __('Reject') }}" name="status">
     </div> --}}
-@if ($leave->status == 'Pending')
-    <div class="modal-footer">
-        <input type="submit" value="{{ __('Approved') }}" class="btn btn-success rounded" name="status">
-        <input type="submit" value="{{ __('Reject') }}" class="btn btn-danger rounded" name="status">
-    </div>
+@if (\Auth::user()->type == 'hr' || \Auth::user()->type == 'company')
+
+    @if ($leave->status == 'Pending')
+        <div class="modal-footer">
+            <input type="submit" value="{{ __('Approved') }}" class="btn btn-success rounded" name="status">
+            <input type="submit" value="{{ __('Reject') }}" class="btn btn-danger rounded" name="status">
+        </div>
+    @endif
 @endif
 {{ Form::close() }}

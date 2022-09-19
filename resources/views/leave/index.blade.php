@@ -339,6 +339,8 @@
                                                                         </tr>
                                                                         <input type="hidden" value="{{ $leave->id }}"
                                                                             name="leave_id">
+                                                                        <input type="hidden" value="{{ $leave->leave_id }}"
+                                                                            name="leaves_id">
                                                                     </table>
                                                                 </div>
                                                             </div>
@@ -432,9 +434,9 @@
                                     </td>
 
                                     <td class="Action">
-
                                         <span>
-                                            @if (\Auth::user()->type == 'employee')
+                                            @if (\Auth::user())
+                                            {{-- @if (\Auth::user()->type == 'hr' || \Auth::user()->type == 'company' || \Auth::user()->type == 'employee') --}}
                                                 <div class="action-btn bg-success ms-2">
                                                     <a href="#" class="mx-3 btn btn-sm  align-items-center"
                                                         data-size="lg"
