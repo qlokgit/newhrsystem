@@ -36,6 +36,26 @@
                 <tr>
                     <th><?php echo e(__('Approved By')); ?></th>
                     <td>
+                        <div class="row mt-2">
+                            <div class="col-8">
+
+                                <?php echo e($hr->hr->name); ?> <b>(HR)</b>
+                            </div>
+
+                            <?php if($hr->status == 'Pending'): ?>
+                                <div class="col-4 badge bg-warning p-2 px-3 rounded status-badge5">
+                                    <?php echo e($hr->status); ?></div>
+                            <?php elseif($hr->status == 'Waiting'): ?>
+                                <div class="col-4 badge bg-info p-2 px-3 rounded status-badge5">
+                                    <?php echo e($hr->status); ?></div>
+                            <?php elseif($hr->status == 'Approved'): ?>
+                                <div class="col-4 badge bg-success p-2 px-3 rounded status-badge5">
+                                    <?php echo e($hr->status); ?></div>
+                            <?php else: ?>
+                                <div class="col-4 badge bg-danger p-2 px-3 rounded status-badge5">
+                                    <?php echo e($hr->status); ?></div>
+                            <?php endif; ?>
+                        </div>
                         <?php $__currentLoopData = $approvedLeave; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div class="row mt-2">
                                 <div class="col-8">

@@ -31,6 +31,11 @@ class Leave extends Model
         return $this->hasOne('App\Models\Employee', 'id', 'employee_id');
     }
 
+    public function hr()
+    {
+        return $this->hasOne('App\Models\Employee', 'id', 'created_by');
+    }
+
     public function approvedLeave()
     {
         return $this->hasMany(ApprovedLeave::class, 'leave_id', 'id');
