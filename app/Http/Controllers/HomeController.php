@@ -209,9 +209,12 @@ class HomeController extends Controller
     {
         $leave = ApprovedLeave::where('id', $request->leave_id)->first();
         $emp = Employee::find($leave->employee_id);
-
+        $leaves = Leave::find($request->leaves_id);
         if ($request->status == 'Reject') {
             $leaveAll = ApprovedLeave::with('leave')->where('leave_id', $leave->leave_id)->get();
+            $leaves->status = $request->status;
+            $leaves->save();
+
             foreach ($leaveAll as $value) {
                 $value->status = $request->status;
                 $value->save();
@@ -226,6 +229,8 @@ class HomeController extends Controller
             'status' => $request->status
         ]);
 
+        // dd($leaves);
+
         $getApprovedLeave = ApprovedLeave::with('employee')->where(['leave_id' => $leave->leave_id, 'status' => 'Waiting'])->orderBy('id', 'asc')->first();
         if ($getApprovedLeave) {
             $getApprovedLeave->status = 'Pending';
@@ -239,7 +244,9 @@ class HomeController extends Controller
 
             Mail::to($getApprovedLeave->employee->email)->send(new \App\Mail\ApprovedLeave(($output)));
         } else {
-            Leave::with('approvedLeave.employee')->where('id', $leave->leave_id)->update(['status' => 'Approved']);
+            if ($leaves->status != 'Reject') {
+                Leave::with('approvedLeave.employee')->where('id', $leave->leave_id)->update(['status' => 'Approved']);
+            }
         }
 
         return redirect('/leave')->with('success', __('Approved Leave successfully.'));
