@@ -268,7 +268,8 @@
 
                                     <td class="Action">
                                         <span>
-                                            <?php if(\Auth::user()->type == 'hr' || \Auth::user()->type == 'company' || \Auth::user()->type == 'employee'): ?>
+                                            <?php if(\Auth::user()): ?>
+                                            
                                                 <div class="action-btn bg-success ms-2">
                                                     <a href="#" class="mx-3 btn btn-sm  align-items-center"
                                                         data-size="lg"
