@@ -33,12 +33,12 @@ class Leave extends Model
 
     public function hr()
     {
-        return $this->hasOne('App\Models\Employee', 'id', 'created_by');
+        return $this->hasOne('App\Models\User', 'id', 'created_by');
     }
 
     public function rejectedBy()
     {
-        return $this->hasOne('App\Models\Employee', 'id', 'rejected_by');
+        return $this->hasOne('App\Models\User', 'id', 'rejected_by');
     }
 
     public function approvedLeave()
