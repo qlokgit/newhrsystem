@@ -17,6 +17,7 @@ class StripePaymentController extends Controller
 {
     public function index()
     {
+
         if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company')
         {
             $objUser = \Auth::user();
@@ -25,7 +26,7 @@ class StripePaymentController extends Controller
                     'orders.*',
                     'users.name as user_name',
                 ]
-            )->join('users', 'orders.user_id', '=', 'users.id')->orderBy('orders.created_at', 'DESC')->get();
+            )->join('users', 'orders.user_id', '=', 'users.id')->where('user_id',\Auth::user()->id)->orderBy('orders.created_at', 'DESC')->get();
 
             return view('order.index', compact('orders'));
         }

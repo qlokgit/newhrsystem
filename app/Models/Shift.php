@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Shift extends Model
 {
     use HasFactory;
+
+    protected $guarded = [];
+
+    public function detailShift()
+    {
+        return $this->hasMany('App\Models\DetailShift', 'shift_id', 'id');
+    }
 }

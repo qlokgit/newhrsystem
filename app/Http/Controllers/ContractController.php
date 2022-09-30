@@ -91,7 +91,7 @@ class ContractController extends Controller
     {
         if(\Auth::user()->type =='company')
         {
-            $employee       = User::where('type', '=', 'employee')->get()->pluck('name', 'id');
+            $employee       = User::where('type', '=', 'employee')->where('created_by',\Auth::user()->id)->get()->pluck('name', 'id');
             
             $contractType = ContractType::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
 

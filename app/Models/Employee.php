@@ -38,6 +38,11 @@ class Employee extends Model
         return $this->hasMany('App\Models\EmployeeDocument', 'employee_id', 'employee_id')->get();
     }
 
+    public function shift()
+    {
+        return $this->hasMany('App\Models\Shift', 'employee_id', 'id');
+    }
+
     public function salary_type()
     {
         return $this->hasOne('App\Models\PayslipType', 'id', 'salary_type')->pluck('name')->first();

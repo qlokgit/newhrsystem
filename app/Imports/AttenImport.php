@@ -101,6 +101,8 @@ class AttenImport implements ToModel
             $status_presensi = 'Present';
         }
         
+     
+
         return new AttendanceEmployee([  
             'employee_id' => $idemployee,
             'date' => $date,

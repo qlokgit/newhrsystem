@@ -1,15 +1,11 @@
-
-
 @php
 $logo = asset(Storage::url('uploads/logo/'));
 $company_favicon = Utility::getValByName('company_favicon');
 // $setting = App\Models\Utility::settings();
 $company_logo = \App\Models\Utility::GetLogo();
 $SITE_RTL = Utility::getValByName('SITE_RTL');
-
 $setting = App\Models\Utility::colorset();
 $color = (!empty($setting['theme_color'])) ? $setting['theme_color'] : 'theme-3';
-
 @endphp
 
 <!DOCTYPE html>
@@ -294,7 +290,6 @@ $color = (!empty($setting['theme_color'])) ? $setting['theme_color'] : 'theme-3'
                     if ($(".d_week").length > 0) {
                         $($(".d_week")).each(function(index, element) {
                             var id = $(element).attr('id');
-
                             (function() {
                                 const d_week = new Datepicker(document.querySelector('#' +
                                     id), {
@@ -302,10 +297,8 @@ $color = (!empty($setting['theme_color'])) ? $setting['theme_color'] : 'theme-3'
                                     format: 'yyyy-mm-dd',
                                 });
                             })();
-
                         });
                     }
-
                 },
                 error: function(data) {
                     data = data.responseJSON;
@@ -356,24 +349,19 @@ $color = (!empty($setting['theme_color'])) ? $setting['theme_color'] : 'theme-3'
             $(document).ready(function() {
                 pushNotification('{{ Auth::id() }}');
             });
-
             function pushNotification(id) {
-
                 // ajax setup form csrf token
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
-
                 // Enable pusher logging - don't include this in production
                 Pusher.logToConsole = false;
-
                 var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
                     cluster: '{{ env('PUSHER_APP_CLUSTER') }}',
                     forceTLS: true
                 });
-
                 // Pusher Notification
                 var channel = pusher.subscribe('send_notification');
                 channel.bind('notification', function(data) {
@@ -382,7 +370,6 @@ $color = (!empty($setting['theme_color'])) ? $setting['theme_color'] : 'theme-3'
                         $(".notification-dropdown #notification-list").prepend(data.html);
                     }
                 });
-
                 // Pusher Message
                 var msgChannel = pusher.subscribe('my-channel');
                 msgChannel.bind('my-chat', function(data) {
@@ -392,36 +379,6 @@ $color = (!empty($setting['theme_color'])) ? $setting['theme_color'] : 'theme-3'
                     }
                 });
             }
-
-            // Get chat for top ox
-            function getChat() {
-                $.ajax({
-                    url: '{{ route('message.data') }}',
-                    type: "get",
-                    cache: false,
-                    success: function(data) {
-                        console.log(data);
-                        if (data.length != 0) {
-                            $(".message-toggle-msg").addClass('beep');
-                            $(".dropdown-list-message-msg").html(data);
-                        }
-                    }
-                })
-            }
-
-            getChat();
-
-            $(document).on("click", ".mark_all_as_read_message", function() {
-                $.ajax({
-                    url: '{{ route('message.seen') }}',
-                    type: "get",
-                    cache: false,
-                    success: function(data) {
-                        $('.dropdown-list-message-msg').html('');
-                        $(".message-toggle-msg").removeClass('beep');
-                    }
-                })
-            });
         </script>
     @endif
 

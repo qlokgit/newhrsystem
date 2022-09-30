@@ -48,7 +48,6 @@ class AuthenticatedSessionController extends Controller
         {
             auth()->logout();
         }
-
         return redirect('/check');
     }*/
 
@@ -74,6 +73,10 @@ class AuthenticatedSessionController extends Controller
         }
 
         $user =\Auth::user();
+
+        if($user == ''){
+            return redirect()->back();
+        }
         // dd($user);
         if($user->type == 'company')
         {

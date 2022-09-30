@@ -606,8 +606,7 @@ class AttendanceEmployeeController extends Controller
     public function importattendance(Request $request){
         $file = $request->file('file');
         $namaFile = $file->getClientOriginalName();
-        $file->move('EmployeeData', $namaFile);
-        
+        $file->move(public_path('/EmployeeData'), $namaFile);
         Excel::import(new AttenImport, \public_path('/EmployeeData/'.$namaFile));
         return \redirect()->back();
     }

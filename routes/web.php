@@ -24,66 +24,60 @@ Route::get('/testtime', function () {
 
     // $dt = '2022-07-20 07:46:32';
     // echo $dt;
-        $time = strtotime('2022-07-20 07:00:00');
-        $timecheckut = strtotime('2022-07-20 019:00:00');
-        $date = date('y-m-d',$time);
-        $check_in = date('H:i:s',$time);
-        $check_out = date('H:i:s',$timecheckut);
-        
+    $time = strtotime('2022-07-20 07:00:00');
+    $timecheckut = strtotime('2022-07-20 019:00:00');
+    $date = date('y-m-d', $time);
+    $check_in = date('H:i:s', $time);
+    $check_out = date('H:i:s', $timecheckut);
 
-        $startTime = Utility::getValByName('company_start_time');
-        $endTime   = Utility::getValByName('company_end_time');
-        
-        //late
-        $totalLateSeconds = strtotime($check_in) - strtotime($startTime);
-        $hours = floor($totalLateSeconds / 3600);
-        $mins  = floor($totalLateSeconds / 60 % 60);
-        $secs  = floor($totalLateSeconds % 60);
-        $late  = sprintf('%02d:%02d:%02d', $hours, $mins, $secs);
 
-        //early Leaving
-        if($check_in == '00:00:00' && $check_out == '00:00:00'){
-            $overtime  = '00:00:00';
-        }else{
-        
-            //overtime
+    $startTime = Utility::getValByName('company_start_time');
+    $endTime   = Utility::getValByName('company_end_time');
+
+    //late
+    $totalLateSeconds = strtotime($check_in) - strtotime($startTime);
+    $hours = floor($totalLateSeconds / 3600);
+    $mins  = floor($totalLateSeconds / 60 % 60);
+    $secs  = floor($totalLateSeconds % 60);
+    $late  = sprintf('%02d:%02d:%02d', $hours, $mins, $secs);
+
+    //early Leaving
+    if ($check_in == '00:00:00' && $check_out == '00:00:00') {
+        $overtime  = '00:00:00';
+    } else {
+
+        //overtime
         $totalOvertimeSeconds = strtotime($check_out) - strtotime($endTime);
         $hours                = floor($totalOvertimeSeconds / 3600);
         $mins                 = floor($totalOvertimeSeconds / 60 % 60);
         $secs                 = floor($totalOvertimeSeconds % 60);
         $overtime             = sprintf('%02d:%02d:%02d', $hours, $mins, $secs);
-        }
+    }
 
-        $totalEarlyLeavingSeconds = strtotime($endTime) - strtotime($check_out);
-        $hours                    = floor($totalEarlyLeavingSeconds / 3600);
-        $mins                     = floor($totalEarlyLeavingSeconds / 60 % 60);
-        $secs                     = floor($totalEarlyLeavingSeconds % 60);
-        $earlyLeaving             = sprintf('%02d:%02d:%02d', $hours, $mins, $secs);
-       
-
-       
+    $totalEarlyLeavingSeconds = strtotime($endTime) - strtotime($check_out);
+    $hours                    = floor($totalEarlyLeavingSeconds / 3600);
+    $mins                     = floor($totalEarlyLeavingSeconds / 60 % 60);
+    $secs                     = floor($totalEarlyLeavingSeconds % 60);
+    $earlyLeaving             = sprintf('%02d:%02d:%02d', $hours, $mins, $secs);
 
 
-       
-        if(strtotime($late) == null){
-            $late = '00:00:00';
-        }
 
-        if(strtotime($earlyLeaving) == null){
-            $earlyLeaving = '00:00:00';
-            
-        }
 
-        if(strtotime($overtime)== null){
-            $overtime = '00:00:00';
-        }
 
-     dd($late,$earlyLeaving,$overtime);
 
-        
-       
-       
-    
+    if (strtotime($late) == null) {
+        $late = '00:00:00';
+    }
+
+    if (strtotime($earlyLeaving) == null) {
+        $earlyLeaving = '00:00:00';
+    }
+
+    if (strtotime($overtime) == null) {
+        $overtime = '00:00:00';
+    }
+
+    dd($late, $earlyLeaving, $overtime);
 });
 
 Route::get('/', function () {
@@ -102,7 +96,7 @@ Route::get('/check', 'HomeController@check')->middleware(
         'XSS',
     ]
 );
-Route::get('/password/resets/{lang?}', 'Auth\LoginController@showLinkRequestForm')->name('change.langPass');
+// Route::get('/password/resets/{lang?}', 'Auth\LoginController@showLinkRequestForm')->name('change.langPass');
 
 Route::get('/', 'HomeController@index')->name('home')->middleware(['XSS']);
 Route::get('/home', 'HomeController@index')->name('home')->middleware(
@@ -111,6 +105,9 @@ Route::get('/home', 'HomeController@index')->name('home')->middleware(
         'XSS',
     ]
 );
+
+Route::post('/approve-leave', 'HomeController@approveLeave')->name('approve.employee.leave');
+
 Route::get('/home/getlanguvage', 'HomeController@getlanguvage')->name('home.getlanguvage');
 
 Route::group(
@@ -129,7 +126,7 @@ Route::group(
         Route::post('system-settings', 'SettingsController@saveSystemSettings')->name('system.settings');
         Route::get('company-setting', 'SettingsController@companyIndex')->name('company.setting');
         Route::get('company-email-setting/{name}', 'EmailTemplateController@updateStatus')->name('company.email.setting');
-// Route::post('company-email-setting/{name}', 'EmailTemplateController@updateStatus')->name('status.email.language')->middleware(['auth']);
+        // Route::post('company-email-setting/{name}', 'EmailTemplateController@updateStatus')->name('status.email.language')->middleware(['auth']);
 
         Route::post('pusher-settings', 'SettingsController@savePusherSettings')->name('pusher.settings');
         Route::post('business-setting', 'SettingsController@saveBusinessSettings')->name('business.setting');
@@ -163,7 +160,7 @@ Route::group(
     }
 );
 // Email Templates
-Route::get('email_template_lang/{id}/{lang?}', 'EmailTemplateController@manageEmailLang')->name('manage.email.language')->middleware(['auth','XSS']);
+Route::get('email_template_lang/{id}/{lang?}', 'EmailTemplateController@manageEmailLang')->name('manage.email.language')->middleware(['auth', 'XSS']);
 Route::post('email_template_store/{pid}', 'EmailTemplateController@storeEmailLang')->name('store.email.language')->middleware(['auth']);
 Route::post('email_template_status/{id}', 'EmailTemplateController@updateStatus')->name('status.email.language')->middleware(['auth']);
 
@@ -173,12 +170,12 @@ Route::resource('email_template', 'EmailTemplateController')->middleware(
         'XSS',
     ]
 );
-Route::resource('email_template_lang', 'EmailTemplateLangController')->middleware(
-    [
-        'auth',
-        'XSS',
-    ]
-);
+// Route::resource('email_template_lang', 'EmailTemplateLangController')->middleware(
+//     [
+//         'auth',
+//         'XSS',
+//     ]
+// );
 Route::get(
     '/test',
     [
@@ -286,7 +283,12 @@ Route::resource('award', 'AwardController')->middleware(
         'XSS',
     ]
 );
+
 Route::get('termination/{id}/description', 'TerminationController@description')->name('termination.description');
+
+Route::get('get-employee/{department}/{designation}', 'LeaveController@getEmployee')->name('get.employee.json');
+Route::get('get-approved-leave/{id}', 'HomeController@getApprovedLeave')->name('get.apprive.leave.json');
+Route::get('delete-approved-leave/{id}', 'LeaveController@deleteApprovedLeave')->name('delete.approve.leave');
 
 Route::resource('termination', 'TerminationController')->middleware(
     [
@@ -888,19 +890,20 @@ Route::group(
             'XSS',
 
         ],
-    ], function (){
-    Route::resource('plan_request', 'PlanRequestController');
-}
+    ],
+    function () {
+        Route::resource('plan_request', 'PlanRequestController');
+    }
 );
 
 
 
 // Plan Request Module
-Route::get('plan_request', 'PlanRequestController@index')->name('plan_request.index')->middleware(['auth','XSS',]);
-Route::get('request_frequency/{id}', 'PlanRequestController@requestView')->name('request.view')->middleware(['auth','XSS',]);
-Route::get('request_send/{id}', 'PlanRequestController@userRequest')->name('send.request')->middleware(['auth','XSS',]);
-Route::get('request_response/{id}/{response}', 'PlanRequestController@acceptRequest')->name('response.request')->middleware(['auth','XSS',]);
-Route::get('request_cancel/{id}', 'PlanRequestController@cancelRequest')->name('request.cancel')->middleware(['auth','XSS',]);
+Route::get('plan_request', 'PlanRequestController@index')->name('plan_request.index')->middleware(['auth', 'XSS',]);
+Route::get('request_frequency/{id}', 'PlanRequestController@requestView')->name('request.view')->middleware(['auth', 'XSS',]);
+Route::get('request_send/{id}', 'PlanRequestController@userRequest')->name('send.request')->middleware(['auth', 'XSS',]);
+Route::get('request_response/{id}/{response}', 'PlanRequestController@acceptRequest')->name('response.request')->middleware(['auth', 'XSS',]);
+Route::get('request_cancel/{id}', 'PlanRequestController@cancelRequest')->name('request.cancel')->middleware(['auth', 'XSS',]);
 // End Plan Request Module
 
 
@@ -1355,32 +1358,40 @@ Route::post('setting/telegram', 'SettingsController@telegram')->name('telegram.s
 //twilio
 Route::post('setting/twilio', 'SettingsController@twilio')->name('twilio.setting');
 
-// recaptcha
-Route::post('/recaptcha-settings',['as' => 'recaptcha.settings.store','uses' =>'SettingsController@recaptchaSettingStore'])->middleware(['auth','XSS']);
+// recaptcha/orders
+Route::post('/recaptcha-settings', ['as' => 'recaptcha.settings.store', 'uses' => 'SettingsController@recaptchaSettingStore'])->middleware(['auth', 'XSS']);
 
- // user reset password
- Route::any('user-reset-password/{id}', 'UserController@userPassword')->name('user.reset');
- Route::post('user-reset-password/{id}', 'UserController@userPasswordReset')->name('user.password.update');
+// user reset password
+Route::any('user-reset-password/{id}', 'UserController@userPassword')->name('user.reset');
+Route::post('user-reset-password/{id}', 'UserController@userPasswordReset')->name('user.password.update');
 
- //contract
-Route::resource('contract_type', 'ContractTypeController')->middleware(['auth','XSS']);
-Route::resource('contract', 'ContractController')->middleware(['auth','XSS']);
+//contract
+Route::resource('contract_type', 'ContractTypeController')->middleware(['auth', 'XSS']);
+Route::resource('contract', 'ContractController')->middleware(['auth', 'XSS']);
 
- Route::post('/contract/{id}/file', ['as' => 'contracts.file.upload','uses' => 'ContractController@fileUpload',])->middleware(['auth','XSS']);
-Route::get('/contract/{id}/file/{fid}', ['as' => 'contracts.file.download','uses' => 'ContractController@fileDownload',])->middleware(['auth','XSS']);
-Route::get('/contract/{id}/file/delete/{fid}', ['as' => 'contracts.file.delete','uses' => 'ContractController@fileDelete',])->middleware(['auth','XSS']);
-Route::post('/contract/{id}/notestore', ['as' => 'contracts.note.store','uses' => 'ContractController@noteStore',])->middleware(['auth']);
-Route::get('/contract/{id}/note', ['as' => 'contracts.note.destroy','uses' => 'ContractController@noteDestroy',])->middleware(['auth']);
+// Employee Shift
+Route::resource('employee_shift', 'EmployeeShiftController')->middleware(['auth', 'XSS']);
+Route::get('/get-employee-by-department/{id}', ['as' => 'get.employee.department', 'uses' => 'ShiftController@getEmployeeByDepartment',])->middleware(['auth', 'XSS']);
+Route::post('/set-employee-by-department', ['as' => 'set.employee.department', 'uses' => 'ShiftController@setEmployeeByDate',])->middleware(['auth', 'XSS']);
+Route::delete('/delete-shift-roaster', ['as' => 'delete.shift.roaster', 'uses' => 'ShiftController@deleteShiftRoaster',])->middleware(['auth', 'XSS']);
+Route::post('/edit-shift-roaster', ['as' => 'edit.shift.roaster', 'uses' => 'ShiftController@editShiftRoaster',])->middleware(['auth', 'XSS']);
+
+
+Route::post('/contract/{id}/file', ['as' => 'contracts.file.upload', 'uses' => 'ContractController@fileUpload',])->middleware(['auth', 'XSS']);
+Route::get('/contract/{id}/file/{fid}', ['as' => 'contracts.file.download', 'uses' => 'ContractController@fileDownload',])->middleware(['auth', 'XSS']);
+Route::get('/contract/{id}/file/delete/{fid}', ['as' => 'contracts.file.delete', 'uses' => 'ContractController@fileDelete',])->middleware(['auth', 'XSS']);
+Route::post('/contract/{id}/notestore', ['as' => 'contracts.note.store', 'uses' => 'ContractController@noteStore',])->middleware(['auth']);
+Route::get('/contract/{id}/note', ['as' => 'contracts.note.destroy', 'uses' => 'ContractController@noteDestroy',])->middleware(['auth']);
 
 Route::post('contract/{id}/description', 'ContractController@descriptionStore')->name('contracts.description.store')->middleware(['auth']);
 
 
 Route::post('/contract/{id}/commentstore', ['as' => 'comment.store',    'uses' => 'ContractController@commentStore',]);
-Route::get('/contract/{id}/comment', ['as' => 'comment.destroy','uses' => 'ContractController@commentDestroy',]);
+Route::get('/contract/{id}/comment', ['as' => 'comment.destroy', 'uses' => 'ContractController@commentDestroy',]);
 
 
-Route::get('/contract/copy/{id}',['as' => 'contracts.copy','uses' =>'ContractController@copycontract'])->middleware(['auth','XSS']);
-Route::post('/contract/copy/store/{id}',['as' => 'contracts.copystore','uses' =>'ContractController@copycontractstore'])->middleware(['auth','XSS']);
+Route::get('/contract/copy/{id}', ['as' => 'contracts.copy', 'uses' => 'ContractController@copycontract'])->middleware(['auth', 'XSS']);
+Route::post('/contract/copy/store/{id}', ['as' => 'contracts.copystore', 'uses' => 'ContractController@copycontractstore'])->middleware(['auth', 'XSS']);
 
 Route::get('contract/{id}/get_contract', 'ContractController@printContract')->name('get.contract');
 Route::get('contract/pdf/{id}', 'ContractController@pdffromcontract')->name('contract.download.pdf');
@@ -1388,6 +1399,6 @@ Route::get('contract/pdf/{id}', 'ContractController@pdffromcontract')->name('con
 // Route::get('/signature/{id}', 'ContractController@signature')->name('signature')->middleware(['auth','XSS']);
 // Route::post('/signaturestore', 'ContractController@signatureStore')->name('signaturestore')->middleware(['auth','XSS']);
 
-Route::get('/contract/{id}/mail', ['as' => 'send.mail.contract','uses' => 'ContractController@sendmailContract',]);
-Route::get('/signature/{id}', 'ContractController@signature')->name('signature')->middleware(['auth','XSS']);
-Route::post('/signaturestore', 'ContractController@signatureStore')->name('signaturestore')->middleware(['auth','XSS']);
+Route::get('/contract/{id}/mail', ['as' => 'send.mail.contract', 'uses' => 'ContractController@sendmailContract',]);
+Route::get('/signature/{id}', 'ContractController@signature')->name('signature')->middleware(['auth', 'XSS']);
+Route::post('/signaturestore', 'ContractController@signatureStore')->name('signaturestore')->middleware(['auth', 'XSS']);

@@ -13,3 +13,7 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+<<<<<<< HEAD
+=======
+/storage/logs/laravel.log
+>>>>>>> ac7ca2a4d2a6c21793717c9128b485463f3f7284

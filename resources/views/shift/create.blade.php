@@ -1,117 +1,88 @@
-{{-- {{ Form::open(['url' => 'leave', 'method' => 'post']) }}
-<div class="modal-body">
-    <div class="row">
-        @if (\Auth::user()->type != 'employee')
-            <div class="form-group">
-                {{ Form::label('employee_id', __('Employee'), ['class' => 'col-form-label']) }}
-                {{ Form::select('employee_id', $employees, null, ['class' => 'form-control  ','id' => 'employee_id','placeholder' => __('Select Employee')]) }}
+{{-- 
+<div class="modal-lg">
+    <form action="{{ route('shift.store') }}" method="post">
+        @csrf
+        <div class="p-2">
+            <div class="card p-3">
+                <h6>Add Shift Roster</h6>
+                <div class="alert alert-info mt-5" role="alert">
+                    <i class="fa fa-info-circle"></i> The existing shift will be overidden
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Department</label>
+                                <select class="form-control" name="department_id">
+                                    <option>Nothing Selected</option>
+                                    @foreach ($departments as $item)
+                                        <option value={{ $item->id }}>{{ $item->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Employees</label>
+                                <select class="form-control" name="employee_id">
+                                    <option>Nothing Selected</option>
+                                    @foreach ($employees as $item)
+                                        <option value={{ $item->id }}>{{ $item->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Employee Shift</label>
+                                <select class="form-control" name="employee_shift_id">
+                                    <option>Nothing Selected</option>
+                                    @foreach ($employeeShift as $item)
+                                        <option value={{ $item->id }}>{{ $item->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Assign Shift By</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="assign_shift_by" value="date"
+                                        checked>
+                                    <label class="form-check-label">
+                                        Date
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="assign_shift_by"
+                                        value="month">
+                                    <label class="form-check-label">
+                                        Month
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="validationDefault01">Date</label>
+                            <input type="date" name="dates" class="form-control datepicker"/>
+                        </div>
+                    </div>
+                </div>
             </div>
-        @endif
-        <div class="form-group">
-            {{ Form::label('leave_type_id', __('Leave Type'), ['class' => 'col-form-label']) }}
-            <select name="leave_type_id" id="leave_type_id" class="form-control  ">
-                @foreach ($leavetypes as $leave)
-                    <option value="{{ $leave->id }}">{{ $leave->title }} (<p class="float-right pr-5">
-                            {{ $leave->days }}</p>)</option>
-                @endforeach
-            </select>
         </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ Form::label('start_date', __('Start Date'), ['class' => 'col-form-label']) }}
-                {{ Form::text('start_date', null, ['class' => 'form-control', 'id' => 'data_picker1']) }}
+        <div class="modal-footer">
+            <input type="button" value="Cancel" class="btn btn-light" data-bs-dismiss="modal">
+            <input type="submit" value="{{ __('Create') }}" class="btn btn-primary">
+        </div>
+    </form>
+</div>
+{{-- <script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script> --}}
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+               
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ Form::label('end_date', __('End Date'), ['class' => 'col-form-label']) }}
-                {{ Form::text('end_date', null, ['class' => 'form-control', 'id' => 'data_picker2']) }}
-            </div>
-        </div>
-        <div class="form-group">
-            {{ Form::label('leave_reason', __('Leave Reason'), ['class' => 'col-form-label']) }}
-            {{ Form::textarea('leave_reason', null, ['class' => 'form-control', 'placeholder' => __('Leave Reason')]) }}
-        </div>
-        <div class="form-group">
-            {{ Form::label('remark', __('Remark'), ['class' => 'col-form-label']) }}
-            {{ Form::textarea('remark', null, ['class' => 'form-control', 'placeholder' => __('Leave Remark')]) }}
-        </div>
     </div>
-</div>
-<div class="modal-footer">
-    <button type="button" class="btn  btn-light" data-bs-dismiss="modal">{{ __('Close') }}</button>
-    <input type="submit" value="{{ __('Create') }}" class="btn  btn-primary">
-</div>
-{{ Form::close() }} --}}
-
-{{ Form::open(['url' => 'leave', 'method' => 'post']) }}
-<div class="modal-body">
-
-
-@if (\Auth::user()->type != 'employee')
-    <div class="row">
-        <div class="col-md-12">
-            <div class="form-group">
-                {{ Form::label('employee_id', __('Employee'), ['class' => 'col-form-label']) }}
-                {{ Form::select('employee_id', $employees, null, ['class' => 'form-control select2', 'id' => 'employee_id', 'placeholder' => __('Select Employee')]) }}
-            </div>
-
-            
-        </div>
-    </div>
-@endif
-<div class="row">
-    <div class="col-md-12">
-        <div class="form-group">
-            {{ Form::label('leave_type_id', __('Leave Type*'), ['class' => 'col-form-label']) }}
-            <select name="leave_type_id" id="leave_type_id" class="form-control select2">
-            <option selected> Pilih</option>
-                @foreach ($leavetypes as $leave)
-                
-                    <option value="{{ $leave->id }},{{ $leave->days }}">{{ $leave->title }} (<p class="float-right pr-5">
-                            {{ $leave->days }}</p>)</option>
-
-                @endforeach
-            </select>
-
-            
-
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-6">
-        <div class="form-group">
-            {{ Form::label('start_date', __('Start Date'), ['class' => 'col-form-label']) }}
-            {{ Form::text('start_date', null, ['class' => 'form-control d_week','autocomplete'=>'off']) }}
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="form-group">
-            {{ Form::label('end_date', __('End Date'), ['class' => 'col-form-label']) }}
-            {{ Form::text('end_date', null, ['class' => 'form-control d_week','autocomplete'=>'off']) }}
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="form-group">
-            {{ Form::label('leave_reason', __('Leave Reason'), ['class' => 'col-form-label']) }}
-            {{ Form::textarea('leave_reason', null, ['class' => 'form-control', 'placeholder' => __('Leave Reason'),'rows'=>'3']) }}
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="form-group">
-            {{ Form::label('remark', __('Remark'), ['class' => 'col-form-label']) }}
-            {{ Form::textarea('remark', null, ['class' => 'form-control', 'placeholder' => __('Leave Remark'),'rows'=>'3']) }}
-        </div>
-    </div>
-</div>
-</div>
-<div class="modal-footer">
-    <button type="button" class="btn  btn-light" data-bs-dismiss="modal">{{ __('Close') }}</button>
-    <input type="submit" value="{{ __('Create') }}" class="btn  btn-primary">
-</div>
-{{ Form::close() }}

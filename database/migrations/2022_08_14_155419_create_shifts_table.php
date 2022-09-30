@@ -15,6 +15,11 @@ class CreateShiftsTable extends Migration
     {
         Schema::create('shifts', function (Blueprint $table) {
             $table->id();
+            $table->integer('department_id');
+            $table->integer('employee_id');
+            $table->string('assign_shift_by');
+            $table->string('month')->nullable();
+            $table->integer('created_by');
             $table->timestamps();
         });
     }

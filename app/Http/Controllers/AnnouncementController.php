@@ -96,7 +96,7 @@ class AnnouncementController extends Controller
             $announcement->title         = $request->title;
             $announcement->start_date    = $request->start_date;
             $announcement->end_date      = $request->end_date;
-            $announcement->branch_id     = $request->branch_id ;
+            $announcement->branch_id     = $request->branch_id;
             $announcement->department_id = implode("," , $request->department_id);
             $announcement->employee_id   = implode("," , $request->employee_id);
             // dd(implode("," , $request->employee_id));
@@ -106,9 +106,61 @@ class AnnouncementController extends Controller
             $announcement->created_by    = \Auth::user()->creatorId();
             $announcement->save();
             
-            // slack
+            if($request->branch_id == 0){
+                 // slack
             $setting = Utility::settings(\Auth::user()->creatorId());
-            $branch = Branch ::find($request->branch_id);
+            $branch = Branch::find($request->branch_id);
+            if(isset($setting['Announcement_notification']) && $setting['Announcement_notification'] ==1){
+                $msg = $request->title.' '. __("announcement created for branch").'  '. __("from").' '.$request->start_date.' '. __("to").' '.$request->end_date.'.';
+                Utility::send_slack_msg($msg);
+            }
+            
+            // telegram
+            $setting = Utility::settings(\Auth::user()->creatorId());
+            $branch = Branch::find($request->branch_id);
+            if(isset($setting['telegram_Announcement_notification']) && $setting['telegram_Announcement_notification'] ==1){
+                $msg = $request->title.' '. __("announcement created for branch"). '  '. __("from"). ' '.$request->start_date. ' '. __("to"). ' ' .$request->end_date.'.';
+                Utility::send_telegram_msg($msg);
+            }
+             // twilio
+              $setting = Utility::settings(\Auth::user()->creatorId());
+              $branch = Branch::find($request->branch_id);
+              $departments = Department::where('branch_id' , $request->branch_id)->first();
+              $employees = Employee::where('branch_id' , $request->branch_id)->first();
+             
+            if(isset($setting['twilio_announcement_notification']) && $setting['twilio_announcement_notification'] ==1) {
+                $employeess= Employee::whereIn('branch_id' , $request->employee_id)->get();                
+                foreach ($employeess as $key => $employee) {
+                    $msg = $request->title.' '. __("announcement created for branch"). '  '. __("from"). ' '.$request->start_date. ' '. __("to"). ' ' .$request->end_date.'.';                    
+                    Utility::send_twilio_msg($employee->phone,$msg);
+                } 
+            }
+            
+            if(in_array('0', $request->employee_id))
+            {
+                $departmentEmployee = Employee::whereIn('department_id', $request->department_id)->get()->pluck('id');
+                $departmentEmployee = $departmentEmployee;
+
+            }
+            else
+            {
+                $departmentEmployee = $request->employee_id;
+            }
+            foreach($departmentEmployee as $employee)
+            {
+                $announcementEmployee                  = new AnnouncementEmployee();
+                $announcementEmployee->announcement_id = $announcement->id;
+                $announcementEmployee->employee_id     = $employee;
+                $announcementEmployee->created_by      = \Auth::user()->creatorId();
+               
+                $announcementEmployee->save();
+            }
+            return redirect()->route('announcement.index')->with('success', __('Announcement  successfully created.'));
+
+            }else{
+                 // slack
+            $setting = Utility::settings(\Auth::user()->creatorId());
+            $branch = Branch::find($request->branch_id);
             if(isset($setting['Announcement_notification']) && $setting['Announcement_notification'] ==1){
                 $msg = $request->title.' '. __("announcement created for branch").' '.$branch->name.' '. __("from").' '.$request->start_date.' '. __("to").' '.$request->end_date.'.';
                 Utility::send_slack_msg($msg);
@@ -116,14 +168,14 @@ class AnnouncementController extends Controller
             
             // telegram
             $setting = Utility::settings(\Auth::user()->creatorId());
-            $branch = Branch ::find($request->branch_id);
+            $branch = Branch::find($request->branch_id);
             if(isset($setting['telegram_Announcement_notification']) && $setting['telegram_Announcement_notification'] ==1){
                 $msg = $request->title.' '. __("announcement created for branch"). ' ' .$branch->name. ' '. __("from"). ' '.$request->start_date. ' '. __("to"). ' ' .$request->end_date.'.';
                 Utility::send_telegram_msg($msg);
             }
              // twilio
               $setting = Utility::settings(\Auth::user()->creatorId());
-              $branch = Branch ::find($request->branch_id);
+              $branch = Branch::find($request->branch_id);
               $departments = Department::where('branch_id' , $request->branch_id)->first();
               $employees = Employee::where('branch_id' , $request->branch_id)->first();
              
@@ -154,8 +206,12 @@ class AnnouncementController extends Controller
                
                 $announcementEmployee->save();
             }
-
             return redirect()->route('announcement.index')->with('success', __('Announcement  successfully created.'));
+
+            }
+
+           
+
         }
 
         else

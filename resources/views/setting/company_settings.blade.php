@@ -11,7 +11,6 @@ $color = isset($settings['theme_color']) ? $settings['theme_color'] : 'theme-4';
 // $is_sidebar_transperent = isset($settings['is_sidebar_transperent']) ? $settings['is_sidebar_transperent'] : '';
 // $dark_mode = isset($settings['dark_mode']) ? $settings['dark_mode'] : '';
 $setting = App\Models\Utility::settings();
-
 $SITE_RTL = $settings['SITE_RTL'];
 if ($SITE_RTL == '') {
     $SITE_RTL == 'off';
@@ -36,7 +35,6 @@ if ($SITE_RTL == '') {
                     type: 'GET',
                     data: {_token: $('meta[name="csrf-token"]').attr('content'), status: chbox.val()},
                     success: function(data) {
-
                     },
                 });
             });
@@ -46,14 +44,12 @@ if ($SITE_RTL == '') {
             target: '#useradd-sidenav',
             offset: 300
         })
-
         $('.themes-color-change').on('click', function() {
             var color_val = $(this).data('value');
             $('.theme-color').prop('checked', false);
             $('.themes-color-change').removeClass('active_color');
             $(this).addClass('active_color');
             $(`input[value=${color_val}]`).prop('checked', true);
-
         });
     </script>
     <script>
@@ -717,11 +713,11 @@ if ($SITE_RTL == '') {
                                                     <div class="form-group col-md-12">
                                                         <label class="form-check form-switch d-inline-block">
                                                             <input type="checkbox"
-                                                                class="email-template-checkbox form-check-input"
+                                                                {{-- class="email-template-checkbox form-check-input"
                                                                 name="{{ $EmailTemplate->id }}"
                                                                 @if($EmailTemplate->template->is_active == 1) checked="checked" @endcan
                                                                 value="{{ $EmailTemplate->template->is_active == 1 ? '1' : '0' }}"
-                                                                data-url="{{ route('company.email.setting', $EmailTemplate->id) }}">
+                                                                data-url="{{ route('company.email.setting', $EmailTemplate->id) }}"> --}}
                                                             <span class="slider1 round"></span>
                                                         </label>
                                                     </div>
