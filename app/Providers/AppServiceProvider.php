@@ -28,16 +28,18 @@ class AppServiceProvider extends ServiceProvider
     {
         view()->composer('*', function ($view) {
 
-            if (Auth::user()->type != 'super admin') {
-                $employee = Employee::where('user_id', Auth::user()->id)->get('id');
-                $check = count($employee) != 0;
-                if ($check) {
-                    $notification = Notification::where(['employee_id' => $employee->first()->id, 'is_read' => false])->orderBy('created_at', 'desc')->get();
-                }
+            if (Auth::user()) {
+                if (Auth::user()->type != 'super admin') {
+                    $employee = Employee::where('user_id', Auth::user()->id)->get('id');
+                    $check = count($employee) != 0;
+                    if ($check) {
+                        $notification = Notification::where(['employee_id' => $employee->first()->id, 'is_read' => false])->orderBy('created_at', 'desc')->get();
+                    }
 
-                $view->with([
-                    'notifEmployee' => $check ? $notification : [],
-                ]);
+                    $view->with([
+                        'notifEmployee' => $check ? $notification : [],
+                    ]);
+                }
             }
         });
 
