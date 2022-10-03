@@ -104,6 +104,10 @@ class WarningController extends Controller
             $warning->created_by   = \Auth::user()->creatorId();
             $warning->save();
 
+            if ($warning) {
+                $this->notification($request->warning_to, 'New Warning', $request->description, 'warning', '/warning');
+            }
+
             $setings = Utility::settings();
             
             if($setings['employee_warning'] == 1)

@@ -1402,3 +1402,5 @@ Route::get('contract/pdf/{id}', 'ContractController@pdffromcontract')->name('con
 Route::get('/contract/{id}/mail', ['as' => 'send.mail.contract', 'uses' => 'ContractController@sendmailContract',]);
 Route::get('/signature/{id}', 'ContractController@signature')->name('signature')->middleware(['auth', 'XSS']);
 Route::post('/signaturestore', 'ContractController@signatureStore')->name('signaturestore')->middleware(['auth', 'XSS']);
+
+Route::get('/notification-read/{id}', 'HomeController@readNotification')->name('read.notification')->middleware(['auth', 'XSS']);

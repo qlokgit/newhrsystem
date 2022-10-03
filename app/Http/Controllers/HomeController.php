@@ -12,6 +12,7 @@ use App\Models\LandingPageSection;
 use App\Models\Meeting;
 use App\Models\Job;
 use App\Models\Leave;
+use App\Models\Notification;
 use App\Models\Order;
 use App\Models\Payees;
 use App\Models\Payer;
@@ -22,6 +23,7 @@ use App\Models\Utility;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Redirect;
 
 class HomeController extends Controller
 {
@@ -257,5 +259,18 @@ class HomeController extends Controller
         $approvedLeave = ApprovedLeave::with('employee')->where('leave_id', $id)->get();
 
         return response()->json($approvedLeave);
+    }
+
+    public function readNotification($id)
+    {
+        try {
+            $notification = Notification::where('id', $id)->first();
+            $notification->is_read = true;
+            $notification->save();
+
+            return Redirect::to($notification->url);
+        } catch (\Throwable $th) {
+            
+        }
     }
 }

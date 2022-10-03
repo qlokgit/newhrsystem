@@ -78,7 +78,7 @@
                             <div class="row mt-2">
                                 <div class="col-8">
     
-                                    {{ $hr->hr->name }} <b>(HR)</b>
+                                    {{ $hr->hr->name }} <b>({{ $hr->hr->name }})</b>
                                 </div>
                                 @if ($hr->status == 'Pending')
                                     <div class="col-4 badge bg-warning p-2 px-3 rounded status-badge5">

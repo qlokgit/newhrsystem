@@ -69,6 +69,9 @@ class TravelController extends Controller
             $travel->created_by       = \Auth::user()->creatorId();
             $travel->save();
 
+            if ($travel) {
+                $this->notification($request->employee_id, 'New Travel', $request->description, 'travel', '/travel');
+            }
 
             // twilio
             $setting = Utility::settings(\Auth::user()->creatorId());

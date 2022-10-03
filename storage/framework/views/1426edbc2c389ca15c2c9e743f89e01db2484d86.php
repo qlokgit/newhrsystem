@@ -13,154 +13,175 @@ $profile = asset(Storage::url('uploads/avatar/'));
 
 <?php if(isset($setting['cust_theme_bg']) && $setting['cust_theme_bg'] == 'on'): ?>
     <header class="dash-header transprent-bg">
-<?php else: ?>
-    <header class="dash-header">
+    <?php else: ?>
+        <header class="dash-header">
 <?php endif; ?>
 
-    
-    <div class="header-wrapper">
-        <div class="me-auto dash-mob-drp">
-            <ul class="list-unstyled">
-                <li class="dash-h-item mob-hamburger">
-                    <a href="#!" class="dash-head-link" id="mobile-collapse">
-                        <div class="hamburger hamburger--arrowturn">
-                            <div class="hamburger-box">
-                                <div class="hamburger-inner"></div>
-                            </div>
+
+<div class="header-wrapper">
+    <div class="me-auto dash-mob-drp">
+        <ul class="list-unstyled">
+            <li class="dash-h-item mob-hamburger">
+                <a href="#!" class="dash-head-link" id="mobile-collapse">
+                    <div class="hamburger hamburger--arrowturn">
+                        <div class="hamburger-box">
+                            <div class="hamburger-inner"></div>
                         </div>
+                    </div>
+                </a>
+            </li>
+
+            <li class="dropdown dash-h-item drp-company">
+                <a class="dash-head-link dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#"
+                    role="button" aria-haspopup="false" aria-expanded="false">
+                    <span class="theme-avtar">
+                        <img alt="#"
+                            src="<?php echo e(!empty($users->avatar) ? $profile . '/' . $users->avatar : $profile . '/avatar.png'); ?>"
+                            class="header-avtar" style="width: 100%">
+                    </span>
+                    <span class="hide-mob ms-2"> <?php echo e(Auth::user()->name); ?>
+
+                        <i class="ti ti-chevron-down drp-arrow nocolor hide-mob"></i>
+                </a>
+                <div class="dropdown-menu dash-h-dropdown">
+                    <a href="<?php echo e(route('profile')); ?>" class="dropdown-item">
+                        <i class="ti ti-user"></i>
+                        <span><?php echo e(__('My Profile')); ?></span>
+                    </a>
+
+                    <a href="<?php echo e(route('logout')); ?>" class="dropdown-item"
+                        onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                        <i class="ti ti-power"></i>
+                        <span><?php echo e(__('Logout')); ?></span>
+                    </a>
+                    <form id="logout-form" action="<?php echo e(route('logout')); ?>" method="POST" style="display: none;">
+                        <?php echo csrf_field(); ?></form>
+                </div>
+            </li>
+
+
+        </ul>
+    </div>
+    <div class="ms-auto">
+        <ul class="list-unstyled">
+
+            <?php
+                $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
+                    ->where('seen', 0)
+                    ->count();
+            ?>
+
+            <?php if(Auth::user()->type != 'super admin'): ?>
+                <li class="dash-h-item">
+                    <a class="dash-head-link me-0" href="<?php echo e(url('/chats')); ?>">
+                        <i class="ti ti-message-circle"></i>
+                        <span
+                            class="bg-danger dash-h-badge message-counter custom_messanger_counter"><?php echo e($unseenCounter); ?><span
+                                class="sr-only"></span>
                     </a>
                 </li>
+            <?php endif; ?>
 
-                <li class="dropdown dash-h-item drp-company">
+            <?php if(\Auth::user()->type != 'super admin'): ?>
+                <li class="dropdown dash-h-item drp-notification">
                     <a class="dash-head-link dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#"
                         role="button" aria-haspopup="false" aria-expanded="false">
-                        <span class="theme-avtar">
-                            <img alt="#"
-                                src="<?php echo e(!empty($users->avatar) ? $profile . '/' . $users->avatar : $profile . '/avatar.png'); ?>"
-                                class="header-avtar" style="width: 100%">
-                        </span>
-                        <span class="hide-mob ms-2"> <?php echo e(Auth::user()->name); ?>
-
-                            <i class="ti ti-chevron-down drp-arrow nocolor hide-mob"></i>
+                        <i class="ti ti-message-2"></i>
+                        <span class="bg-danger dash-h-badge message-toggle-msg"><span class="sr-only"></span>
                     </a>
-                    <div class="dropdown-menu dash-h-dropdown">
-                        <a href="<?php echo e(route('profile')); ?>" class="dropdown-item">
-                            <i class="ti ti-user"></i>
-                            <span><?php echo e(__('My Profile')); ?></span>
-                        </a>
-                       
-                        <a href="<?php echo e(route('logout')); ?>" class="dropdown-item"
-                            onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-                            <i class="ti ti-power"></i>
-                            <span><?php echo e(__('Logout')); ?></span>
-                        </a>
-                        <form id="logout-form" action="<?php echo e(route('logout')); ?>" method="POST" style="display: none;">
-                            <?php echo csrf_field(); ?></form>
+                    <div class="dropdown-menu dash-h-dropdown dropdown-menu-end">
+                        <div class="noti-header">
+                            <h5 class="m-0"><?php echo e(__('Messages')); ?></h5>
+                            <a href="#" class="dash-head-link mark_all_as_read_message"><?php echo e(__('Clear All')); ?></a>
+                        </div>
+                        <div class="noti-body dropdown-list-message-msg">
+                        </div>
+                        <div class="noti-footer">
+                            <div class="d-grid">
+                                <a href="<?php echo e(route('chats')); ?>"
+                                    class="btn dash-head-link justify-content-center text-primary mx-0">View all</a>
+                            </div>
+                        </div>
                     </div>
                 </li>
-
-
-            </ul>
-        </div>
-        <div class="ms-auto">
-            <ul class="list-unstyled">  
-
-                <?php
-                    $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
-                        ->where('seen', 0)
-                        ->count();
-                ?>
-
-                <?php if(Auth::user()->type != 'super admin'): ?>
-                    <li class="dash-h-item">
-                        <a class="dash-head-link me-0" href="<?php echo e(url('/chats')); ?>">
-                            <i class="ti ti-message-circle"></i>
-                            <span
-                                class="bg-danger dash-h-badge message-counter custom_messanger_counter"><?php echo e($unseenCounter); ?><span
-                                    class="sr-only"></span>
-                        </a>
-                    </li>
-                <?php endif; ?>
-
-                <?php if(\Auth::user()->type != 'super admin'): ?>
-                    <li class="dropdown dash-h-item drp-notification">
-                        <a class="dash-head-link dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#"
-                            role="button" aria-haspopup="false" aria-expanded="false">
-                            <i class="ti ti-message-2"></i>
-                            <span class="bg-danger dash-h-badge message-toggle-msg"><span class="sr-only"></span>
-                        </a>
-                        <div class="dropdown-menu dash-h-dropdown dropdown-menu-end">
-                            <div class="noti-header">
-                                <h5 class="m-0"><?php echo e(__('Messages')); ?></h5>
-                                <a href="#"
-                                    class="dash-head-link mark_all_as_read_message"><?php echo e(__('Clear All')); ?></a>
-                            </div>
-                            <div class="noti-body dropdown-list-message-msg">
-                            </div>
-                            <div class="noti-footer">
-                                <div class="d-grid">
-                                    <a href="<?php echo e(route('chats')); ?>"
-                                        class="btn dash-head-link justify-content-center text-primary mx-0">View all</a>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                <?php endif; ?>  
-                <?php if(\Auth::user()->type != 'super admin'): ?>
-                    <li class="dropdown dash-h-item drp-notification">
-                        <a class="dash-head-link dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#" role="button"aria-haspopup="false" aria-expanded="false">
-                            <i class="ti ti-bell"></i>
-                            <span class="bg-danger dash-h-badge notification-toggle"><span class="sr-only"></span></span>
-                        </a>
-                        <div class="dropdown-menu dash-h-dropdown dropdown-menu-end notification-dropdown">
-                            <div class="noti-header">
-                                <h5 class="m-0"><?php echo e(__('Notifications')); ?></h5>
-                                <a href="#" class="dash-head-link mark_all_as_read"><?php echo e(__('Clear All')); ?></a>
-                            </div>
-                            <div class="noti-body" id="notification-list">
-                                <?php
-                                    $notifications = \Auth::user()->notifications();
-                                ?>
-                                <?php $__currentLoopData = $notifications; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $notification): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <?php echo $notification->toHtml(); ?>
-
-                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                            </div>
-                        </div>
-                    </li>
-                <?php endif; ?>
-
-
-                <?php
-                $currantLang = Cookie::get('LANGUAGE');
-                if(!isset($currantLang))
-                {
-                    $currantLang = "en";
-                }
-              ?>
-
-                <li class="dropdown dash-h-item drp-language">
+            <?php endif; ?>
+            <?php if(\Auth::user()->type != 'super admin'): ?>
+                <li class="dropdown dash-h-item drp-notification">
                     <a class="dash-head-link dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#"
-                        role="button" aria-haspopup="false" aria-expanded="false" id="dropdownLanguage">
-                        <i class="ti ti-world nocolor"></i>
-                        <span class="drp-text hide-mob"><?php echo e(Str::upper($currantLang)); ?></span>
-                        <i class="ti ti-chevron-down drp-arrow nocolor"></i>
-                    </a>
-                    <div class="dropdown-menu dash-h-dropdown dropdown-menu-end" aria-labelledby="dropdownLanguage">
-                        <?php $__currentLoopData = App\Models\Utility::languages(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $lang): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <a href="<?php echo e(route('change.language', $lang)); ?>"
-                                class="dropdown-item <?php echo e(basename(App::getLocale()) == $lang ? 'text-danger' : ''); ?>"><?php echo e(Str::upper($lang)); ?></a>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                        <?php if(\Auth::user()->type == 'super admin'): ?>
-                            <div class="dropdown-divider m-0"></div>
-                            <a href="<?php echo e(route('manage.language', [basename(App::getLocale())])); ?>"
-                                class="dropdown-item text-primary"><?php echo e(__('Manage Language')); ?></a>
+                        role="button"aria-haspopup="false" aria-expanded="false">
+                        <i class="ti ti-bell"></i>
+                        <?php if(count($notifEmployee) > 0): ?>
+                            <span
+                                class="bg-danger dash-h-badge message-counter custom_messanger_counter"><?php echo e(count($notifEmployee)); ?><span
+                                    class="sr-only"></span>
                         <?php endif; ?>
+
+                        <span class="bg-danger dash-h-badge notification-toggle"><span class="sr-only"></span></span>
+                    </a>
+                    <div class="dropdown-menu dash-h-dropdown dropdown-menu-end notification-dropdown">
+                        <div class="noti-header">
+                            <h5 class="m-0"><?php echo e(__('Notifications')); ?></h5>
+                            <a href="#" class="dash-head-link mark_all_as_read"><?php echo e(__('Clear All')); ?></a>
+                        </div>
+                        <div class="noti-body" id="notification-list">
+                            <?php $__currentLoopData = $notifEmployee; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <div>
+                                <a href="<?php echo e(route('read.notification', $item->id)); ?>" class="notification">
+                                    <div>
+                                        <b class="text-black d-flex"><?php echo e($item->title); ?> <div style="background: red;width:6px;height:6px;border-radius: 6px"></div>
+                                        </b> 
+                                        <div class="d-flex justify-content-between mt-2">
+                                            <div>
+                                                <b style="font-size:12px;color:grey"><?php echo e($item->description); ?></b>
+    
+                                            </div>
+                                            <div>
+                                                <p style="font-size:12px;color:grey"><?php echo e($item->created_at->diffForHumans()); ?></p>
+    
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                </a>
+                            </div>
+                               
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            
+                        </div>
                     </div>
                 </li>
+            <?php endif; ?>
 
-            </ul>
-        </div>
+
+            <?php
+                $currantLang = Cookie::get('LANGUAGE');
+                if (!isset($currantLang)) {
+                    $currantLang = 'en';
+                }
+            ?>
+
+            <li class="dropdown dash-h-item drp-language">
+                <a class="dash-head-link dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#"
+                    role="button" aria-haspopup="false" aria-expanded="false" id="dropdownLanguage">
+                    <i class="ti ti-world nocolor"></i>
+                    <span class="drp-text hide-mob"><?php echo e(Str::upper($currantLang)); ?></span>
+                    <i class="ti ti-chevron-down drp-arrow nocolor"></i>
+                </a>
+                <div class="dropdown-menu dash-h-dropdown dropdown-menu-end" aria-labelledby="dropdownLanguage">
+                    <?php $__currentLoopData = App\Models\Utility::languages(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $lang): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <a href="<?php echo e(route('change.language', $lang)); ?>"
+                            class="dropdown-item <?php echo e(basename(App::getLocale()) == $lang ? 'text-danger' : ''); ?>"><?php echo e(Str::upper($lang)); ?></a>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    <?php if(\Auth::user()->type == 'super admin'): ?>
+                        <div class="dropdown-divider m-0"></div>
+                        <a href="<?php echo e(route('manage.language', [basename(App::getLocale())])); ?>"
+                            class="dropdown-item text-primary"><?php echo e(__('Manage Language')); ?></a>
+                    <?php endif; ?>
+                </div>
+            </li>
+
+        </ul>
     </div>
+</div>
 </header>
 <?php /**PATH /home/aannn/Pictures/main_file/resources/views/partial/Admin/header.blade.php ENDPATH**/ ?>

@@ -6,6 +6,7 @@ use App\Models\Award;
 use App\Models\AwardType;
 use App\Models\Employee;
 use App\Mail\AwardSend;
+use App\Models\Notification;
 use App\Models\Utility;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -75,6 +76,10 @@ class AwardController extends Controller
             $award->description =  $request->description;
             $award->created_by  = \Auth::user()->creatorId();
             $award->save();
+
+            if ($award) {
+                $this->notification($request->employee_id, 'New Award', $request->description, 'award', '/award');
+            }
 
             //slack
             $setting = Utility::settings(\Auth::user()->creatorId());

@@ -105,6 +105,10 @@ class ComplaintController extends Controller
             $complaint->created_by        = \Auth::user()->creatorId();
             $complaint->save();
 
+            if ($complaint) {
+                $this->notification($request->complaint_against, 'New Complaint', $request->description, 'complaint', '/complaint');
+            }
+
             $setings = Utility::settings();
              
             if($setings['employee_complaints'] == 1)

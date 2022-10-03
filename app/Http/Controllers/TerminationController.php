@@ -80,6 +80,10 @@ class TerminationController extends Controller
             $termination->created_by       = \Auth::user()->creatorId();
             $termination->save();
 
+            if ($termination) {
+                $this->notification($request->employee_id, 'New Termination', $request->description, 'termination', '/termination');
+            }
+
             $setings = Utility::settings();
             // dd( $termination->termination_type );
             if($setings['employee_termination'] == 1)

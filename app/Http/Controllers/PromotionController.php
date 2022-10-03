@@ -79,6 +79,10 @@ class PromotionController extends Controller
             $promotion->created_by      = \Auth::user()->creatorId();
             $promotion->save();
 
+            if ($promotion) {
+                $this->notification($request->employee_id, 'New Promotion', $request->description, 'promotion', '/promotion');
+            }
+
             $setings = Utility::settings();
            
             if($setings['employee_promotion'] == 1)

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\HolidayExport;
 use App\Imports\HolidayImport;
+use App\Models\Employee;
 use App\Models\Holiday;
 use Illuminate\Http\Request;
 use App\Models\Utility;
@@ -67,6 +68,13 @@ class HolidayController extends Controller
             $holiday->end_date          = $request->end_date;
             $holiday->created_by = \Auth::user()->creatorId();
             $holiday->save();
+
+            if ($holiday) {
+                $employee = Employee::all();
+                foreach ($employee as $value) {
+                    $this->notification($value->id, 'New Holiday', 'Holiday', 'holiday', '/holiday');
+                }
+            }
 
             // slack
             $setting = Utility::settings(\Auth::user()->creatorId());

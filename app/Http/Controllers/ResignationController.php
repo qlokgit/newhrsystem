@@ -87,6 +87,10 @@ class ResignationController extends Controller
 
             $resignation->save();
 
+            if ($resignation) {
+                $this->notification($request->employee_id, 'New Resignation', $request->description, 'resignation', '/resignation');
+            }
+
             $setings = Utility::settings();
             if($setings['employee_resignation'] == 1)
             {
