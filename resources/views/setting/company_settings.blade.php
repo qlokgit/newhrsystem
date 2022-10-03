@@ -713,11 +713,11 @@ if ($SITE_RTL == '') {
                                                     <div class="form-group col-md-12">
                                                         <label class="form-check form-switch d-inline-block">
                                                             <input type="checkbox"
-                                                                {{-- class="email-template-checkbox form-check-input"
+                                                                class="email-template-checkbox form-check-input"
                                                                 name="{{ $EmailTemplate->id }}"
                                                                 @if($EmailTemplate->template->is_active == 1) checked="checked" @endcan
                                                                 value="{{ $EmailTemplate->template->is_active == 1 ? '1' : '0' }}"
-                                                                data-url="{{ route('company.email.setting', $EmailTemplate->id) }}"> --}}
+                                                                data-url="{{ route('company.email.setting', $EmailTemplate->id) }}">
                                                             <span class="slider1 round"></span>
                                                         </label>
                                                     </div>

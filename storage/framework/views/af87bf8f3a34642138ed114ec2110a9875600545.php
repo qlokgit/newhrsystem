@@ -29,7 +29,7 @@
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
-<?php if(\Auth::user()->type == 'employee'): ?>
+    <?php if(\Auth::user()->type == 'employee'): ?>
         <div class="col-xl-12 col-lg-12 col-md-12">
             <div class="card">
                 <div class="card-header card-body table-border-style">
@@ -55,7 +55,9 @@
                                 
                                 <?php $__currentLoopData = $approvedLeave; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $leave): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <tr>
-                                        <td><?php echo e(!empty($leave->leave->employees) ? $leave->leave->employees->name : ''); ?></td>
+                                        <td><?php echo e(!empty($leave->leave->employees) ? $leave->leave->employees->name : ''); ?>
+
+                                        </td>
                                         <td><?php echo e(!empty(\Auth::user()->getLeaveType($leave->leave->leave_type_id)) ? \Auth::user()->getLeaveType($leave->leave->leave_type_id)->title : ''); ?>
 
                                         </td>
@@ -174,6 +176,8 @@
                                                                         </tr>
                                                                         <input type="hidden" value="<?php echo e($leave->id); ?>"
                                                                             name="leave_id">
+                                                                        <input type="hidden" value="<?php echo e($leave->leave_id); ?>"
+                                                                            name="leaves_id">
                                                                     </table>
                                                                 </div>
                                                             </div>
@@ -201,7 +205,7 @@
                 </div>
             </div>
         </div>
-<?php endif; ?>
+    <?php endif; ?>
     <div class="col-xl-12">
         <div class="card">
             <div class="card-header card-body table-border-style">
@@ -267,24 +271,9 @@
                                     </td>
 
                                     <td class="Action">
-
                                         <span>
-                                            <?php if(\Auth::user()->type == 'employee'): ?>
-                                                <?php if($leave->status == 'Pending'): ?>
-                                                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('Edit Leave')): ?>
-                                                        <div class="action-btn bg-info ms-2">
-                                                            <a href="#" class="mx-3 btn btn-sm  align-items-center"
-                                                                data-size="lg"
-                                                                data-url="<?php echo e(URL::to('leave/' . $leave->id . '/edit')); ?>"
-                                                                data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip"
-                                                                title="" data-title="<?php echo e(__('Edit Leave')); ?>"
-                                                                data-bs-original-title="<?php echo e(__('Edit')); ?>">
-                                                                <i class="ti ti-pencil text-white"></i>
-                                                            </a>
-                                                        </div>
-                                                    <?php endif; ?>
-                                                <?php endif; ?>
-                                            <?php else: ?>
+                                            <?php if(\Auth::user()): ?>
+                                            
                                                 <div class="action-btn bg-success ms-2">
                                                     <a href="#" class="mx-3 btn btn-sm  align-items-center"
                                                         data-size="lg"
@@ -295,6 +284,22 @@
                                                         <i class="ti ti-caret-right text-white"></i>
                                                     </a>
                                                 </div>
+                                                
+                                                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('Edit Leave')): ?>
+                                                        <div class="action-btn bg-info ms-2">
+                                                            <a href="#" class="mx-3 btn btn-sm  align-items-center"
+                                                                data-size="lg"
+                                                                data-url="<?php echo e(URL::to('leave/' . $leave->id . '/edit')); ?>"
+                                                                data-ajax-popup="true" data-size="md"
+                                                                data-bs-toggle="tooltip" title=""
+                                                                data-title="<?php echo e(__('Edit Leave')); ?>"
+                                                                data-bs-original-title="<?php echo e(__('Edit')); ?>">
+                                                                <i class="ti ti-pencil text-white"></i>
+                                                            </a>
+                                                        </div>
+                                                    <?php endif; ?>
+                                                
+                                            <?php else: ?>
                                                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('Edit Leave')): ?>
                                                     <div class="action-btn bg-info ms-2">
                                                         <a href="#" class="mx-3 btn btn-sm  align-items-center"
@@ -318,8 +323,8 @@
                                                     ]); ?>
 
                                                     <a href="#" class="mx-3 btn btn-sm  align-items-center bs-pass-para"
-                                                        data-bs-toggle="tooltip" title="" data-bs-original-title="Delete"
-                                                        aria-label="Delete"><i
+                                                        data-bs-toggle="tooltip" title=""
+                                                        data-bs-original-title="Delete" aria-label="Delete"><i
                                                             class="ti ti-trash text-white"></i></a>
                                                     </form>
                                                 </div>
@@ -389,19 +394,28 @@
                         var i;
 
                         for (i = 0; i < data.length; i++) {
-                            html += '<div class="row mt-2"> <div class="col-8">' + data[i].employee.name + '</div>'
+                            html += '<div class="row mt-2"> <div class="col-8">' + data[i]
+                                .employee.name + '</div>'
                             if (data[i].status == 'Pending') {
-                                html += '<div class="col-4 badge bg-warning p-2 px-3 rounded status-badge5">' + data[i].status + '</div>'
+                                html +=
+                                    '<div class="col-4 badge bg-warning p-2 px-3 rounded status-badge5">' +
+                                    data[i].status + '</div>'
                             } else if (data[i].status == 'Approved') {
-                                html += '<div class="col-4 badge bg-success p-2 px-3 rounded status-badge5">' + data[i].status + '</div>'
+                                html +=
+                                    '<div class="col-4 badge bg-success p-2 px-3 rounded status-badge5">' +
+                                    data[i].status + '</div>'
                             } else if (data[i].status == 'Waiting') {
-                                html += '<div class="col-4 badge bg-info p-2 px-3 rounded status-badge5">' + data[i].status + '</div>'
+                                html +=
+                                    '<div class="col-4 badge bg-info p-2 px-3 rounded status-badge5">' +
+                                    data[i].status + '</div>'
                             } else {
-                                html += '<div class="col-4 badge bg-danger p-2 px-3 rounded status-badge5">' + data[i].status + '</div>'
-                            } 
+                                html +=
+                                    '<div class="col-4 badge bg-danger p-2 px-3 rounded status-badge5">' +
+                                    data[i].status + '</div>'
+                            }
                             html += '</div>'
                         }
-                    $('.approved-leave-employee').html(html);
+                        $('.approved-leave-employee').html(html);
                     }
                 })
                 console.log(id);
