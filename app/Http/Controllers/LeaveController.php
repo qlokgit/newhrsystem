@@ -41,16 +41,11 @@ class LeaveController extends Controller
                     $approvedLeaveAll = [];
                 }
 
-            return view('leave.index', compact('leaves','approvedLeave', 'approvedLeaveAll'));
-
-
-
+                return view('leave.index', compact('leaves', 'approvedLeave', 'approvedLeaveAll'));
             } else {
                 $leaves = Leave::with('approvedLeave')->where('created_by', '=', \Auth::user()->creatorId())->get();
                 return view('leave.index', compact('leaves'));
-
             }
-
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
@@ -88,7 +83,6 @@ class LeaveController extends Controller
         $total_leave = $answer_in_days + 1;
 
         $num = (int) last(explode(',', $request->leave_type_id));
-
 
         if ($total_leave > $num) {
             return redirect('/leave')->with('error', __('Tanggal yang di input Melebihi Batas Cuti yang di tentukan'));
@@ -159,6 +153,15 @@ class LeaveController extends Controller
             $leave->created_by       = \Auth::user()->creatorId();
             $leave->save();
 
+            $getHr = User::where('type', 'hr')->orWhere('type', 'company')->get();
+            if ($leave) {
+                foreach ($getHr as $value) {
+                    $getEmp = Employee::where(['user_id' => $value->id, 'branch_id' => $employee->branch_id, 'department_id' => $employee->department_id, 'designation_id' => $employee->designation_id])->first();
+                    if ($getEmp) {
+                        $this->notification($getEmp->id, 'New Leave', Auth::user()->name . ' Request Leave', 'leave', '/leave');
+                    }
+                }
+            }
 
             if (\Auth::user()->type != 'employee') {
                 $approvedEmployee = $request->approved_employee_id;
@@ -245,7 +248,7 @@ class LeaveController extends Controller
                 ->sum('total_leave_days');
         }
 
-        
+
         $leave = Leave::find($leave);
         if (\Auth::user()->can('Edit Leave')) {
             if ($leave->created_by == Auth::user()->creatorId()) {
@@ -337,7 +340,7 @@ class LeaveController extends Controller
         $leave     = Leave::find($id);
         $employee  = Employee::find($leave->employee_id);
         $leavetype = LeaveType::find($leave->leave_type_id);
-        $hr = Leave::with(['hr','rejectedBy'])->find($id);
+        $hr = Leave::with(['hr', 'rejectedBy'])->find($id);
         $approvedLeave = ApprovedLeave::with('employee')->where('leave_id', $leave->id)->get();
 
         return view('leave.action', compact('employee', 'leavetype', 'leave', 'hr', 'approvedLeave'));
