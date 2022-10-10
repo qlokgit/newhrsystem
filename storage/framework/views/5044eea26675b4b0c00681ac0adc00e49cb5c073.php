@@ -39,7 +39,7 @@
                             <div class="row mt-2">
                                 <div class="col-8">
     
-                                    <?php echo e($hr->hr->name); ?> <b>(HR)</b>
+                                    <?php echo e($hr->hr->name); ?> <b>(<?php echo e($hr->hr->name); ?>)</b>
                                 </div>
                                 <?php if($hr->status == 'Pending'): ?>
                                     <div class="col-4 badge bg-warning p-2 px-3 rounded status-badge5">

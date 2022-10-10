@@ -364,16 +364,19 @@ class LeaveController extends Controller
         $leave->save();
 
         $getApprovedLeave = ApprovedLeave::where(['leave_id' => $leave->id, 'status' => 'Waiting'])->orderBy('id', 'asc')->first();
-        $getApprovedLeave->status = 'Pending';
-        $getApprovedLeave->save();
+        if ($getApprovedLeave) {
+            $getApprovedLeave->status = 'Pending';
+            $getApprovedLeave->save();
 
-        $output = [
-            'employee' => $getApprovedLeave->employee,
-            'leave' => $leave->with('employees')->first(),
-            'type' => 'hr'
-        ];
-
-        Mail::to($getApprovedLeave->employee->email)->send(new \App\Mail\ApprovedLeave(($output)));
+            $output = [
+                'employee' => $getApprovedLeave->employee,
+                'leave' => $leave->with('employees')->first(),
+                'type' => 'hr'
+            ];
+    
+            Mail::to($getApprovedLeave->employee->email)->send(new \App\Mail\ApprovedLeave(($output)));
+        }
+      
 
 
         if ($request->status == 'Reject') {
