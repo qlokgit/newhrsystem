@@ -120,12 +120,12 @@ $profile = asset(Storage::url('uploads/avatar/'));
                     <div class="dropdown-menu dash-h-dropdown dropdown-menu-end notification-dropdown">
                         <div class="noti-header">
                             <h5 class="m-0">{{ __('Notifications') }}</h5>
-                            <a href="#" class="dash-head-link mark_all_as_read">{{ __('Clear All') }}</a>
+                            <a href="{{route('read.notification.all')}}" class="dash-head-link mark_all_as_read">{{ __('Clear All') }}</a>
                         </div>
                         <div class="noti-body" id="notification-list">
                             @foreach ($notifEmployee as $item)
                             <div>
-                                <a href="{{route('read.notification', $item->id)}}" class="notification">
+                                <a href="{{route('read.notification', $item->id, 'first')}}" class="notification">
                                     <div>
                                         <b class="text-black d-flex">{{ $item->title }} <div style="background: red;width:6px;height:6px;border-radius: 6px"></div>
                                         </b> 

@@ -74,7 +74,6 @@ class LeaveController extends Controller
     public function store(Request $request)
     {
         $id_leave = (int) current(explode(',', $request->leave_type_id));
-
         $check_leave = LeaveType::find($request->leave_type_id);
 
         $from_date = Carbon::parse($request->start_date);
@@ -359,14 +358,26 @@ class LeaveController extends Controller
             $total_leave_days        = $startDate->diff($endDate)->days;
             $leave->total_leave_days = $total_leave_days;
             $leave->status           = 'Approve';
+
+            $this->notification($emp->employee_id, 'Approved Leave', 'Your Leave Approved', 'leave', '/leave');
         }
 
         $leave->save();
 
         $getApprovedLeave = ApprovedLeave::where(['leave_id' => $leave->id, 'status' => 'Waiting'])->orderBy('id', 'asc')->first();
+        if ($getApprovedLeave == null) {
+
+            $leave->status = 'Approved';
+            $leave->save();
+            $this->notification($emp->employee_id, 'Approved Leave', 'Your Leave Approved', 'leave', '/leave');
+
+        }
         if ($getApprovedLeave) {
+
             $getApprovedLeave->status = 'Pending';
             $getApprovedLeave->save();
+
+            $this->notification($getApprovedLeave->employee_id, 'Approved Leave', $emp->name . ' Request Leave', 'leave', '/leave');
 
             $output = [
                 'employee' => $getApprovedLeave->employee,
@@ -383,6 +394,7 @@ class LeaveController extends Controller
             $leaveAll = ApprovedLeave::with('leave')->where('leave_id', $leave->id)->get();
             $leave->rejected_by = $emp->id;
             $leave->save();
+            $this->notification($emp->employee_id, 'Approved Leave', 'Your Leave Not Approved', 'leave', '/leave');
             foreach ($leaveAll as $value) {
                 $value->status = $request->status;
                 $value->save();

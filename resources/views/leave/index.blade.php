@@ -329,7 +329,8 @@
                                                                         </tr>
                                                                         <input type="hidden" value="{{ $leave->id }}"
                                                                             name="leave_id">
-                                                                        <input type="hidden" value="{{ $leave->leave_id }}"
+                                                                        <input type="hidden"
+                                                                            value="{{ $leave->leave_id }}"
                                                                             name="leaves_id">
                                                                     </table>
                                                                 </div>
@@ -414,8 +415,14 @@
                                                 <div class="badge bg-success p-2 px-3 rounded status-badge5">
                                                     Approved</div>
                                             @else
-                                                <div class="badge bg-warning p-2 px-3 rounded status-badge5">
-                                                    Pending</div>
+
+                                                @if ($leave->status == 'Approved')
+                                                    <div class="badge bg-success p-2 px-3 rounded status-badge5">
+                                                        Approved</div>
+                                                @else
+                                                    <div class="badge bg-warning p-2 px-3 rounded status-badge5">
+                                                        Pending</div>
+                                                @endif
                                             @endif
                                         @else($leave->status == "Reject")
                                             <div class="badge bg-danger p-2 px-3 rounded status-badge5">
@@ -426,7 +433,7 @@
                                     <td class="Action">
                                         <span>
                                             @if (\Auth::user())
-                                            {{-- @if (\Auth::user()->type == 'hr' || \Auth::user()->type == 'company' || \Auth::user()->type == 'employee') --}}
+                                                {{-- @if (\Auth::user()->type == 'hr' || \Auth::user()->type == 'company' || \Auth::user()->type == 'employee') --}}
                                                 <div class="action-btn bg-success ms-2">
                                                     <a href="#" class="mx-3 btn btn-sm  align-items-center"
                                                         data-size="lg"
@@ -438,19 +445,18 @@
                                                     </a>
                                                 </div>
                                                 {{-- @if ($leave->status == 'Pending') --}}
-                                                    @can('Edit Leave')
-                                                        <div class="action-btn bg-info ms-2">
-                                                            <a href="#" class="mx-3 btn btn-sm  align-items-center"
-                                                                data-size="lg"
-                                                                data-url="{{ URL::to('leave/' . $leave->id . '/edit') }}"
-                                                                data-ajax-popup="true" data-size="md"
-                                                                data-bs-toggle="tooltip" title=""
-                                                                data-title="{{ __('Edit Leave') }}"
-                                                                data-bs-original-title="{{ __('Edit') }}">
-                                                                <i class="ti ti-pencil text-white"></i>
-                                                            </a>
-                                                        </div>
-                                                    @endcan
+                                                @can('Edit Leave')
+                                                    <div class="action-btn bg-info ms-2">
+                                                        <a href="#" class="mx-3 btn btn-sm  align-items-center"
+                                                            data-size="lg"
+                                                            data-url="{{ URL::to('leave/' . $leave->id . '/edit') }}"
+                                                            data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip"
+                                                            title="" data-title="{{ __('Edit Leave') }}"
+                                                            data-bs-original-title="{{ __('Edit') }}">
+                                                            <i class="ti ti-pencil text-white"></i>
+                                                        </a>
+                                                    </div>
+                                                @endcan
                                                 {{-- @endif --}}
                                             @else
                                                 @can('Edit Leave')

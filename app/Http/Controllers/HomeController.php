@@ -217,6 +217,8 @@ class HomeController extends Controller
             $leaves->status = $request->status;
             $leaves->save();
 
+            $this->notification($emp->employee_id, 'Approved Leave', 'Your Leave Not Approved', 'leave', '/leave');
+
             foreach ($leaveAll as $value) {
                 $value->status = $request->status;
                 $value->save();
@@ -237,7 +239,7 @@ class HomeController extends Controller
         if ($getApprovedLeave) {
             $getApprovedLeave->status = 'Pending';
             $getApprovedLeave->save();
-
+            $this->notification($getApprovedLeave->employee_id, 'Approved Leave', $emp->name . ' Request Leave', 'leave', '/leave');
             $output = [
                 'employee' => $getApprovedLeave->employee,
                 'leave' => $emp->name,
@@ -247,6 +249,7 @@ class HomeController extends Controller
             Mail::to($getApprovedLeave->employee->email)->send(new \App\Mail\ApprovedLeave(($output)));
         } else {
             if ($leaves->status != 'Reject') {
+                $this->notification($emp->employee_id, 'Approved Leave', 'Your Leave Approved', 'leave', '/leave');
                 Leave::with('approvedLeave.employee')->where('id', $leave->leave_id)->update(['status' => 'Approved']);
             }
         }
@@ -270,7 +273,21 @@ class HomeController extends Controller
 
             return Redirect::to($notification->url);
         } catch (\Throwable $th) {
-            
+        }
+    }
+
+    public function readNotificationAll()
+    {
+        try {
+            $emp = Employee::where('user_id', Auth::user()->id)->first();
+            $notification = Notification::where('employee_id', $emp->id)->get();
+            foreach ($notification as $item) {
+                $item->is_read = true;
+                $item->save();
+            }
+
+            return redirect()->back();
+        } catch (\Throwable $th) {
         }
     }
 }

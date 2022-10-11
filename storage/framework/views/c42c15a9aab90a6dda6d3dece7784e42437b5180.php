@@ -172,7 +172,8 @@
                                                                         </tr>
                                                                         <input type="hidden" value="<?php echo e($leave->id); ?>"
                                                                             name="leave_id">
-                                                                        <input type="hidden" value="<?php echo e($leave->leave_id); ?>"
+                                                                        <input type="hidden"
+                                                                            value="<?php echo e($leave->leave_id); ?>"
                                                                             name="leaves_id">
                                                                     </table>
                                                                 </div>
@@ -257,8 +258,14 @@
                                                 <div class="badge bg-success p-2 px-3 rounded status-badge5">
                                                     Approved</div>
                                             <?php else: ?>
-                                                <div class="badge bg-warning p-2 px-3 rounded status-badge5">
-                                                    Pending</div>
+
+                                                <?php if($leave->status == 'Approved'): ?>
+                                                    <div class="badge bg-success p-2 px-3 rounded status-badge5">
+                                                        Approved</div>
+                                                <?php else: ?>
+                                                    <div class="badge bg-warning p-2 px-3 rounded status-badge5">
+                                                        Pending</div>
+                                                <?php endif; ?>
                                             <?php endif; ?>
                                         <?php else: ?>
                                             <div class="badge bg-danger p-2 px-3 rounded status-badge5">
@@ -269,7 +276,7 @@
                                     <td class="Action">
                                         <span>
                                             <?php if(\Auth::user()): ?>
-                                            
+                                                
                                                 <div class="action-btn bg-success ms-2">
                                                     <a href="#" class="mx-3 btn btn-sm  align-items-center"
                                                         data-size="lg"
@@ -281,19 +288,18 @@
                                                     </a>
                                                 </div>
                                                 
-                                                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('Edit Leave')): ?>
-                                                        <div class="action-btn bg-info ms-2">
-                                                            <a href="#" class="mx-3 btn btn-sm  align-items-center"
-                                                                data-size="lg"
-                                                                data-url="<?php echo e(URL::to('leave/' . $leave->id . '/edit')); ?>"
-                                                                data-ajax-popup="true" data-size="md"
-                                                                data-bs-toggle="tooltip" title=""
-                                                                data-title="<?php echo e(__('Edit Leave')); ?>"
-                                                                data-bs-original-title="<?php echo e(__('Edit')); ?>">
-                                                                <i class="ti ti-pencil text-white"></i>
-                                                            </a>
-                                                        </div>
-                                                    <?php endif; ?>
+                                                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('Edit Leave')): ?>
+                                                    <div class="action-btn bg-info ms-2">
+                                                        <a href="#" class="mx-3 btn btn-sm  align-items-center"
+                                                            data-size="lg"
+                                                            data-url="<?php echo e(URL::to('leave/' . $leave->id . '/edit')); ?>"
+                                                            data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip"
+                                                            title="" data-title="<?php echo e(__('Edit Leave')); ?>"
+                                                            data-bs-original-title="<?php echo e(__('Edit')); ?>">
+                                                            <i class="ti ti-pencil text-white"></i>
+                                                        </a>
+                                                    </div>
+                                                <?php endif; ?>
                                                 
                                             <?php else: ?>
                                                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('Edit Leave')): ?>
@@ -413,4 +419,5 @@
         });
     </script>
 <?php $__env->stopPush(); ?>
+
 <?php echo $__env->make('layouts.admin', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /home/aannn/Pictures/main_file/resources/views/leave/index.blade.php ENDPATH**/ ?>

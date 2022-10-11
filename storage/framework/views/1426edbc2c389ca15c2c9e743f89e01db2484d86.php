@@ -121,12 +121,12 @@ $profile = asset(Storage::url('uploads/avatar/'));
                     <div class="dropdown-menu dash-h-dropdown dropdown-menu-end notification-dropdown">
                         <div class="noti-header">
                             <h5 class="m-0"><?php echo e(__('Notifications')); ?></h5>
-                            <a href="#" class="dash-head-link mark_all_as_read"><?php echo e(__('Clear All')); ?></a>
+                            <a href="<?php echo e(route('read.notification.all')); ?>" class="dash-head-link mark_all_as_read"><?php echo e(__('Clear All')); ?></a>
                         </div>
                         <div class="noti-body" id="notification-list">
                             <?php $__currentLoopData = $notifEmployee; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div>
-                                <a href="<?php echo e(route('read.notification', $item->id)); ?>" class="notification">
+                                <a href="<?php echo e(route('read.notification', $item->id, 'first')); ?>" class="notification">
                                     <div>
                                         <b class="text-black d-flex"><?php echo e($item->title); ?> <div style="background: red;width:6px;height:6px;border-radius: 6px"></div>
                                         </b> 

@@ -1404,3 +1404,4 @@ Route::get('/signature/{id}', 'ContractController@signature')->name('signature')
 Route::post('/signaturestore', 'ContractController@signatureStore')->name('signaturestore')->middleware(['auth', 'XSS']);
 
 Route::get('/notification-read/{id}', 'HomeController@readNotification')->name('read.notification')->middleware(['auth', 'XSS']);
+Route::get('/notification-read', 'HomeController@readNotificationAll')->name('read.notification.all')->middleware(['auth', 'XSS']);
