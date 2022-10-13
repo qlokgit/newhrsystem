@@ -156,6 +156,7 @@ class LeaveController extends Controller
             if ($leave) {
                 foreach ($getHr as $value) {
                     $getEmp = Employee::where(['user_id' => $value->id, 'branch_id' => $employee->branch_id, 'department_id' => $employee->department_id, 'designation_id' => $employee->designation_id])->first();
+                    
                     if ($getEmp) {
                         $this->notification($getEmp->id, 'New Leave', Auth::user()->name . ' Request Leave', 'leave', '/leave');
                     }
