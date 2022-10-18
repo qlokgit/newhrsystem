@@ -19,13 +19,12 @@ class Utility extends Model
     {
         $data = DB::table('settings');
 
-       if (\Auth::check()) {
+        if (\Auth::check()) {
 
-            $data=$data->where('created_by','=',\Auth::user()->creatorId())->get();
-            if(count($data)==0){
-                $data =DB::table('settings')->where('created_by', '=', 1 )->get();
+            $data = $data->where('created_by', '=', \Auth::user()->creatorId())->get();
+            if (count($data) == 0) {
+                $data = DB::table('settings')->where('created_by', '=', 1)->get();
             }
-
         } else {
 
             $data->where('created_by', '=', 1);
@@ -66,7 +65,7 @@ class Utility extends Model
             'employee_warning' => '1',
             'employee_termination' => '1',
             'leave_status' => '1',
-            'contract'=>'1',
+            'contract' => '1',
             "default_language" => "en",
             "display_landing_page" => "on",
             "ip_restrict" => "on",
@@ -87,12 +86,12 @@ class Utility extends Model
             "cust_darklayout" => "off",
             "SITE_RTL" => "off",
             "company_logo" => 'logo-dark.png',
-            "company_logo_light"=> 'logo-light.png',
+            "company_logo_light" => 'logo-light.png',
             "dark_logo" => "logo-dark.png",
             "light_logo" => "logo-light.png",
             "contract_prefix" => "#CON",
 
-           
+
         ];
 
         foreach ($data as $row) {
@@ -187,7 +186,7 @@ class Utility extends Model
         'employee_warning' => 'Employee Warning',
         'employee_termination' => 'Employee Termination',
         'leave_status' => 'Leave Status',
-        'contract'=>'Contract',
+        'contract' => 'Contract',
     ];
 
     public static function employeePayslipDetail($employeeId)
@@ -458,80 +457,71 @@ class Utility extends Model
 
         $mailTo = array_values($mailTo);
 
-        if($usr->type != 'super admin')
-        {
-        // dd($usr->type);
+        if ($usr->type != 'super admin') {
+            // dd($usr->type);
 
             // find template is exist or not in our record
             $template = EmailTemplate::where('slug', $emailTemplate)->first();
 
-// dd($template);
-            if(isset($template) && !empty($template))
-            {
+            // dd($template);
+            if (isset($template) && !empty($template)) {
                 // check template is active or not by company
                 $is_active = UserEmailTemplate::where('template_id', '=', $template->id)->where('user_id', '=', $usr->creatorId())->first();
 
                 // dd($is_active);
-                if($is_active->is_active == 1)
-                {
-                    $settings = self::settings();
+                if ($is_active) {
+                    if ($is_active->is_active == 1) {
+                        $settings = self::settings();
 
-                    // get email content language base
-                    $content = EmailTemplateLang::where('parent_id', '=', $template->id)->where('lang', 'LIKE', $usr->lang)->first();
+                        // get email content language base
+                        $content = EmailTemplateLang::where('parent_id', '=', $template->id)->where('lang', 'LIKE', $usr->lang)->first();
 
-                    $content->from = $template->from;
-                  
-                    if(!empty($content->content))
-                    {
+                        $content->from = $template->from;
 
-                        $content->content = self::replaceVariable($content->content, $obj);
-                        // send email
-                        try
-                        {
-                            // dd($mailTo,$content, $settings);
-                            Mail::to($mailTo)->send(new CommonEmailTemplate($content, $settings));
-                        }
-                        catch(\Exception $e)
-                        {
-                            // dd( $e);
-                            $error = __('E-Mail has been not sent due to SMTP configuration');
-                        }
+                        if (!empty($content->content)) {
 
-                        if(isset($error))
-                        {
+                            $content->content = self::replaceVariable($content->content, $obj);
+                            // send email
+                            try {
+                                // dd($mailTo,$content, $settings);
+                                Mail::to($mailTo)->send(new CommonEmailTemplate($content, $settings));
+                            } catch (\Exception $e) {
+                                // dd( $e);
+                                $error = __('E-Mail has been not sent due to SMTP configuration');
+                            }
+
+                            if (isset($error)) {
+                                $arReturn = [
+                                    'is_success' => false,
+                                    'error' => $error,
+                                ];
+                            } else {
+                                $arReturn = [
+                                    'is_success' => true,
+                                    'error' => false,
+                                ];
+                            }
+                        } else {
                             $arReturn = [
                                 'is_success' => false,
-                                'error' => $error,
+                                'error' => __('Mail not send, email is empty'),
                             ];
                         }
-                        else
-                        {
-                            $arReturn = [
-                                'is_success' => true,
-                                'error' => false,
-                            ];
-                        }
-                    }
-                    else
-                    {
-                        $arReturn = [
-                            'is_success' => false,
-                            'error' => __('Mail not send, email is empty'),
+
+                        return $arReturn;
+                    } else {
+                        return [
+                            'is_success' => true,
+                            'error' => false,
                         ];
                     }
-
-                    return $arReturn;
-                }
-                else
-                {
+                } else {
                     return [
                         'is_success' => true,
                         'error' => false,
                     ];
                 }
-            }
-            else
-            {
+            } else {
                 return [
                     'is_success' => false,
                     'error' => __('Mail not send, email not found'),
@@ -539,13 +529,13 @@ class Utility extends Model
             }
         }
     }
-    
+
     public static function replaceVariable($content, $obj)
     {
         $arrVariable = [
             '{email}',
             '{password}',
-            
+
             '{app_name}',
             '{app_url}',
 
@@ -556,7 +546,7 @@ class Utility extends Model
             '{employee_branch}',
             '{employee_department}',
             '{employee_designation}',
-            
+
             // '{payslip_email}',
             '{name}',
             '{salary_month}',
@@ -573,7 +563,7 @@ class Utility extends Model
             '{transfer_department}',
             '{transfer_branch}',
             '{transfer_description}',
-            
+
             '{assign_user}',
             '{resignation_date}',
             '{notice_date}',
@@ -589,9 +579,9 @@ class Utility extends Model
             '{promotion_designation}',
             '{promotion_title}',
             '{promotion_date}',
-            
+
             '{employee_complaints_name}',
-            
+
             '{employee_warning_name}',
             '{warning_subject}',
             '{warning_description}',
@@ -632,17 +622,17 @@ class Utility extends Model
         $arrValue    = [
             'email' => '-',
             'password' => '-',
-            
+
             'app_name' => '-',
             'app_url' => '-',
 
             'employee_name' => '-',
             'employee_email' => '-',
-            'employee_password' => '-', 
+            'employee_password' => '-',
             'employee_branch' => '-',
             'employee_department' => '-',
             'employee_designation' => '-',
-            
+
             'name' => '-',
             'salary_month' => '-',
             'url' => '-',
@@ -715,8 +705,7 @@ class Utility extends Model
             // 'password' => '-',
         ];
 
-        foreach($obj as $key => $val)
-        {
+        foreach ($obj as $key => $val) {
             $arrValue[$key] = $val;
         }
         $settings = Utility::settings();
@@ -731,8 +720,7 @@ class Utility extends Model
     public static function makeEmailLang($lang)
     {
         $template = EmailTemplate::all();
-        foreach($template as $t)
-        {
+        foreach ($template as $t) {
             $default_lang                 = EmailTemplateLang::where('parent_id', '=', $t->id)->where('lang', 'LIKE', 'en')->first();
             $emailTemplateLang            = new EmailTemplateLang();
             $emailTemplateLang->parent_id = $t->id;
@@ -759,7 +747,7 @@ class Utility extends Model
         return $settings;
     }
 
-   
+
 
     public static function error_res($msg = "", $args = array())
     {
@@ -944,178 +932,153 @@ class Utility extends Model
     //     return $settings;
     // }
 
-    public static function get_superadmin_logo(){
+    public static function get_superadmin_logo()
+    {
 
-        $is_dark_mode = DB::table('settings')->where('created_by', '1')->pluck('value','name')->toArray();
+        $is_dark_mode = DB::table('settings')->where('created_by', '1')->pluck('value', 'name')->toArray();
 
-        if(!empty($is_dark_mode['dark_mode'])){
+        if (!empty($is_dark_mode['dark_mode'])) {
             $is_dark_modes = $is_dark_mode['dark_mode'];
 
-            if($is_dark_modes == 'on'){
+            if ($is_dark_modes == 'on') {
                 return 'logo-light.png';
-            }else{
+            } else {
                 return 'logo-dark.png';
             }
-        }
-        else{
+        } else {
             return 'logo-dark.png';
         }
     }
 
-    public static function get_company_logo(){
-       
-        $is_dark_mode = DB::table('settings')->where('created_by', Auth::user()->id)->pluck('value','name')->toArray();  
+    public static function get_company_logo()
+    {
+
+        $is_dark_mode = DB::table('settings')->where('created_by', Auth::user()->id)->pluck('value', 'name')->toArray();
 
         $is_dark_modes = !empty($is_dark_mode['dark_mode']) ? $is_dark_mode['dark_mode'] : 'off';
-            if($is_dark_modes == 'on'){
-                return Utility::getValByName('company_logo_light');
-            }else{
-                return Utility::getValByName('company_logo');
-            }
-        
-        
+        if ($is_dark_modes == 'on') {
+            return Utility::getValByName('company_logo_light');
+        } else {
+            return Utility::getValByName('company_logo');
+        }
     }
 
-//  public static function getLayoutsSetting()
-//     {
-//         // $data = DB::table('settings');
+    //  public static function getLayoutsSetting()
+    //     {
+    //         // $data = DB::table('settings');
 
-//         // if(\Auth::check()){
+    //         // if(\Auth::check()){
 
-//         //      $data =\DB::table('settings')->where('created_by', '=', \Auth::user()->id )->get();
+    //         //      $data =\DB::table('settings')->where('created_by', '=', \Auth::user()->id )->get();
 
-//         //      if(count($data)==0){
-//         //         $data =\DB::table('settings')->where('created_by', '=', 1 )->get();
-//         //     }
-//         // }else{
-//         //     $data = $data->where('created_by', '=', 1);
+    //         //      if(count($data)==0){
+    //         //         $data =\DB::table('settings')->where('created_by', '=', 1 )->get();
+    //         //     }
+    //         // }else{
+    //         //     $data = $data->where('created_by', '=', 1);
 
-//         // }
-
-        
-//         // $data     = $data->get();
-//         // $settings = [
-//         //     "cust_theme_bg"=>"on",
-//         //     "cust_darklayout"=>"off",
-//         //     "color"=>"theme-3",
-//         // ];
-
-//         // foreach($data as $row)
-//         // {
-//         //     $settings[$row->name] = $row->value;
-//         // }
-
-//         // return $settings;
-
-//         $data = DB::table('settings');
-
-//         if (\Auth::check()) {
- 
-//              $data=$data->where('created_by','=',\Auth::user()->creatorId())->get();
-//              if(count($data)==0){
-//                  $data =DB::table('settings')->where('created_by', '=', 1 )->get();
-//              }
- 
-//          } else {
- 
-//              $data->where('created_by', '=', 1);
-//              $data = $data->get();
-//              $settings = [
-//                      "is_sidebar_transperent"=>"on",
-//                     "dark_mode"=>"off",
-//                     "color"=>"theme-3",
-//                  ];
-//     }
-
-//     }
+    //         // }
 
 
+    //         // $data     = $data->get();
+    //         // $settings = [
+    //         //     "cust_theme_bg"=>"on",
+    //         //     "cust_darklayout"=>"off",
+    //         //     "color"=>"theme-3",
+    //         // ];
 
-        public static function colorset(){
-            if(\Auth::user())
-            {
-                if(\Auth::user()->type == 'super admin')
-                {
-                    $user = \Auth::user();
+    //         // foreach($data as $row)
+    //         // {
+    //         //     $settings[$row->name] = $row->value;
+    //         // }
 
-                    $setting = DB::table('settings')->where('created_by',$user->id)->pluck('value','name')->toArray();
-                }
-                else
-                {
-                    $setting = DB::table('settings')->where('created_by', \Auth::user()->creatorId())->pluck('value','name')->toArray();
-                }
+    //         // return $settings;
+
+    //         $data = DB::table('settings');
+
+    //         if (\Auth::check()) {
+
+    //              $data=$data->where('created_by','=',\Auth::user()->creatorId())->get();
+    //              if(count($data)==0){
+    //                  $data =DB::table('settings')->where('created_by', '=', 1 )->get();
+    //              }
+
+    //          } else {
+
+    //              $data->where('created_by', '=', 1);
+    //              $data = $data->get();
+    //              $settings = [
+    //                      "is_sidebar_transperent"=>"on",
+    //                     "dark_mode"=>"off",
+    //                     "color"=>"theme-3",
+    //                  ];
+    //     }
+
+    //     }
+
+
+
+    public static function colorset()
+    {
+        if (\Auth::user()) {
+            if (\Auth::user()->type == 'super admin') {
+                $user = \Auth::user();
+
+                $setting = DB::table('settings')->where('created_by', $user->id)->pluck('value', 'name')->toArray();
+            } else {
+                $setting = DB::table('settings')->where('created_by', \Auth::user()->creatorId())->pluck('value', 'name')->toArray();
             }
-            else
-            {
-                $user = User::where('type','super admin')->first();
-                $setting = DB::table('settings')->where('created_by',$user->id)->pluck('value','name')->toArray();
-            }
-            if(!isset($setting['color']))
-            {
-                $setting = Utility::settings();
-            }
-            return $setting;
+        } else {
+            $user = User::where('type', 'super admin')->first();
+            $setting = DB::table('settings')->where('created_by', $user->id)->pluck('value', 'name')->toArray();
         }
+        if (!isset($setting['color'])) {
+            $setting = Utility::settings();
+        }
+        return $setting;
+    }
 
-        public static function GetLogo()
-        {
-            $setting = Utility::colorset();
-            //  dd($setting);
-            if(\Auth::user() && \Auth::user()->type != 'super admin')
-            {
-                   
-                if(Utility::getValByName('cust_darklayout') == 'on')
-                {
-                
-                    return Utility::getValByName('company_logo_light');
-                }
-                else
-                {
-                    return Utility::getValByName('company_logo');
-                }
-            }
-            else
-            {      
-                                    
-                if(Utility::getValByName('cust_darklayout') == 'on')
-                {
-                    
-                    return Utility::getValByName('light_logo');
-                }
-                else
-                {
-                    return Utility::getValByName('dark_logo');
-                }
-            }
-        }  
+    public static function GetLogo()
+    {
+        $setting = Utility::colorset();
+        //  dd($setting);
+        if (\Auth::user() && \Auth::user()->type != 'super admin') {
 
+            if (Utility::getValByName('cust_darklayout') == 'on') {
 
-        public static function GetLogolanding()
-        {
-            $setting = Utility::colorset();
-            //  dd($setting);
-            if(\Auth::user() && \Auth::user()->type != 'super admin')
-            {
-                   
-                if(Utility::getValByName('cust_darklayout') == 'on')
-                {
-                
-                    return Utility::getValByName('company_logo_light');
-                }
-                else
-                {
-                    return Utility::getValByName('company_logo');
-                }
+                return Utility::getValByName('company_logo_light');
+            } else {
+                return Utility::getValByName('company_logo');
             }
-            else
-            {      
-                                    
-                
-               
-                    return Utility::getValByName('light_logo');
+        } else {
+
+            if (Utility::getValByName('cust_darklayout') == 'on') {
+
+                return Utility::getValByName('light_logo');
+            } else {
+                return Utility::getValByName('dark_logo');
             }
         }
+    }
+
+
+    public static function GetLogolanding()
+    {
+        $setting = Utility::colorset();
+        //  dd($setting);
+        if (\Auth::user() && \Auth::user()->type != 'super admin') {
+
+            if (Utility::getValByName('cust_darklayout') == 'on') {
+
+                return Utility::getValByName('company_logo_light');
+            } else {
+                return Utility::getValByName('company_logo');
+            }
+        } else {
 
 
 
+            return Utility::getValByName('light_logo');
+        }
+    }
 }
